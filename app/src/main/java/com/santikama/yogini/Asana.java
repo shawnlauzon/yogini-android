@@ -8,6 +8,8 @@ public class Asana {
     private String name;
     private int order;
     private int time;
+    private String audioBegin;
+    private String audioEnd;
 
     public int getId() {
         return id;
@@ -23,6 +25,15 @@ public class Asana {
 
     public int getTime() {
         return time;
+    }
+
+    public String getAudioBegin() {
+
+        return audioBegin;
+    }
+
+    public String getAudioEnd() {
+        return audioEnd;
     }
 
     @Override

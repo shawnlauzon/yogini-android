@@ -1,6 +1,7 @@
 package com.santikama.yogini;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,27 +18,43 @@ import java.io.Reader;
  */
 public class PracticeActivityFragment extends Fragment {
 
+    private Asanas mAsanas;
+
     public PracticeActivityFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAsanas = loadJson();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_practice, container, false);
+        final View root = inflater.inflate(R.layout.fragment_practice, container, false);
+        ((TextView) root.findViewById(R.id.text)).setText(mAsanas.toString());
+        return root;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        loadJson();
+    public void onStart() {
+        super.onStart();
+        performAsanas();
     }
 
-    private void loadJson() {
+    private void performAsanas() {
+        for (Asana asana : mAsanas.getAsanas()) {
+            performAsana(asana);
+        }
+    }
+
+    private void performAsana(Asana asana) {
+        ((TextView) getView().findViewById(R.id.text)).setText(asana.toString());
+    }
+
+    private Asanas loadJson() {
         final Reader asanasJson = new InputStreamReader(getResources().openRawResource(R.raw.asanas));
-
-        final Gson gson = new Gson();
-
-        final Asanas asanas = gson.fromJson(asanasJson, Asanas.class);
-        ((TextView) getView().findViewById(R.id.text)).setText(asanas.toString());
+        return new Gson().fromJson(asanasJson, Asanas.class);
     }
 }

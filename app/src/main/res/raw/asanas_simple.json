@@ -1,0 +1,12 @@
+{
+  "asanas": [
+    {
+      "id": 2,
+      "name": "Padahastasana",
+      "order": 100,
+      "time": 5,
+      "audio_begin": "2_begin.opus",
+      "audio_end": "2_end.opus"
+    }
+  ]
+}
