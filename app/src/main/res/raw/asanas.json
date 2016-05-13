@@ -1,0 +1,26 @@
+{
+  "asanas": [
+    {
+      "id": 1,
+      "name": "Warming exercises",
+      "order": 10
+    },
+    {
+      "id": 2,
+      "name": "Padahastasana",
+      "order": 100,
+      "time": 420
+    },
+    {
+      "id": 3,
+      "name": "Tadasana",
+      "order": 200,
+      "time": 300
+    },
+    {
+      "id": 100,
+      "name": "Shavasana",
+      "order": 1000000000
+    }
+  ]
+}
