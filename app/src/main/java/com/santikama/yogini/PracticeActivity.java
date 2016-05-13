@@ -64,6 +64,7 @@ public class PracticeActivity extends AppCompatActivity {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 Log.e(TAG, "MediaPlayer error: " + what + "(" + extra + ")");
+                // TODO display to user
                 return false;
             }
         });
@@ -79,6 +80,7 @@ public class PracticeActivity extends AppCompatActivity {
         mAudioPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                Log.i(TAG, "Media complete");
 //                advanceToNextAsana();
             }
         });
@@ -132,7 +134,7 @@ public class PracticeActivity extends AppCompatActivity {
     }
 
     private void startAudio() throws IOException {
-        mAudioPlayer.setDataSource(this, Uri.parse("android.resource://com.santikama.yogini/raw/ogg_2_begin"));
+        mAudioPlayer.setDataSource(this, Uri.parse("android.resource://com.santikama.yogini/raw/begin_2"));
         mAudioPlayer.prepare();
         resumeAudio();
     }
