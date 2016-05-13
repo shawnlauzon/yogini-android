@@ -17,6 +17,7 @@ import java.io.Reader;
  * A placeholder fragment containing a simple view.
  */
 public class PracticeActivityFragment extends Fragment {
+    private static final String TAG = "PracticeActivityFragment";
 
     private Asanas mAsanas;
 
