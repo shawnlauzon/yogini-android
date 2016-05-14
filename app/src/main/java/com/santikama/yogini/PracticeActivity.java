@@ -36,12 +36,15 @@ public class PracticeActivity extends AppCompatActivity {
 
     private Asanas mAsanas;
     private Asana mCurrentAsana;
+    private int mCurrentAsanaPosition = 0;
 
     private short mPracticeState = PRACTICE_STATE_IDLE;
     private MediaPlayer mAudioPlayer;
     private CountDownTimer mCountdownTimer;
 
     private FloatingActionButton mFab;
+
+    private long mCurrentMillisRemaining;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +98,8 @@ public class PracticeActivity extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 Log.i(TAG, "Media complete");
-                startTimer();
+                mAudioPlayer.reset();
+                startTimer(mCurrentAsana.getTime() * 1000);
             }
         });
     }
@@ -113,10 +117,12 @@ public class PracticeActivity extends AppCompatActivity {
         mCurrentAsana = mAsanas.getByPosition(0);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        PracticeActivityFragment fragment = PracticeActivityFragment.newInstance(mCurrentAsana);
-        fragmentTransaction.add(R.id.fragment, fragment);
-        fragmentTransaction.commit();
+        if (fragmentManager.findFragmentById(R.id.fragment) == null) {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            PracticeActivityFragment fragment = PracticeActivityFragment.newInstance(mCurrentAsana);
+            fragmentTransaction.add(R.id.fragment, fragment);
+            fragmentTransaction.commit();
+        }
     }
 
     @Override
@@ -144,7 +150,7 @@ public class PracticeActivity extends AppCompatActivity {
     private void fabPressed() {
         try {
             if (mPracticeState == PRACTICE_STATE_IDLE) {
-                startAudio();
+                playBeginAudio();
                 ((PracticeActivityFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.fragment)).onPracticeStarted();
                 mFab.setImageResource(android.R.drawable.ic_media_pause);
@@ -154,7 +160,11 @@ public class PracticeActivity extends AppCompatActivity {
                         .findFragmentById(R.id.fragment)).onPracticePaused();
                 mFab.setImageResource(android.R.drawable.ic_media_play);
             } else if (mPracticeState == PRACTICE_STATE_PAUSED) {
-                resumeAudio();
+                if (mAudioPlayer.isPlaying()) {
+                    resumeAudio();
+                } else {
+                    startTimer(mCurrentMillisRemaining);
+                }
                 ((PracticeActivityFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.fragment)).onPracticeResumed();
                 mFab.setImageResource(android.R.drawable.ic_media_pause);
@@ -165,10 +175,21 @@ public class PracticeActivity extends AppCompatActivity {
         }
     }
 
-    private void startAudio() throws IOException {
+    private void playBeginAudio() throws IOException {
         mAudioPlayer.setDataSource(this, Uri.parse("android.resource://com.santikama.yogini/raw/begin_2_short"));
         mAudioPlayer.prepare();
         resumeAudio();
+    }
+
+    private void playEndAudio() {
+        try {
+            mAudioPlayer.setDataSource(this, Uri.parse("android.resource://com.santikama.yogini/raw/end_2"));
+            mAudioPlayer.prepare();
+            resumeAudio();
+        } catch (IOException e) {
+            // TODO handle
+            e.printStackTrace();
+        }
     }
 
     private void resumeAudio() throws IOException {
@@ -182,17 +203,20 @@ public class PracticeActivity extends AppCompatActivity {
         mCountdownTimer.cancel();
     }
 
-    private void startTimer() {
-        mCountdownTimer = new CountDownTimer(mCurrentAsana.getTime() * 1000, 100) {
+    private void startTimer(long millisRemaining) {
+        // Callback occurs 10 times per second
+        mCountdownTimer = new CountDownTimer(millisRemaining, 10) {
 
             @Override
             public void onTick(long millisUntilFinished) {
+                mCurrentMillisRemaining = millisUntilFinished;
                 ((PracticeActivityFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment)).onTick(millisUntilFinished);
+                        .findFragmentById(R.id.fragment)).onTick10TimesPerSecond(mCurrentMillisRemaining);
             }
 
             @Override
             public void onFinish() {
+                playEndAudio();
             }
         }.start();
     }
