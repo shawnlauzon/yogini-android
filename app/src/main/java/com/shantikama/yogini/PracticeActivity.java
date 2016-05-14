@@ -134,7 +134,7 @@ public class PracticeActivity extends AppCompatActivity {
         mFinishedAsana = false;
 
         if (mCurrentAsana == null) {
-            finish();
+//            finish();
         } else {
                     FragmentManager fragmentManager = getSupportFragmentManager();
             PracticeActivityFragment fragment = (PracticeActivityFragment) fragmentManager
