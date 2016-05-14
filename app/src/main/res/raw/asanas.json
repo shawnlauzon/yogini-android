@@ -2,7 +2,7 @@
   "asanas": [
     {
       "id": 2,
-      "name": "Padahastasana",
+      "name": "Pādahastāsana",
       "order": 100,
       "time": 5,
       "audio_begin": "begin_2",
@@ -10,7 +10,7 @@
     },
     {
       "id": 3,
-      "name": "Tadasana",
+      "name": "Tadāsana",
       "order": 200,
       "time": 7,
       "audio_begin": "begin_3",
@@ -18,7 +18,7 @@
     },
     {
       "id": 100,
-      "name": "Shavasana",
+      "name": "Śavāsana",
       "order": 1000000000,
       "audio_begin": "begin_2",
       "audio_end": "end"

@@ -11,11 +11,11 @@
 
     <TextView
         android:id="@+id/name"
-        style="@style/TextAppearance.AppCompat.Large"
+        style="@style/TextAppearance.AppCompat.Display1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Padahastasana" />
+        android:text="Pādahastāsana" />
 
     <TextView
         android:id="@+id/timer"
@@ -23,16 +23,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:text="07:00" />
 
     <ProgressBar
         android:id="@+id/progress"
-        style="@android:style/Widget.ProgressBar.Horizontal"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/timer"
-        android:paddingRight="12dp" />
-
+        android:paddingRight="12dp"
+        android:progress="70" />
 
 </RelativeLayout>
