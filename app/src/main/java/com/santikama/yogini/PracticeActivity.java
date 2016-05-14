@@ -10,7 +10,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -34,11 +33,14 @@ public class PracticeActivity extends AppCompatActivity {
     private static final short PRACTICE_STATE_PLAYING = 1;
     private static final short PRACTICE_STATE_PAUSED = 2;
 
+    private static final String AUDIO_URL_START = "android.resource://com.santikama.yogini/raw/";
+
     private Asanas mAsanas;
     private Asana mCurrentAsana;
-    private int mCurrentAsanaPosition = 0;
+    private int mCurrentAsanaPosition = -1;
 
     private short mPracticeState = PRACTICE_STATE_IDLE;
+    private boolean mFinishedAsana = false;
     private MediaPlayer mAudioPlayer;
     private CountDownTimer mCountdownTimer;
 
@@ -99,7 +101,17 @@ public class PracticeActivity extends AppCompatActivity {
             public void onCompletion(MediaPlayer mp) {
                 Log.i(TAG, "Media complete");
                 mAudioPlayer.reset();
-                startTimer(mCurrentAsana.getTime() * 1000);
+
+                if (mFinishedAsana) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startNextAsana();
+                        }
+                    }, 1000);
+                } else { // We just finished the begin audio
+                    startTimer(mCurrentAsana.getTime() * 1000);
+                }
             }
         });
     }
@@ -114,14 +126,24 @@ public class PracticeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mCurrentAsana = mAsanas.getByPosition(0);
+        startNextAsana();
+    }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager.findFragmentById(R.id.fragment) == null) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            PracticeActivityFragment fragment = PracticeActivityFragment.newInstance(mCurrentAsana);
-            fragmentTransaction.add(R.id.fragment, fragment);
-            fragmentTransaction.commit();
+    private void startNextAsana() {
+        mCurrentAsana = mAsanas.getByPosition(++mCurrentAsanaPosition);
+        mFinishedAsana = false;
+
+        if (mCurrentAsana != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            PracticeActivityFragment fragment = (PracticeActivityFragment) fragmentManager
+                    .findFragmentById(R.id.fragment);
+            fragment.updateAsana(mCurrentAsana);
+
+            try {
+                playBeginAudio();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -145,6 +167,61 @@ public class PracticeActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void playBeginAudio() throws IOException {
+        mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + mCurrentAsana.getAudioBegin()));
+        playAudio();
+    }
+
+    private void playEndAudio() {
+        try {
+            mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + mCurrentAsana.getAudioEnd()));
+            playAudio();
+        } catch (IOException e) {
+            // TODO handle
+            e.printStackTrace();
+        }
+    }
+
+    private void playAudio() {
+        try {
+            mAudioPlayer.prepare();
+            resumeAudio();
+        } catch (IOException e) {
+            // TODO handle
+            e.printStackTrace();
+        }
+    }
+
+    private void pauseAudio() {
+        mAudioPlayer.pause();
+        mPracticeState = PRACTICE_STATE_PAUSED;
+        mCountdownTimer.cancel();
+    }
+
+    private void resumeAudio() throws IOException {
+        mAudioPlayer.start();
+        mPracticeState = PRACTICE_STATE_PLAYING;
+    }
+
+    private void startTimer(long millisRemaining) {
+        // Callback occurs 10 times per second
+        mCountdownTimer = new CountDownTimer(millisRemaining, 10) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mCurrentMillisRemaining = millisUntilFinished;
+                ((PracticeActivityFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment)).onTick10TimesPerSecond(mCurrentMillisRemaining);
+            }
+
+            @Override
+            public void onFinish() {
+                mFinishedAsana = true;
+                playEndAudio();
+            }
+        }.start();
     }
 
     private void fabPressed() {
@@ -173,52 +250,6 @@ public class PracticeActivity extends AppCompatActivity {
             // TODO Show problem to user
             e.printStackTrace();
         }
-    }
-
-    private void playBeginAudio() throws IOException {
-        mAudioPlayer.setDataSource(this, Uri.parse("android.resource://com.santikama.yogini/raw/begin_2_short"));
-        mAudioPlayer.prepare();
-        resumeAudio();
-    }
-
-    private void playEndAudio() {
-        try {
-            mAudioPlayer.setDataSource(this, Uri.parse("android.resource://com.santikama.yogini/raw/end_2"));
-            mAudioPlayer.prepare();
-            resumeAudio();
-        } catch (IOException e) {
-            // TODO handle
-            e.printStackTrace();
-        }
-    }
-
-    private void resumeAudio() throws IOException {
-        mAudioPlayer.start();
-        mPracticeState = PRACTICE_STATE_PLAYING;
-    }
-
-    private void pauseAudio() {
-        mAudioPlayer.pause();
-        mPracticeState = PRACTICE_STATE_PAUSED;
-        mCountdownTimer.cancel();
-    }
-
-    private void startTimer(long millisRemaining) {
-        // Callback occurs 10 times per second
-        mCountdownTimer = new CountDownTimer(millisRemaining, 10) {
-
-            @Override
-            public void onTick(long millisUntilFinished) {
-                mCurrentMillisRemaining = millisUntilFinished;
-                ((PracticeActivityFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment)).onTick10TimesPerSecond(mCurrentMillisRemaining);
-            }
-
-            @Override
-            public void onFinish() {
-                playEndAudio();
-            }
-        }.start();
     }
 
     /**

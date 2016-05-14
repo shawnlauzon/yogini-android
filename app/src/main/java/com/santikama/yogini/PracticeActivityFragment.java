@@ -17,25 +17,11 @@ import java.util.Locale;
 public class PracticeActivityFragment extends Fragment {
     private static final String TAG = "PracticeActivityFragment";
 
-    private static final String ARG_ASANA_NAME = "asana_name";
-    private static final String ARG_ASANA_TIME = "asana_time";
-
     private static final String TIMER_FORMAT = "%02d:%02d";
 
     private TextView mAsanaName;
     private TextView mTimer;
     private ProgressBar mProgress;
-
-    static PracticeActivityFragment newInstance(Asana asana) {
-        PracticeActivityFragment f = new PracticeActivityFragment();
-        Bundle args = new Bundle();
-
-        args.putString(ARG_ASANA_NAME, asana.getName());
-        args.putInt(ARG_ASANA_TIME, asana.getTime());
-
-        f.setArguments(args);
-        return f;
-    }
 
     public PracticeActivityFragment() {
     }
@@ -54,19 +40,22 @@ public class PracticeActivityFragment extends Fragment {
         mTimer = (TextView) root.findViewById(R.id.timer);
         mProgress = (ProgressBar) root.findViewById(R.id.progress);
 
-        mAsanaName.setText(getArguments().getString(ARG_ASANA_NAME));
-
-        int numSecs = getArguments().getInt(ARG_ASANA_TIME);
-        setTimerText(numSecs * 1000);
-
-        mProgress.setMax(numSecs * 1000);
-
         return root;
     }
 
     private void setTimerText(long millisUntilFinished) {
         mTimer.setText(String.format(Locale.getDefault(), TIMER_FORMAT,
                 millisUntilFinished / 60000, millisUntilFinished / 1000 % 60));
+    }
+
+    void updateAsana(Asana asana) {
+        mAsanaName.setText(asana.getName());
+
+        int numSecs = asana.getTime();
+        setTimerText(numSecs * 1000);
+
+        mProgress.setProgress(0);
+        mProgress.setMax(numSecs * 1000);
     }
 
     void onPracticeStarted() {

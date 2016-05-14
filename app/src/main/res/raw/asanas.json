@@ -4,24 +4,24 @@
       "id": 2,
       "name": "Padahastasana",
       "order": 100,
-      "time": 10,
+      "time": 5,
       "audio_begin": "begin_2",
-      "audio_end": "end_2"
+      "audio_end": "end"
     },
     {
       "id": 3,
       "name": "Tadasana",
       "order": 200,
-      "time": 300,
-      "audio_begin": "begin_2",
-      "audio_end": "end_2"
+      "time": 20,
+      "audio_begin": "begin_3",
+      "audio_end": "end"
     },
     {
       "id": 100,
       "name": "Shavasana",
       "order": 1000000000,
       "audio_begin": "begin_2",
-      "audio_end": "end_2"
+      "audio_end": "end"
     }
   ]
 }

@@ -11,8 +11,8 @@ public class Asana implements Parcelable {
     private String name;
     private int order;
     private int time;
-    private String audioBegin;
-    private String audioEnd;
+    private String audio_begin;
+    private String audio_end;
 
     public int getId() {
         return id;
@@ -32,11 +32,11 @@ public class Asana implements Parcelable {
 
     public String getAudioBegin() {
 
-        return audioBegin;
+        return audio_begin;
     }
 
     public String getAudioEnd() {
-        return audioEnd;
+        return audio_end;
     }
 
     @Override
@@ -50,8 +50,8 @@ public class Asana implements Parcelable {
         out.writeString(name);
         out.writeInt(order);
         out.writeInt(time);
-        out.writeString(audioBegin);
-        out.writeString(audioEnd);
+        out.writeString(audio_begin);
+        out.writeString(audio_end);
     }
 
     public static final Parcelable.Creator<Asana> CREATOR
@@ -70,8 +70,8 @@ public class Asana implements Parcelable {
         name = in.readString();
         order = in.readInt();
         time = in.readInt();
-        audioBegin = in.readString();
-        audioEnd = in.readString();
+        audio_begin = in.readString();
+        audio_end = in.readString();
     }
 
     @Override
