@@ -1,12 +1,14 @@
 package com.shantikama.yogini;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.List;
 
 /**
  * Created by Admin on 100/10/16.
  */
 public class Asanas {
-    private List<Asana> asanas;
+    private ImmutableList<Asana> asanas;
 
     public Asana getById(int asanaId) {
         for (Asana a : asanas) {
