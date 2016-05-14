@@ -8,30 +8,35 @@ public class Asana {
     public final String name;
     public final int order;
     public final int time;
-    public final String audio_begin;
-    public final String audio_end;
-    public final SequenceItem[] sequence;
+    public final String audioBegin;
+    public final String audioEnd;
+    public final SequenceItem[] multiPart;
 
-    public Asana(int id, String name, int order, int time, String audio_begin, String audio_end, SequenceItem[] sequence) {
+    public Asana(int id, String name, int order, int time, String audioBegin, String audioEnd, SequenceItem[] multiPart) {
         this.id = id;
         this.name = name;
         this.order = order;
         this.time = time;
-        this.audio_begin = audio_begin;
-        this.audio_end = audio_end;
-        this.sequence = sequence;
+        this.audioBegin = audioBegin;
+        this.audioEnd = audioEnd;
+        this.multiPart = multiPart;
     }
 
    @Override
     public String toString() {
-        return "Asana{" +
+        return "Asana {" +
                 "id=" + id +
                 ", name='" +
                 '}';
     }
 
     public static class SequenceItem {
-        private String audio;
-        private int pause;
+        public final String audio;
+        public final int pause;
+
+        public SequenceItem(String audio, int pause) {
+            this.audio = audio;
+            this.pause = pause;
+        }
     }
 }

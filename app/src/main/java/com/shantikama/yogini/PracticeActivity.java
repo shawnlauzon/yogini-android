@@ -17,7 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.gson.Gson;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,7 +40,7 @@ public class PracticeActivity extends AppCompatActivity {
     private Asana mCurrentAsana;
     private int mCurrentAsanaPosition = -1;
 
-    private short mPracticeState = PRACTICE_STATE_IDLE;
+    private short mPracticeState = PRACTICE_STATE_PLAYING;
     private boolean mFinishedAsana = false;
     private MediaPlayer mAudioPlayer;
     private CountDownTimer mCountdownTimer;
@@ -56,9 +57,12 @@ public class PracticeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final Reader asanasJson = new InputStreamReader(getResources().openRawResource(R.raw.asanas));
-        mAsanas = new Gson().fromJson(asanasJson, Asanas.class);
+        mAsanas = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create().fromJson(asanasJson, Asanas.class);
 
         mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setImageResource(android.R.drawable.ic_media_pause);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,13 +176,13 @@ public class PracticeActivity extends AppCompatActivity {
     }
 
     private void playBeginAudio() throws IOException {
-        mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + mCurrentAsana.audio_begin));
+        mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + mCurrentAsana.audioBegin));
         playAudio();
     }
 
     private void playEndAudio() {
         try {
-            mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + mCurrentAsana.audio_end));
+            mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + mCurrentAsana.audioEnd));
             playAudio();
         } catch (IOException e) {
             // TODO handle

@@ -4,7 +4,7 @@
       "id": 2,
       "name": "Pādahastāsana",
       "order": 100,
-      "time": 5,
+      "time": 1,
       "audio_begin": "begin_2",
       "audio_end": "end"
     },
@@ -12,7 +12,7 @@
       "id": 3,
       "name": "Tadāsana",
       "order": 200,
-      "time": 7,
+      "time": 1,
       "audio_begin": "begin_3",
       "audio_end": "end"
     },
@@ -20,10 +20,11 @@
       "id": 100,
       "name": "Śavāsana",
       "order": 1000000000,
-      "sequence": [
+      "audio_begin": "begin_2_short",
+      "multi_part": [
         {
-          "audio": "shavasana_begin",
-          "pause": 10
+          "audio": "begin_2_short",
+          "pause": 5
         },
         {
           "audio": "shavasana_leftleg",
@@ -33,7 +34,8 @@
           "audio": "shavasana_rightleg",
           "pause": 20
         }
-      ]
+      ],
+      "audio_end": "end"
     }
   ]
 }
