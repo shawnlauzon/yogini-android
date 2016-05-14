@@ -133,8 +133,10 @@ public class PracticeActivity extends AppCompatActivity {
         mCurrentAsana = mAsanas.getByPosition(++mCurrentAsanaPosition);
         mFinishedAsana = false;
 
-        if (mCurrentAsana != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
+        if (mCurrentAsana == null) {
+            finish();
+        } else {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
             PracticeActivityFragment fragment = (PracticeActivityFragment) fragmentManager
                     .findFragmentById(R.id.fragment);
             fragment.updateAsana(mCurrentAsana);
