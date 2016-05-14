@@ -20,8 +20,20 @@
       "id": 100,
       "name": "Śavāsana",
       "order": 1000000000,
-      "audio_begin": "begin_2",
-      "audio_end": "end"
+      "sequence": [
+        {
+          "audio": "shavasana_begin",
+          "pause": 10
+        },
+        {
+          "audio": "shavasana_leftleg",
+          "pause": 20
+        },
+        {
+          "audio": "shavasana_rightleg",
+          "pause": 20
+        }
+      ]
     }
   ]
 }

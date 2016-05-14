@@ -10,7 +10,7 @@ public class Asanas {
 
     public Asana getById(int asanaId) {
         for (Asana a : asanas) {
-            if (asanaId == a.getId()) {
+            if (asanaId == a.id) {
                 return a;
             }
         }

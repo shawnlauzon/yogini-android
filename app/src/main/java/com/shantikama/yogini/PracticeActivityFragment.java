@@ -49,9 +49,9 @@ public class PracticeActivityFragment extends Fragment {
     }
 
     void updateAsana(Asana asana) {
-        mAsanaName.setText(asana.getName());
+        mAsanaName.setText(asana.name);
 
-        int numSecs = asana.getTime();
+        int numSecs = asana.time;
         setTimerText(numSecs * 1000);
 
         mProgress.setProgress(0);

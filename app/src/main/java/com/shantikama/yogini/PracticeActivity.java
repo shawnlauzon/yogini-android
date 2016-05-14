@@ -110,7 +110,7 @@ public class PracticeActivity extends AppCompatActivity {
                         }
                     }, 1000);
                 } else { // We just finished the begin audio
-                    startTimer(mCurrentAsana.getTime() * 1000);
+                    startTimer(mCurrentAsana.time * 1000);
                 }
             }
         });
@@ -172,13 +172,13 @@ public class PracticeActivity extends AppCompatActivity {
     }
 
     private void playBeginAudio() throws IOException {
-        mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + mCurrentAsana.getAudioBegin()));
+        mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + mCurrentAsana.audio_begin));
         playAudio();
     }
 
     private void playEndAudio() {
         try {
-            mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + mCurrentAsana.getAudioEnd()));
+            mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + mCurrentAsana.audio_end));
             playAudio();
         } catch (IOException e) {
             // TODO handle
