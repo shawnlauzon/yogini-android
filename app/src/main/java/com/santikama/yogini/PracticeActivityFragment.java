@@ -6,12 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.util.Locale;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -19,7 +17,25 @@ import java.io.Reader;
 public class PracticeActivityFragment extends Fragment {
     private static final String TAG = "PracticeActivityFragment";
 
-    private Asanas mAsanas;
+    private static final String ARG_ASANA_NAME = "asana_name";
+    private static final String ARG_ASANA_TIME = "asana_time";
+
+    private static final String TIMER_FORMAT = "%02d:%02d";
+
+    private TextView mAsanaName;
+    private TextView mTimer;
+    private ProgressBar mProgress;
+
+    static PracticeActivityFragment newInstance(Asana asana) {
+        PracticeActivityFragment f = new PracticeActivityFragment();
+        Bundle args = new Bundle();
+
+        args.putString(ARG_ASANA_NAME, asana.getName());
+        args.putInt(ARG_ASANA_TIME, asana.getTime());
+
+        f.setArguments(args);
+        return f;
+    }
 
     public PracticeActivityFragment() {
     }
@@ -27,35 +43,43 @@ public class PracticeActivityFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAsanas = loadJson();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_practice, container, false);
-        ((TextView) root.findViewById(R.id.text)).setText(mAsanas.toString());
+
+        mAsanaName = (TextView) root.findViewById(R.id.name);
+        mTimer = (TextView) root.findViewById(R.id.timer);
+        mProgress = (ProgressBar) root.findViewById(R.id.progress);
+
+        mAsanaName.setText(getArguments().getString(ARG_ASANA_NAME));
+
+        int numSecs = getArguments().getInt(ARG_ASANA_TIME);
+        setTimerText(numSecs * 1000);
+
+        mProgress.setMax(numSecs * 1000);
+
         return root;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        performAsanas();
+    private void setTimerText(long millisUntilFinished) {
+        mTimer.setText(String.format(Locale.getDefault(), TIMER_FORMAT,
+                millisUntilFinished / 60000, millisUntilFinished / 1000 % 60));
     }
 
-    private void performAsanas() {
-        for (Asana asana : mAsanas.getAsanas()) {
-            performAsana(asana);
-        }
+    void onPracticeStarted() {
     }
 
-    private void performAsana(Asana asana) {
-        ((TextView) getView().findViewById(R.id.text)).setText(asana.toString());
+    void onPracticeResumed() {
     }
 
-    private Asanas loadJson() {
-        final Reader asanasJson = new InputStreamReader(getResources().openRawResource(R.raw.asanas));
-        return new Gson().fromJson(asanasJson, Asanas.class);
+    void onPracticePaused() {
+    }
+
+    void onTick(long millisUntilFinished) {
+        setTimerText(millisUntilFinished);
+        mProgress.incrementProgressBy(100);
     }
 }

@@ -8,13 +8,17 @@ import java.util.List;
 public class Asanas {
     private List<Asana> asanas;
 
-    public Asana get(int asanaId) {
+    public Asana getById(int asanaId) {
         for (Asana a : asanas) {
             if (asanaId == a.getId()) {
                 return a;
             }
         }
         return null;
+    }
+
+    public Asana getByPosition(int position) {
+        return asanas.get(position);
     }
 
     public List<Asana> getAsanas() {

@@ -6,8 +6,11 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,7 +18,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -27,8 +34,12 @@ public class PracticeActivity extends AppCompatActivity {
     private static final short PRACTICE_STATE_PLAYING = 1;
     private static final short PRACTICE_STATE_PAUSED = 2;
 
+    private Asanas mAsanas;
+    private Asana mCurrentAsana;
+
     private short mPracticeState = PRACTICE_STATE_IDLE;
     private MediaPlayer mAudioPlayer;
+    private CountDownTimer mCountdownTimer;
 
     private FloatingActionButton mFab;
 
@@ -38,6 +49,9 @@ public class PracticeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_practice);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        final Reader asanasJson = new InputStreamReader(getResources().openRawResource(R.raw.asanas));
+        mAsanas = new Gson().fromJson(asanasJson, Asanas.class);
 
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +95,7 @@ public class PracticeActivity extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 Log.i(TAG, "Media complete");
-//                advanceToNextAsana();
+                startTimer();
             }
         });
     }
@@ -91,6 +105,18 @@ public class PracticeActivity extends AppCompatActivity {
         super.onDestroy();
         mAudioPlayer.reset();
         mAudioPlayer.release();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mCurrentAsana = mAsanas.getByPosition(0);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        PracticeActivityFragment fragment = PracticeActivityFragment.newInstance(mCurrentAsana);
+        fragmentTransaction.add(R.id.fragment, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -119,12 +145,18 @@ public class PracticeActivity extends AppCompatActivity {
         try {
             if (mPracticeState == PRACTICE_STATE_IDLE) {
                 startAudio();
+                ((PracticeActivityFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment)).onPracticeStarted();
                 mFab.setImageResource(android.R.drawable.ic_media_pause);
             } else if (mPracticeState == PRACTICE_STATE_PLAYING) {
                 pauseAudio();
+                ((PracticeActivityFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment)).onPracticePaused();
                 mFab.setImageResource(android.R.drawable.ic_media_play);
             } else if (mPracticeState == PRACTICE_STATE_PAUSED) {
                 resumeAudio();
+                ((PracticeActivityFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment)).onPracticeResumed();
                 mFab.setImageResource(android.R.drawable.ic_media_pause);
             }
         } catch (IOException e) {
@@ -134,7 +166,7 @@ public class PracticeActivity extends AppCompatActivity {
     }
 
     private void startAudio() throws IOException {
-        mAudioPlayer.setDataSource(this, Uri.parse("android.resource://com.santikama.yogini/raw/begin_2"));
+        mAudioPlayer.setDataSource(this, Uri.parse("android.resource://com.santikama.yogini/raw/begin_2_short"));
         mAudioPlayer.prepare();
         resumeAudio();
     }
@@ -147,6 +179,22 @@ public class PracticeActivity extends AppCompatActivity {
     private void pauseAudio() {
         mAudioPlayer.pause();
         mPracticeState = PRACTICE_STATE_PAUSED;
+        mCountdownTimer.cancel();
+    }
+
+    private void startTimer() {
+        mCountdownTimer = new CountDownTimer(mCurrentAsana.getTime() * 1000, 100) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                ((PracticeActivityFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment)).onTick(millisUntilFinished);
+            }
+
+            @Override
+            public void onFinish() {
+            }
+        }.start();
     }
 
     /**
@@ -154,7 +202,7 @@ public class PracticeActivity extends AppCompatActivity {
      * E/MediaPlayer: Should have subtitle controller already set
      *
      * @return a new MediaPlayer object
-     * @see http://stackoverflow.com/a/20149754/355039
+     * @link http://stackoverflow.com/a/20149754/355039
      */
     static MediaPlayer newMediaPlayer(Context context) {
 
