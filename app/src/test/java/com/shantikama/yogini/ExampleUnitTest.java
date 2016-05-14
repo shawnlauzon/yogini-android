@@ -1,4 +1,4 @@
-package com.santikama.yogini;
+package com.shantikama.yogini;
 
 import org.junit.Test;
 

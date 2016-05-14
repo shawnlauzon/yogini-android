@@ -1,4 +1,4 @@
-package com.santikama.yogini;
+package com.shantikama.yogini;
 
 import android.content.Context;
 import android.media.AudioAttributes;
@@ -33,7 +33,7 @@ public class PracticeActivity extends AppCompatActivity {
     private static final short PRACTICE_STATE_PLAYING = 1;
     private static final short PRACTICE_STATE_PAUSED = 2;
 
-    private static final String AUDIO_URL_START = "android.resource://com.santikama.yogini/raw/";
+    private static final String AUDIO_URL_START = "android.resource://com.shantikama.yogini/raw/";
 
     private Asanas mAsanas;
     private Asana mCurrentAsana;

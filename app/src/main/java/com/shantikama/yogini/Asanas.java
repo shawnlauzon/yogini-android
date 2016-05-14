@@ -1,4 +1,4 @@
-package com.santikama.yogini;
+package com.shantikama.yogini;
 
 import java.util.List;
 
@@ -18,6 +18,9 @@ public class Asanas {
     }
 
     public Asana getByPosition(int position) {
+        if (asanas.size() - 1 < position) {
+            return null;
+        }
         return asanas.get(position);
     }
 

@@ -1,4 +1,4 @@
-package com.santikama.yogini;
+package com.shantikama.yogini;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

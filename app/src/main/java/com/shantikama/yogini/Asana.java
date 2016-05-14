@@ -1,4 +1,4 @@
-package com.santikama.yogini;
+package com.shantikama.yogini;
 
 import android.os.Parcel;
 import android.os.Parcelable;
