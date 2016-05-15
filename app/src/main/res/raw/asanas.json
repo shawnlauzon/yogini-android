@@ -78,7 +78,7 @@
       "id": 5,
       "name": "Trikonāsana",
       "order": 300,
-      "time": 5,
+      "time": 150,
       "audio_begin": "trik_begin",
       "polar_asana": {
         "left_begin": "trik_left_begin",
@@ -146,30 +146,31 @@
       "name": "Śavāsana",
       "order": 1000000000,
       "audio_begin": "shavasana_begin",
+      "time": 5,
       "multi_part": [
         {
           "audio": "shavasana_leftleg",
-          "pause": 20
+          "pause": 30
         },
         {
           "audio": "shavasana_rightleg",
-          "pause": 20
+          "pause": 30
         },
         {
           "audio": "shavasana_leftarm",
-          "pause": 20
+          "pause": 30
         },
         {
           "audio": "shavasana_rightarm",
-          "pause": 20
+          "pause": 30
         },
         {
           "audio": "shavasana_thorax",
-          "pause": 40
+          "pause": 60
         },
         {
           "audio": "shavasana_harmony",
-          "pause": 20
+          "pause": 30
         }
       ],
       "audio_end": "shavasana_end"
