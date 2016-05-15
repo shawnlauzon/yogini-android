@@ -1,0 +1,147 @@
+{
+  "asanas": [
+    {
+      "id": 1,
+      "name": "Warming exercises",
+      "order": 1,
+      "time": 1,
+      "audio_begin": "warming_0",
+      "multi_part": [
+        {
+          "audio": "warming_1_begin",
+          "pause": 40
+        },
+        {
+          "audio": "warming_1_switch",
+          "pause": 40
+        },
+        {
+          "audio": "warming_1_end",
+          "pause": 1
+        },
+        {
+          "audio": "warming_2_begin",
+          "pause": 45
+        },
+        {
+          "audio": "warming_2_end",
+          "pause": 1
+        },
+        {
+          "audio": "warming_3_begin",
+          "pause": 30
+        },
+        {
+          "audio": "warming_3_end",
+          "pause": 1
+        },
+        {
+          "audio": "warming_4_begin",
+          "pause": 30
+        },
+        {
+          "audio": "warming_4_end",
+          "pause": 1
+        },
+        {
+          "audio": "warming_5_begin",
+          "pause": 60
+        },
+        {
+          "audio": "warming_5_end",
+          "pause": 1
+        },
+        {
+          "audio": "warming_6_begin",
+          "pause": 20
+        },
+        {
+          "audio": "warming_6_switch",
+          "pause": 20
+        },
+        {
+          "audio": "warming_6_end",
+          "pause": 0
+        }
+      ],
+      "audio_end": "warming_end"
+    },
+    {
+      "id": 2,
+      "name": "Pādahastāsana",
+      "order": 100,
+      "time": 1,
+      "audio_begin": "pad_begin",
+      "audio_end": "pad_end"
+    },
+    {
+      "id": 3,
+      "name": "Tadāsana",
+      "order": 200,
+      "time": 1,
+      "audio_begin": "tad_begin",
+      "audio_end": "tad_end"
+    },
+    {
+      "id": 5,
+      "name": "Trikonāsana",
+      "order": 300,
+      "time": 150,
+      "audio_begin": "trik_begin",
+      "polar_asana": [
+        {
+          "left_begin": "trik_left_begin",
+          "left_end": "trik_left_end",
+          "right_begin": "trik_right_begin",
+          "right_end": "trik_right_end"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Garudāsana",
+      "order": 500,
+      "time": 90,
+      "audio_begin": "garu_begin",
+      "polar_asana": {
+        "left_begin": "garu_left_begin",
+        "left_end": "garu_left_end",
+        "right_begin": "garu_right_begin",
+        "right_end": "garu_right_end"
+      }
+    },
+    {
+      "id": 100,
+      "name": "Śavāsana",
+      "order": 1000000000,
+      "audio_begin": "shavasana_begin",
+      "multi_part": [
+        {
+          "audio": "shavasana_leftleg",
+          "pause": 20
+        },
+        {
+          "audio": "shavasana_rightleg",
+          "pause": 20
+        },
+        {
+          "audio": "shavasana_leftarm",
+          "pause": 20
+        },
+        {
+          "audio": "shavasana_rightarm",
+          "pause": 20
+        },
+        {
+          "audio": "shavasana_thorax",
+          "pause": 40
+        },
+        {
+          "audio": "shavasana_harmony",
+          "pause": 20
+        }
+      ],
+      "audio_end": "shavasana_end"
+    }
+  ]
+}

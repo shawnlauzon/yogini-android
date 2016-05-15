@@ -29,7 +29,8 @@ public class PracticeActivity extends AppCompatActivity {
     private static final String TAG = "PracticeActivity";
 
     private static final String AUDIO_URL_START = "android.resource://com.shantikama.yogini/raw/";
-    public static final int MILLIS_BETWEEN_ASANAS = 1000;
+    public static final int MILLIS_BETWEEN_ASANAS = 3000;
+    public static final int MILLIS_BETWEEN_SIDES = 2000;
 
     private AsanaController mAsanaController;
 
@@ -217,10 +218,16 @@ public class PracticeActivity extends AppCompatActivity {
     private class AsanaController {
         private static final int STATE_NOT_YET_STARTED = 0;
         private static final int STATE_PLAYING_BEGIN_AUDIO = 1;
-        private static final int STATE_PERFORMING_ASANA = 2;
+        private static final int STATE_WAITING_ASANA = 2;
         private static final int STATE_PLAYING_MULTI_PART_AUDIO = 3;
         private static final int STATE_WAITING_MULTI_PART = 4;
         private static final int STATE_PLAYING_END_AUDIO = 5;
+        private static final int STATE_PLAYING_LEFT_BEGIN = 6;
+        private static final int STATE_WAITING_LEFT = 7;
+        private static final int STATE_PLAYING_LEFT_END = 8;
+        private static final int STATE_PLAYING_RIGHT_BEGIN = 9;
+        private static final int STATE_WAITING_RIGHT = 10;
+        private static final int STATE_PLAYING_RIGHT_END = 11;
 
         private Asanas mAsanas;
 
@@ -246,12 +253,17 @@ public class PracticeActivity extends AppCompatActivity {
                     startNextAsana();
                     break;
                 case STATE_PLAYING_BEGIN_AUDIO:
-                    mCurState = STATE_PERFORMING_ASANA;
-                    waitForAsana(mCurAsana.time);
+                    if (mCurAsana.polarAsana.isPresent()) {
+                        mCurState = STATE_PLAYING_LEFT_BEGIN;
+                        playAudio(mCurAsana.polarAsana.get().leftBegin);
+                    } else {
+                        mCurState = STATE_WAITING_ASANA;
+                        waitForAsana(mCurAsana.time);
+                    }
                     break;
-                case STATE_PERFORMING_ASANA:
+                case STATE_WAITING_ASANA:
                     if (mCurAsana.isMultiPart()) {
-                        mAsanaPartIterator = mCurAsana.multiPart.iterator();
+                        mAsanaPartIterator = mCurAsana.multiPart.get().iterator();
                         mCurAsanaPart = mAsanaPartIterator.next();
                         mCurState = STATE_PLAYING_MULTI_PART_AUDIO;
                         playAudio(mCurAsanaPart.audio);
@@ -273,24 +285,46 @@ public class PracticeActivity extends AppCompatActivity {
                     }
                     break;
                 case STATE_PLAYING_END_AUDIO:
-                    if (mAsanaIterator.hasNext()) {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                startNextAsana();
-                            }
-                        }, MILLIS_BETWEEN_ASANAS);
-                    } else {
-                        // finished
-                    }
+                    startNextAsana();
+                    break;
+                case STATE_PLAYING_LEFT_BEGIN:
+                    mCurState = STATE_WAITING_LEFT;
+                    waitForAsana(mCurAsana.time);
+                    break;
+                case STATE_WAITING_LEFT:
+                    mCurState = STATE_PLAYING_LEFT_END;
+                    playAudio(mCurAsana.polarAsana.get().leftEnd);
+                    break;
+                case STATE_PLAYING_LEFT_END:
+                    startOtherSide();
+                    break;
+                case STATE_PLAYING_RIGHT_BEGIN:
+                    mCurState = STATE_WAITING_RIGHT;
+                    waitForAsana(mCurAsana.time);
+                    break;
+                case STATE_WAITING_RIGHT:
+                    mCurState = STATE_PLAYING_RIGHT_END;
+                    playAudio(mCurAsana.polarAsana.get().rightEnd);
+                    break;
+                case STATE_PLAYING_RIGHT_END:
+                    startNextAsana();
                     break;
             }
         }
 
         private void startNextAsana() {
-            mCurAsana = mAsanaIterator.next();
-            show(mCurAsana);
-            playBeginAudio();
+            if (mAsanaIterator.hasNext()) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCurAsana = mAsanaIterator.next();
+                        show(mCurAsana);
+                        playBeginAudio();
+                    }
+                }, MILLIS_BETWEEN_ASANAS);
+            } else {
+                // finished
+            }
         }
 
         private void playBeginAudio() {
@@ -301,6 +335,17 @@ public class PracticeActivity extends AppCompatActivity {
         private void playEndAudio() {
             mCurState = STATE_PLAYING_END_AUDIO;
             playAudio(mCurAsana.audioEnd);
+        }
+
+        private void startOtherSide() {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    show(mCurAsana);
+                    mCurState = STATE_PLAYING_RIGHT_BEGIN;
+                    playAudio(mCurAsana.polarAsana.get().rightBegin);
+                }
+            }, MILLIS_BETWEEN_SIDES);
         }
     }
 
