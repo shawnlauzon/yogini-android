@@ -71,27 +71,23 @@
       "name": "Pādahastāsana",
       "order": 100,
       "time": 1,
-      "audio_begin": "begin_2",
-      "audio_end": "end"
+      "audio_begin": "pad_begin",
+      "audio_end": "pad_end"
     },
     {
       "id": 3,
       "name": "Tadāsana",
       "order": 200,
       "time": 1,
-      "audio_begin": "begin_3",
-      "audio_end": "end"
+      "audio_begin": "tad_begin",
+      "audio_end": "tad_end"
     },
     {
       "id": 100,
       "name": "Śavāsana",
       "order": 1000000000,
-      "audio_begin": "begin_2_short",
+      "audio_begin": "shavasana_begin",
       "multi_part": [
-        {
-          "audio": "begin_2_short",
-          "pause": 5
-        },
         {
           "audio": "shavasana_leftleg",
           "pause": 20
@@ -99,9 +95,25 @@
         {
           "audio": "shavasana_rightleg",
           "pause": 20
+        },
+        {
+          "audio": "shavasana_leftarm",
+          "pause": 20
+        },
+        {
+          "audio": "shavasana_rightarm",
+          "pause": 20
+        },
+        {
+          "audio": "shavasana_thorax",
+          "pause": 40
+        },
+        {
+          "audio": "shavasana_harmony",
+          "pause": 20
         }
       ],
-      "audio_end": "end"
+      "audio_end": "shavasana_end"
     }
   ]
 }
