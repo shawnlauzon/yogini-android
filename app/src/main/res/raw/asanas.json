@@ -1,6 +1,72 @@
 {
   "asanas": [
     {
+      "id": 1,
+      "name": "Warming exercises",
+      "order": 1,
+      "time": 1,
+      "audio_begin": "warming_0",
+      "multi_part": [
+        {
+          "audio": "warming_1_begin",
+          "pause": 40
+        },
+        {
+          "audio": "warming_1_switch",
+          "pause": 40
+        },
+        {
+          "audio": "warming_1_end",
+          "pause": 1
+        },
+        {
+          "audio": "warming_2_begin",
+          "pause": 45
+        },
+        {
+          "audio": "warming_2_end",
+          "pause": 1
+        },
+        {
+          "audio": "warming_3_begin",
+          "pause": 30
+        },
+        {
+          "audio": "warming_3_end",
+          "pause": 1
+        },
+        {
+          "audio": "warming_4_begin",
+          "pause": 30
+        },
+        {
+          "audio": "warming_4_end",
+          "pause": 1
+        },
+        {
+          "audio": "warming_5_begin",
+          "pause": 60
+        },
+        {
+          "audio": "warming_5_end",
+          "pause": 1
+        },
+        {
+          "audio": "warming_6_begin",
+          "pause": 20
+        },
+        {
+          "audio": "warming_6_switch",
+          "pause": 20
+        },
+        {
+          "audio": "warming_6_end",
+          "pause": 0
+        }
+      ],
+      "audio_end": "warming_end"
+    },
+    {
       "id": 2,
       "name": "Pādahastāsana",
       "order": 100,
