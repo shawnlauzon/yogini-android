@@ -29,8 +29,8 @@ public class PracticeActivity extends AppCompatActivity {
     private static final String TAG = "PracticeActivity";
 
     private static final String AUDIO_URL_START = "android.resource://com.shantikama.yogini/raw/";
-    public static final int MILLIS_BETWEEN_ASANAS = 3000;
-    public static final int MILLIS_BETWEEN_SIDES = 2000;
+    public static final int MILLIS_BETWEEN_ASANAS = 5000;
+    public static final int MILLIS_BETWEEN_SIDES = 3000;
 
     private AsanaController mAsanaController;
 
