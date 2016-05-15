@@ -1,34 +1,10 @@
 {
   "asanas": [
     {
-      "id": 5,
-      "name": "Trikonāsana",
-      "order": 300,
-      "time": 5,
-      "audio_begin": "trik_begin",
-      "polar_asana": [
-        {
-          "left_begin": "trik_left_begin",
-          "left_end": "trik_left_end",
-          "right_begin": "trik_right_begin",
-          "right_end": "trik_right_end"
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "name": "Garudāsana",
-      "order": 500,
-      "time": 5,
-      "audio_begin": "garu_begin",
-      "polar_asana": [
-        {
-          "left_begin": "garu_left_begin",
-          "left_end": "garu_left_end",
-          "right_begin": "garu_right_begin",
-          "right_end": "garu_right_end"
-        }
-      ]
+      "name": "Bhujangāsana",
+      "time": 240,
+      "audio_begin": "bhujan_begin",
+      "audio_end": "bhujan_end"
     }
-  ]
+    ]
 }

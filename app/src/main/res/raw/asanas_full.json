@@ -113,6 +113,18 @@
       ]
     },
     {
+      "name": "Bhujangāsana",
+      "time": 240,
+      "audio_begin": "bhujan_begin",
+      "audio_end": "bhujan_end"
+    },
+    {
+      "name": "Paścimottānāsana",
+      "time": 240,
+      "audio_begin": "paschi_begin",
+      "audio_end": "paschi_end"
+    },
+    {
       "id": 100,
       "name": "Śavāsana",
       "order": 1000000000,
