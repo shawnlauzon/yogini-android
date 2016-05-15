@@ -137,7 +137,7 @@
     },
     {
       "name": "Halāsana",
-      "time": 120,
+      "time": 180,
       "audio_begin": "hala_begin",
       "audio_end": "hala_end"
     },
@@ -170,7 +170,7 @@
         },
         {
           "audio": "shavasana_harmony",
-          "pause": 30
+          "pause": 15
         }
       ],
       "audio_end": "shavasana_end"
