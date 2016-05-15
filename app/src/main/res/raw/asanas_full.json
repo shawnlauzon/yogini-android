@@ -86,7 +86,7 @@
       "id": 5,
       "name": "Trikonāsana",
       "order": 300,
-      "time": 150,
+      "time": 5,
       "audio_begin": "trik_begin",
       "polar_asana": [
         {
@@ -101,14 +101,16 @@
       "id": 7,
       "name": "Garudāsana",
       "order": 500,
-      "time": 90,
+      "time": 5,
       "audio_begin": "garu_begin",
-      "polar_asana": {
-        "left_begin": "garu_left_begin",
-        "left_end": "garu_left_end",
-        "right_begin": "garu_right_begin",
-        "right_end": "garu_right_end"
-      }
+      "polar_asana": [
+        {
+          "left_begin": "garu_left_begin",
+          "left_end": "garu_left_end",
+          "right_begin": "garu_right_begin",
+          "right_end": "garu_right_end"
+        }
+      ]
     },
     {
       "id": 100,
