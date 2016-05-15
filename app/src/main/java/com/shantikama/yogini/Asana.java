@@ -25,11 +25,15 @@ public class Asana {
         this.multiPart = multiPart;
     }
 
+    public boolean isMultiPart() {
+        return multiPart != null;
+    }
+
    @Override
     public String toString() {
         return "Asana {" +
                 "id=" + id +
-                ", name='" +
+                ", name='" + name +
                 '}';
     }
 

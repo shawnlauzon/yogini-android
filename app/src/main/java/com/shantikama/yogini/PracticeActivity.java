@@ -17,33 +17,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.GsonBuilder;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 
 public class PracticeActivity extends AppCompatActivity {
     private static final String TAG = "PracticeActivity";
 
-    private static final short PRACTICE_STATE_IDLE = 0;
-    private static final short PRACTICE_STATE_PLAYING = 1;
-    private static final short PRACTICE_STATE_PAUSED = 2;
-
     private static final String AUDIO_URL_START = "android.resource://com.shantikama.yogini/raw/";
+    public static final int MILLIS_BETWEEN_ASANAS = 1000;
 
-    private Asanas mAsanas;
-    private Asana mCurrentAsana;
-    private int mCurrentAsanaPosition = -1;
+    private AsanaController mAsanaController;
 
-    private short mPracticeState = PRACTICE_STATE_PLAYING;
-    private boolean mFinishedAsana = false;
     private MediaPlayer mAudioPlayer;
     private CountDownTimer mCountdownTimer;
+    private boolean mIsWaitingForAsana;
 
     private FloatingActionButton mFab;
 
@@ -56,21 +48,19 @@ public class PracticeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final Reader asanasJson = new InputStreamReader(getResources().openRawResource(R.raw.asanas));
-        mAsanas = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create().fromJson(asanasJson, Asanas.class);
-
         mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setImageResource(android.R.drawable.ic_media_pause);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fabPressed();
             }
         });
+        showPauseButton();
 
         setupAudioPlayer();
+
+        final Reader asanasJson = new InputStreamReader(getResources().openRawResource(R.raw.asanas));
+        mAsanaController = new AsanaController(GsonUtils.newGson().fromJson(asanasJson, Asanas.class));
     }
 
     private void setupAudioPlayer() {
@@ -105,17 +95,7 @@ public class PracticeActivity extends AppCompatActivity {
             public void onCompletion(MediaPlayer mp) {
                 Log.i(TAG, "Media complete");
                 mAudioPlayer.reset();
-
-                if (mFinishedAsana) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            startNextAsana();
-                        }
-                    }, 1000);
-                } else { // We just finished the begin audio
-                    startTimer(mCurrentAsana.time * 1000);
-                }
+                mAsanaController.continuePractice();
             }
         });
     }
@@ -130,27 +110,7 @@ public class PracticeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        startNextAsana();
-    }
-
-    private void startNextAsana() {
-        mCurrentAsana = mAsanas.getByPosition(++mCurrentAsanaPosition);
-        mFinishedAsana = false;
-
-        if (mCurrentAsana == null) {
-//            finish();
-        } else {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-            PracticeActivityFragment fragment = (PracticeActivityFragment) fragmentManager
-                    .findFragmentById(R.id.fragment);
-            fragment.updateAsana(mCurrentAsana);
-
-            try {
-                playBeginAudio();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        mAsanaController.startPractice();
     }
 
     @Override
@@ -175,23 +135,16 @@ public class PracticeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void playBeginAudio() throws IOException {
-        mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + mCurrentAsana.audioBegin));
-        playAudio();
+    void show(Asana asana) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PracticeActivityFragment fragment = (PracticeActivityFragment) fragmentManager
+                .findFragmentById(R.id.fragment);
+        fragment.updateAsana(asana);
     }
 
-    private void playEndAudio() {
+    void playAudio(String audio) {
         try {
-            mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + mCurrentAsana.audioEnd));
-            playAudio();
-        } catch (IOException e) {
-            // TODO handle
-            e.printStackTrace();
-        }
-    }
-
-    private void playAudio() {
-        try {
+            mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + audio));
             mAudioPlayer.prepare();
             resumeAudio();
         } catch (IOException e) {
@@ -200,20 +153,17 @@ public class PracticeActivity extends AppCompatActivity {
         }
     }
 
-    private void pauseAudio() {
+    void pauseAudio() {
         mAudioPlayer.pause();
-        mPracticeState = PRACTICE_STATE_PAUSED;
-        mCountdownTimer.cancel();
     }
 
     private void resumeAudio() throws IOException {
         mAudioPlayer.start();
-        mPracticeState = PRACTICE_STATE_PLAYING;
     }
 
-    private void startTimer(long millisRemaining) {
+    void waitForAsana(int numSecs) {
         // Callback occurs 10 times per second
-        mCountdownTimer = new CountDownTimer(millisRemaining, 10) {
+        mCountdownTimer = new CountDownTimer(numSecs * 1000, 10) {
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -224,37 +174,133 @@ public class PracticeActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                mFinishedAsana = true;
-                playEndAudio();
+                mIsWaitingForAsana = false;
+                mCountdownTimer = null;
+                mAsanaController.continuePractice();
             }
         }.start();
+        mIsWaitingForAsana = true;
     }
 
     private void fabPressed() {
         try {
-            if (mPracticeState == PRACTICE_STATE_IDLE) {
-                playBeginAudio();
-                ((PracticeActivityFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment)).onPracticeStarted();
-                mFab.setImageResource(android.R.drawable.ic_media_pause);
-            } else if (mPracticeState == PRACTICE_STATE_PLAYING) {
+            if (mAudioPlayer.isPlaying()) {
                 pauseAudio();
-                ((PracticeActivityFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment)).onPracticePaused();
-                mFab.setImageResource(android.R.drawable.ic_media_play);
-            } else if (mPracticeState == PRACTICE_STATE_PAUSED) {
-                if (mAudioPlayer.isPlaying()) {
-                    resumeAudio();
+                showPlayButton();
+            } else if (mIsWaitingForAsana) {
+                if (mCountdownTimer == null) {
+                    waitForAsana((int) mCurrentMillisRemaining / 1000);
+                    showPauseButton();
                 } else {
-                    startTimer(mCurrentMillisRemaining);
+                    mCountdownTimer.cancel();
+                    mCountdownTimer = null;
+                    showPlayButton();
                 }
-                ((PracticeActivityFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment)).onPracticeResumed();
-                mFab.setImageResource(android.R.drawable.ic_media_pause);
+            } else {
+                resumeAudio();
+                showPauseButton();
             }
         } catch (IOException e) {
             // TODO Show problem to user
             e.printStackTrace();
+        }
+    }
+
+    private void showPauseButton() {
+        mFab.setImageResource(android.R.drawable.ic_media_pause);
+    }
+
+    private void showPlayButton() {
+        mFab.setImageResource(android.R.drawable.ic_media_play);
+    }
+
+    private class AsanaController {
+        private static final int STATE_NOT_YET_STARTED = 0;
+        private static final int STATE_PLAYING_BEGIN_AUDIO = 1;
+        private static final int STATE_PERFORMING_ASANA = 2;
+        private static final int STATE_PLAYING_MULTI_PART_AUDIO = 3;
+        private static final int STATE_WAITING_MULTI_PART = 4;
+        private static final int STATE_PLAYING_END_AUDIO = 5;
+
+        private Asanas mAsanas;
+
+        private Iterator<Asana> mAsanaIterator;
+        private Iterator<Asana.SequenceItem> mAsanaPartIterator;
+        private Asana mCurAsana;
+        private Asana.SequenceItem mCurAsanaPart;
+
+        private int mCurState = STATE_NOT_YET_STARTED;
+
+        public AsanaController(Asanas asanas) {
+            mAsanas = asanas;
+        }
+
+        public void startPractice() {
+            continuePractice();
+        }
+
+        public void continuePractice() {
+            switch (mCurState) {
+                case STATE_NOT_YET_STARTED:
+                    mAsanaIterator = mAsanas.getAsanas().iterator();
+                    startNextAsana();
+                    break;
+                case STATE_PLAYING_BEGIN_AUDIO:
+                    mCurState = STATE_PERFORMING_ASANA;
+                    waitForAsana(mCurAsana.time);
+                    break;
+                case STATE_PERFORMING_ASANA:
+                    if (mCurAsana.isMultiPart()) {
+                        mAsanaPartIterator = mCurAsana.multiPart.iterator();
+                        mCurAsanaPart = mAsanaPartIterator.next();
+                        mCurState = STATE_PLAYING_MULTI_PART_AUDIO;
+                        playAudio(mCurAsanaPart.audio);
+                    } else {
+                        playEndAudio();
+                    }
+                    break;
+                case STATE_PLAYING_MULTI_PART_AUDIO:
+                    mCurState = STATE_WAITING_MULTI_PART;
+                    waitForAsana(mCurAsanaPart.pause);
+                    break;
+                case STATE_WAITING_MULTI_PART:
+                    if (mAsanaPartIterator.hasNext()) {
+                        mCurAsanaPart = mAsanaPartIterator.next();
+                        mCurState = STATE_PLAYING_MULTI_PART_AUDIO;
+                        playAudio(mCurAsanaPart.audio);
+                    } else {
+                        playEndAudio();
+                    }
+                    break;
+                case STATE_PLAYING_END_AUDIO:
+                    if (mAsanaIterator.hasNext()) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startNextAsana();
+                            }
+                        }, MILLIS_BETWEEN_ASANAS);
+                    } else {
+                        // finished
+                    }
+                    break;
+            }
+        }
+
+        private void startNextAsana() {
+            mCurAsana = mAsanaIterator.next();
+            show(mCurAsana);
+            playBeginAudio();
+        }
+
+        private void playBeginAudio() {
+            mCurState = STATE_PLAYING_BEGIN_AUDIO;
+            playAudio(mCurAsana.audioBegin);
+        }
+
+        private void playEndAudio() {
+            mCurState = STATE_PLAYING_END_AUDIO;
+            playAudio(mCurAsana.audioEnd);
         }
     }
 

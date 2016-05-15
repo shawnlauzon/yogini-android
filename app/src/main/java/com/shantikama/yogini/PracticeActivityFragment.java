@@ -58,15 +58,6 @@ public class PracticeActivityFragment extends Fragment {
         mProgress.setMax(numSecs * 1000);
     }
 
-    void onPracticeStarted() {
-    }
-
-    void onPracticeResumed() {
-    }
-
-    void onPracticePaused() {
-    }
-
     void onTick10TimesPerSecond(long millisUntilFinished) {
         setTimerText(millisUntilFinished);
 
