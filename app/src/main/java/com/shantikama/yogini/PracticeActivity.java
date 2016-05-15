@@ -136,11 +136,11 @@ public class PracticeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void show(Asana asana) {
+    void show(Asana asana, int time) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PracticeActivityFragment fragment = (PracticeActivityFragment) fragmentManager
                 .findFragmentById(R.id.fragment);
-        fragment.updateAsana(asana);
+        fragment.updateAsana(asana, time);
     }
 
     void playAudio(String audio) {
@@ -236,9 +236,9 @@ public class PracticeActivity extends AppCompatActivity {
         private Asanas mAsanas;
 
         private Iterator<Asana> mAsanaIterator;
-        private Iterator<Asana.SequenceItem> mAsanaPartIterator;
+        private Iterator<Asana.AsanaPart> mAsanaPartIterator;
         private Asana mCurAsana;
-        private Asana.SequenceItem mCurAsanaPart;
+        private Asana.AsanaPart mCurAsanaPart;
 
         private int mCurState = STATE_NOT_YET_STARTED;
 
@@ -268,9 +268,7 @@ public class PracticeActivity extends AppCompatActivity {
                 case STATE_WAITING_ASANA:
                     if (mCurAsana.isMultiPart()) {
                         mAsanaPartIterator = mCurAsana.multiPart.iterator();
-                        mCurAsanaPart = mAsanaPartIterator.next();
-                        mCurState = STATE_PLAYING_MULTI_PART_AUDIO;
-                        playAudio(mCurAsanaPart.audio);
+                        startNextPart();
                     } else {
                         playEndAudio();
                     }
@@ -320,8 +318,9 @@ public class PracticeActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         mCurAsana = mAsanaIterator.next();
-                        show(mCurAsana);
-                        playBeginAudio();
+                        show(mCurAsana, mCurAsana.time);
+                        mCurState = STATE_PLAYING_BEGIN_AUDIO;
+                        playAudio(mCurAsana.audioBegin);
                     }
                 };
                 if (mCurState == STATE_NOT_YET_STARTED) {
@@ -335,19 +334,14 @@ public class PracticeActivity extends AppCompatActivity {
             }
         }
 
-        private void playBeginAudio() {
-            mCurState = STATE_PLAYING_BEGIN_AUDIO;
-            playAudio(mCurAsana.audioBegin);
-        }
-
         private void playEndAudio() {
             mCurState = STATE_PLAYING_END_AUDIO;
             playAudio(mCurAsana.audioEnd);
         }
 
         private void startNextPart() {
-            show(mCurAsana);
             mCurAsanaPart = mAsanaPartIterator.next();
+            show(mCurAsana, mCurAsanaPart.pause);
             mCurState = STATE_PLAYING_MULTI_PART_AUDIO;
             playAudio(mCurAsanaPart.audio);
         }
@@ -356,7 +350,7 @@ public class PracticeActivity extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    show(mCurAsana);
+                    show(mCurAsana, mCurAsana.time);
                     mCurState = STATE_PLAYING_RIGHT_BEGIN;
                     playAudio(mCurAsana.polarAsana.rightBegin);
                 }

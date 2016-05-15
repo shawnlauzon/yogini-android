@@ -48,14 +48,13 @@ public class PracticeActivityFragment extends Fragment {
                 millisUntilFinished / 60000, millisUntilFinished / 1000 % 60));
     }
 
-    void updateAsana(Asana asana) {
+    void updateAsana(Asana asana, int time) {
         mAsanaName.setText(asana.name);
 
-        int numSecs = asana.time;
-        setTimerText(numSecs * 1000);
+        setTimerText(time * 1000);
 
         mProgress.setProgress(0);
-        mProgress.setMax(numSecs * 1000);
+        mProgress.setMax(time * 1000);
     }
 
     void onTick10TimesPerSecond(long millisUntilFinished) {
