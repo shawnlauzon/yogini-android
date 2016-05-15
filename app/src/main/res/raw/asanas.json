@@ -83,6 +83,24 @@
       "audio_end": "tad_end"
     },
     {
+      "id": 5,
+      "name": "Trikonāsana",
+      "order": 300,
+      "time": 150,
+      "audio_begin": "trik_begin",
+      "multi_part": [
+        {
+          "audio": "trik_left_end",
+          "pause": 5
+        },
+        {
+          "audio": "trik_right_begin",
+          "pause": 150
+        }
+      ],
+      "audio_end": "trik_end"
+    },
+    {
       "id": 100,
       "name": "Śavāsana",
       "order": 1000000000,
