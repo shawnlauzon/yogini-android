@@ -14,8 +14,7 @@
         style="@style/TextAppearance.AppCompat.Display1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="Pādahastāsana" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/timer"
@@ -23,8 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:text="07:00" />
+        android:layout_centerVertical="true" />
 
     <ProgressBar
         android:id="@+id/progress"
@@ -33,7 +31,6 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/timer"
-        android:paddingRight="12dp"
-        android:progress="70" />
+        android:paddingRight="12dp" />
 
 </RelativeLayout>

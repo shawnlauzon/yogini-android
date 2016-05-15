@@ -1,0 +1,10 @@
+{
+  "asanas": [
+    {
+      "name": "Bhujangāsana",
+      "time": 240,
+      "audio_begin": "bhujan_begin",
+      "audio_end": "bhujan_end"
+    }
+    ]
+}

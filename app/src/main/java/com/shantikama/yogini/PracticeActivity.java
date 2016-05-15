@@ -33,14 +33,15 @@ public class PracticeActivity extends AppCompatActivity {
     public static final int MILLIS_BETWEEN_SIDES = 3000;
 
     private AsanaController mAsanaController;
+    private boolean mIsStarted = false;
 
     private MediaPlayer mAudioPlayer;
-    private CountDownTimer mCountdownTimer;
-    private boolean mIsWaitingForAsana;
+
+    private CountDownTimer mPerformanceTimer;
+    private boolean mIsWaitingForPerformance;
+    private long mPerformanceMillisRemaining;
 
     private FloatingActionButton mFab;
-
-    private long mCurrentMillisRemaining;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class PracticeActivity extends AppCompatActivity {
                 fabPressed();
             }
         });
-        showPauseButton();
+        showPlayButton();
 
         setupAudioPlayer();
 
@@ -111,7 +112,6 @@ public class PracticeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mAsanaController.startPractice();
     }
 
     @Override
@@ -164,37 +164,41 @@ public class PracticeActivity extends AppCompatActivity {
 
     void waitForAsana(int numSecs) {
         // Callback occurs 10 times per second
-        mCountdownTimer = new CountDownTimer(numSecs * 1000, 10) {
+        mPerformanceTimer = new CountDownTimer(numSecs * 1000, 10) {
 
             @Override
             public void onTick(long millisUntilFinished) {
-                mCurrentMillisRemaining = millisUntilFinished;
+                mPerformanceMillisRemaining = millisUntilFinished;
                 ((PracticeActivityFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment)).onTick10TimesPerSecond(mCurrentMillisRemaining);
+                        .findFragmentById(R.id.fragment)).onTick10TimesPerSecond(mPerformanceMillisRemaining);
             }
 
             @Override
             public void onFinish() {
-                mIsWaitingForAsana = false;
-                mCountdownTimer = null;
+                mIsWaitingForPerformance = false;
+                mPerformanceTimer = null;
                 mAsanaController.continuePractice();
             }
         }.start();
-        mIsWaitingForAsana = true;
+        mIsWaitingForPerformance = true;
     }
 
     private void fabPressed() {
         try {
-            if (mAudioPlayer.isPlaying()) {
+            if (!mIsStarted) {
+                showPauseButton();
+                mAsanaController.startPractice();
+                mIsStarted = true;
+            } else if (mAudioPlayer.isPlaying()) {
                 pauseAudio();
                 showPlayButton();
-            } else if (mIsWaitingForAsana) {
-                if (mCountdownTimer == null) {
-                    waitForAsana((int) mCurrentMillisRemaining / 1000);
+            } else if (mIsWaitingForPerformance) {
+                if (mPerformanceTimer == null) {
+                    waitForAsana((int) mPerformanceMillisRemaining / 1000);
                     showPauseButton();
                 } else {
-                    mCountdownTimer.cancel();
-                    mCountdownTimer = null;
+                    mPerformanceTimer.cancel();
+                    mPerformanceTimer = null;
                     showPlayButton();
                 }
             } else {
@@ -253,9 +257,9 @@ public class PracticeActivity extends AppCompatActivity {
                     startNextAsana();
                     break;
                 case STATE_PLAYING_BEGIN_AUDIO:
-                    if (mCurAsana.polarAsana.isPresent()) {
+                    if (mCurAsana.isPolarAsana()) {
                         mCurState = STATE_PLAYING_LEFT_BEGIN;
-                        playAudio(mCurAsana.polarAsana.get().leftBegin);
+                        playAudio(mCurAsana.polarAsana.leftBegin);
                     } else {
                         mCurState = STATE_WAITING_ASANA;
                         waitForAsana(mCurAsana.time);
@@ -263,7 +267,7 @@ public class PracticeActivity extends AppCompatActivity {
                     break;
                 case STATE_WAITING_ASANA:
                     if (mCurAsana.isMultiPart()) {
-                        mAsanaPartIterator = mCurAsana.multiPart.get().iterator();
+                        mAsanaPartIterator = mCurAsana.multiPart.iterator();
                         mCurAsanaPart = mAsanaPartIterator.next();
                         mCurState = STATE_PLAYING_MULTI_PART_AUDIO;
                         playAudio(mCurAsanaPart.audio);
@@ -277,9 +281,7 @@ public class PracticeActivity extends AppCompatActivity {
                     break;
                 case STATE_WAITING_MULTI_PART:
                     if (mAsanaPartIterator.hasNext()) {
-                        mCurAsanaPart = mAsanaPartIterator.next();
-                        mCurState = STATE_PLAYING_MULTI_PART_AUDIO;
-                        playAudio(mCurAsanaPart.audio);
+                        startNextPart();
                     } else {
                         playEndAudio();
                     }
@@ -293,7 +295,7 @@ public class PracticeActivity extends AppCompatActivity {
                     break;
                 case STATE_WAITING_LEFT:
                     mCurState = STATE_PLAYING_LEFT_END;
-                    playAudio(mCurAsana.polarAsana.get().leftEnd);
+                    playAudio(mCurAsana.polarAsana.leftEnd);
                     break;
                 case STATE_PLAYING_LEFT_END:
                     startOtherSide();
@@ -304,7 +306,7 @@ public class PracticeActivity extends AppCompatActivity {
                     break;
                 case STATE_WAITING_RIGHT:
                     mCurState = STATE_PLAYING_RIGHT_END;
-                    playAudio(mCurAsana.polarAsana.get().rightEnd);
+                    playAudio(mCurAsana.polarAsana.rightEnd);
                     break;
                 case STATE_PLAYING_RIGHT_END:
                     startNextAsana();
@@ -314,14 +316,20 @@ public class PracticeActivity extends AppCompatActivity {
 
         private void startNextAsana() {
             if (mAsanaIterator.hasNext()) {
-                new Handler().postDelayed(new Runnable() {
+                Runnable startNextAsanaRunnable = new Runnable() {
                     @Override
                     public void run() {
                         mCurAsana = mAsanaIterator.next();
                         show(mCurAsana);
                         playBeginAudio();
                     }
-                }, MILLIS_BETWEEN_ASANAS);
+                };
+                if (mCurState == STATE_NOT_YET_STARTED) {
+                    // Start it immediately
+                    startNextAsanaRunnable.run();
+                } else {
+                    new Handler().postDelayed(startNextAsanaRunnable, MILLIS_BETWEEN_ASANAS);
+                }
             } else {
                 // finished
             }
@@ -337,13 +345,20 @@ public class PracticeActivity extends AppCompatActivity {
             playAudio(mCurAsana.audioEnd);
         }
 
+        private void startNextPart() {
+            show(mCurAsana);
+            mCurAsanaPart = mAsanaPartIterator.next();
+            mCurState = STATE_PLAYING_MULTI_PART_AUDIO;
+            playAudio(mCurAsanaPart.audio);
+        }
+
         private void startOtherSide() {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     show(mCurAsana);
                     mCurState = STATE_PLAYING_RIGHT_BEGIN;
-                    playAudio(mCurAsana.polarAsana.get().rightBegin);
+                    playAudio(mCurAsana.polarAsana.rightBegin);
                 }
             }, MILLIS_BETWEEN_SIDES);
         }

@@ -1,6 +1,5 @@
 package com.shantikama.yogini;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -13,11 +12,11 @@ public class Asana {
     public final int time;
     public final String audioBegin;
     public final String audioEnd;
-    public final Optional<ImmutableList<SequenceItem>> multiPart;
-    public final Optional<PolarAsana> polarAsana;
+    public final ImmutableList<SequenceItem> multiPart;
+    public final PolarAsana polarAsana;
 
     public Asana(int id, String name, int order, int time, String audioBegin, String audioEnd,
-                 Optional<ImmutableList<SequenceItem>> multiPart, Optional<PolarAsana> polarAsana) {
+                 ImmutableList<SequenceItem> multiPart, PolarAsana polarAsana) {
         this.id = id;
         this.name = name;
         this.order = order;
@@ -30,6 +29,10 @@ public class Asana {
 
     public boolean isMultiPart() {
         return multiPart != null;
+    }
+
+    public boolean isPolarAsana() {
+        return polarAsana != null;
     }
 
     @Override
