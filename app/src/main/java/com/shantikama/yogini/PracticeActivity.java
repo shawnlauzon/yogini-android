@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.common.collect.ImmutableList;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -169,8 +171,27 @@ public class PracticeActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 mPerformanceMillisRemaining = millisUntilFinished;
-                ((PracticeActivityFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment)).onTick10TimesPerSecond(mPerformanceMillisRemaining);
+            }
+
+            @Override
+            public void onFinish() {
+                mIsWaitingForPerformance = false;
+                mPerformanceTimer = null;
+                mAsanaController.continuePractice();
+            }
+        }.start();
+        mIsWaitingForPerformance = true;
+    }
+
+    void waitFor(final int numSecs, final boolean showTimer) {
+        mPerformanceTimer = new CountDownTimer(numSecs * 1000, 10) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if (showTimer) {
+                    ((PracticeActivityFragment) getSupportFragmentManager()
+                            .findFragmentById(R.id.fragment)).onTick10TimesPerSecond(mPerformanceMillisRemaining);
+                }
+                mPerformanceMillisRemaining = millisUntilFinished;
             }
 
             @Override
@@ -223,6 +244,25 @@ public class PracticeActivity extends AppCompatActivity {
         private static final int STATE_NOT_YET_STARTED = 0;
         private static final int STATE_PLAYING_BEGIN_AUDIO = 1;
         private static final int STATE_WAITING_ASANA = 2;
+
+        // Phase numbers must be in ascending order with no gaps
+        private static final int PHASE_IDLE = 0;
+        private static final int PHASE_TECHNIQUE = 1;
+        private static final int PHASE_CONCENTRATION = 2;
+        private static final int PHASE_BEGIN = 3;
+        private static final int PHASE_END = 4;
+        private static final int PHASE_AWARENESS = 5;
+        private static final int PHASE_FIRST = PHASE_TECHNIQUE;
+        private static final int PHASE_LAST = PHASE_AWARENESS;
+        private final ImmutableList<String> PHASE_STRS = ImmutableList.of("idle", "technique",
+                "concentration", "begin", "end", "awareness");
+
+        private static final int STATE_IDLE = 0;
+        private static final int STATE_PLAYING = 1;
+        private static final int STATE_WAITING = 2;
+        private final ImmutableList<String> STATE_STRS = ImmutableList.of("idle", "playing",
+                "waiting");
+
         private static final int STATE_PLAYING_MULTI_PART_AUDIO = 3;
         private static final int STATE_WAITING_MULTI_PART = 4;
         private static final int STATE_PLAYING_END_AUDIO = 5;
@@ -240,28 +280,34 @@ public class PracticeActivity extends AppCompatActivity {
         private Asana mCurAsana;
         private Asana.AsanaPart mCurAsanaPart;
 
-        private int mCurState = STATE_NOT_YET_STARTED;
+        private int mCurPhase = PHASE_IDLE;
+        private int mCurState = STATE_IDLE;
 
         public AsanaController(Asanas asanas) {
             mAsanas = asanas;
         }
 
         public void startPractice() {
+            mAsanaIterator = mAsanas.asanas.iterator();
             continuePractice();
         }
 
         public void continuePractice() {
-            switch (mCurState) {
-                case STATE_NOT_YET_STARTED:
-                    mAsanaIterator = mAsanas.getAsanas().iterator();
-                    startNextAsana();
+            advanceState();
+            handleState();
+        }
+
+        public void continuePracticeOld() {
+            switch (mCurPhase) {
+                case PHASE_IDLE:
+                    handleState();
                     break;
-                case STATE_PLAYING_BEGIN_AUDIO:
+                case PHASE_TECHNIQUE:
                     if (mCurAsana.isPolarAsana()) {
-                        mCurState = STATE_PLAYING_LEFT_BEGIN;
+                        mCurPhase = STATE_PLAYING_LEFT_BEGIN;
                         playAudio(mCurAsana.polarAsana.leftBegin);
                     } else {
-                        mCurState = STATE_WAITING_ASANA;
+                        mCurPhase = STATE_WAITING_ASANA;
                         waitForAsana(mCurAsana.time);
                     }
                     break;
@@ -274,7 +320,7 @@ public class PracticeActivity extends AppCompatActivity {
                     }
                     break;
                 case STATE_PLAYING_MULTI_PART_AUDIO:
-                    mCurState = STATE_WAITING_MULTI_PART;
+                    mCurPhase = STATE_WAITING_MULTI_PART;
                     waitForAsana(mCurAsanaPart.pause);
                     break;
                 case STATE_WAITING_MULTI_PART:
@@ -288,27 +334,59 @@ public class PracticeActivity extends AppCompatActivity {
                     startNextAsana();
                     break;
                 case STATE_PLAYING_LEFT_BEGIN:
-                    mCurState = STATE_WAITING_LEFT;
+                    mCurPhase = STATE_WAITING_LEFT;
                     waitForAsana(mCurAsana.time);
                     break;
                 case STATE_WAITING_LEFT:
-                    mCurState = STATE_PLAYING_LEFT_END;
+                    mCurPhase = STATE_PLAYING_LEFT_END;
                     playAudio(mCurAsana.polarAsana.leftEnd);
                     break;
                 case STATE_PLAYING_LEFT_END:
                     startOtherSide();
                     break;
                 case STATE_PLAYING_RIGHT_BEGIN:
-                    mCurState = STATE_WAITING_RIGHT;
+                    mCurPhase = STATE_WAITING_RIGHT;
                     waitForAsana(mCurAsana.time);
                     break;
                 case STATE_WAITING_RIGHT:
-                    mCurState = STATE_PLAYING_RIGHT_END;
+                    mCurPhase = STATE_PLAYING_RIGHT_END;
                     playAudio(mCurAsana.polarAsana.rightEnd);
                     break;
                 case STATE_PLAYING_RIGHT_END:
                     startNextAsana();
                     break;
+            }
+        }
+
+        private void advanceState() {
+            if (mCurState == STATE_PLAYING) {
+                mCurState = STATE_WAITING;
+            } else {
+                mCurState = STATE_PLAYING;
+                if (mCurPhase == PHASE_LAST) {
+                    mCurPhase = PHASE_FIRST;
+                } else {
+                    ++mCurPhase;
+                }
+            }
+        }
+
+        private void handleState() {
+            Log.d(TAG, String.format("handleState(%s, %s)", PHASE_STRS.get(mCurPhase),
+                    STATE_STRS.get(mCurState)));
+
+            if (mCurState == STATE_WAITING) {
+                waitFor(getPhasePause(), mCurPhase == PHASE_BEGIN);
+            } else if (mCurState == STATE_PLAYING) {
+                if (mCurPhase == PHASE_FIRST) {
+                    if (!mAsanaIterator.hasNext()) {
+                        return;
+                    }
+                    mCurAsana = mAsanaIterator.next();
+                    show(mCurAsana, mCurAsana.time);
+                }
+
+                playAudio(getPhaseAudio());
             }
         }
 
@@ -319,11 +397,11 @@ public class PracticeActivity extends AppCompatActivity {
                     public void run() {
                         mCurAsana = mAsanaIterator.next();
                         show(mCurAsana, mCurAsana.time);
-                        mCurState = STATE_PLAYING_BEGIN_AUDIO;
-                        playAudio(mCurAsana.audioBegin);
+                        mCurPhase = PHASE_TECHNIQUE;
+                        playAudio(mCurAsana.techniqueAudio);
                     }
                 };
-                if (mCurState == STATE_NOT_YET_STARTED) {
+                if (mCurPhase == PHASE_IDLE) {
                     // Start it immediately
                     startNextAsanaRunnable.run();
                 } else {
@@ -334,15 +412,64 @@ public class PracticeActivity extends AppCompatActivity {
             }
         }
 
+        private String getPhaseAudio() {
+            final String phaseAudio;
+            switch (mCurPhase) {
+                case PHASE_TECHNIQUE:
+                    phaseAudio = mCurAsana.techniqueAudio;
+                    break;
+                case PHASE_CONCENTRATION:
+                    phaseAudio = mCurAsana.concentrationAudio;
+                    break;
+                case PHASE_BEGIN:
+                    phaseAudio = mAsanas.beginAudio;
+                    break;
+                case PHASE_END:
+                    phaseAudio = mAsanas.endAudio;
+                    break;
+                case PHASE_AWARENESS:
+                    phaseAudio = mCurAsana.awarenessAudio;
+                    break;
+                default:
+                    phaseAudio = "point1sec";
+            }
+            return phaseAudio;
+        }
+
+        private int getPhasePause() {
+            final int phasePause;
+            switch (mCurPhase) {
+                case PHASE_TECHNIQUE:
+                    phasePause = mCurAsana.techniquePause;
+                    break;
+                case PHASE_CONCENTRATION:
+                    phasePause = mCurAsana.concentrationPause;
+                    break;
+                case PHASE_BEGIN:
+                    phasePause = mCurAsana.time;
+                    break;
+                case PHASE_END:
+                    phasePause = mCurAsana.endPause;
+                    break;
+                case PHASE_AWARENESS:
+                    phasePause = mCurAsana.awarenessPause;
+                    break;
+                default:
+                    phasePause = 0;
+            }
+            return phasePause;
+
+        }
+
         private void playEndAudio() {
-            mCurState = STATE_PLAYING_END_AUDIO;
+            mCurPhase = STATE_PLAYING_END_AUDIO;
             playAudio(mCurAsana.audioEnd);
         }
 
         private void startNextPart() {
             mCurAsanaPart = mAsanaPartIterator.next();
             show(mCurAsana, mCurAsanaPart.pause);
-            mCurState = STATE_PLAYING_MULTI_PART_AUDIO;
+            mCurPhase = STATE_PLAYING_MULTI_PART_AUDIO;
             playAudio(mCurAsanaPart.audio);
         }
 
@@ -351,7 +478,7 @@ public class PracticeActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     show(mCurAsana, mCurAsana.time);
-                    mCurState = STATE_PLAYING_RIGHT_BEGIN;
+                    mCurPhase = STATE_PLAYING_RIGHT_BEGIN;
                     playAudio(mCurAsana.polarAsana.rightBegin);
                 }
             }, MILLIS_BETWEEN_SIDES);

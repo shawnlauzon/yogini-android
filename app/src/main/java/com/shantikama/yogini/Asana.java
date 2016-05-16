@@ -15,8 +15,16 @@ public class Asana {
     public final ImmutableList<AsanaPart> multiPart;
     public final PolarAsana polarAsana;
 
-    public Asana(int id, String name, int order, int time, String audioBegin, String audioEnd,
-                 ImmutableList<AsanaPart> multiPart, PolarAsana polarAsana) {
+    public final String techniqueAudio;
+    public final String concentrationAudio;
+    public final String awarenessAudio;
+
+    public final int techniquePause;
+    public final int concentrationPause;
+    public final int endPause;
+    public final int awarenessPause;
+
+    public Asana(int id, String name, int order, int time, String audioBegin, String audioEnd, ImmutableList<AsanaPart> multiPart, PolarAsana polarAsana, String techniqueAudio, String concentrationAudio, String awarenessAudio, int techniquePause, int concentrationPause, int endPause, int awarenessPause) {
         this.id = id;
         this.name = name;
         this.order = order;
@@ -25,6 +33,13 @@ public class Asana {
         this.audioEnd = audioEnd;
         this.multiPart = multiPart;
         this.polarAsana = polarAsana;
+        this.techniqueAudio = techniqueAudio;
+        this.concentrationAudio = concentrationAudio;
+        this.awarenessAudio = awarenessAudio;
+        this.techniquePause = techniquePause;
+        this.concentrationPause = concentrationPause;
+        this.endPause = endPause;
+        this.awarenessPause = awarenessPause;
     }
 
     public boolean isMultiPart() {

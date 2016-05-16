@@ -1,169 +1,21 @@
 {
+  "remaining_30sec": "remaining_30sec",
+  "remaining_1min": "remaining_1min",
+  "begin_audio": "begin",
+  "end_audio": "end",
+  "chakras": [
+    "anahata"
+  ],
   "asanas": [
     {
-      "name": "Warming exercises",
-      "time": 5,
-      "audio_begin": "warming_0",
-      "multi_part": [
-        {
-          "audio": "warming_1_begin",
-          "pause": 40
-        },
-        {
-          "audio": "warming_1_switch",
-          "pause": 40
-        },
-        {
-          "audio": "warming_1_end",
-          "pause": 1
-        },
-        {
-          "audio": "warming_2_begin",
-          "pause": 45
-        },
-        {
-          "audio": "warming_2_end",
-          "pause": 1
-        },
-        {
-          "audio": "warming_3_begin",
-          "pause": 30
-        },
-        {
-          "audio": "warming_3_end",
-          "pause": 1
-        },
-        {
-          "audio": "warming_4_begin",
-          "pause": 30
-        },
-        {
-          "audio": "warming_4_end",
-          "pause": 1
-        },
-        {
-          "audio": "warming_5_begin",
-          "pause": 60
-        },
-        {
-          "audio": "warming_5_end",
-          "pause": 1
-        },
-        {
-          "audio": "warming_6_begin",
-          "pause": 20
-        },
-        {
-          "audio": "warming_6_switch",
-          "pause": 20
-        },
-        {
-          "audio": "warming_6_end",
-          "pause": 0
-        }
-      ],
-      "audio_end": "warming_end"
-    },
-    {
-      "name": "Pādahastāsana",
-      "time": 420,
-      "audio_begin": "pad_begin",
-      "audio_end": "pad_end"
-    },
-    {
-      "name": "Trikonāsana",
-      "time": 150,
-      "audio_begin": "trik_begin",
-      "polar_asana": {
-        "left_begin": "trik_left_begin",
-        "left_end": "trik_left_end",
-        "right_begin": "trik_right_begin",
-        "right_end": "trik_right_end"
-      }
-    },
-    {
-      "name": "Garudāsana",
-      "time": 180,
-      "audio_begin": "garu_begin",
-      "polar_asana": {
-        "left_begin": "garu_left_begin",
-        "left_end": "garu_left_end",
-        "right_begin": "garu_right_begin",
-        "right_end": "garu_right_end"
-      }
-    },
-    {
-      "name": "Pavana muktāsana",
-      "time": 240,
-      "audio_begin": "pm_begin",
-      "audio_end": "pm_end"
-    },
-    {
       "name": "Bhujangāsana",
-      "time": 240,
-      "audio_begin": "bhujan_begin",
-      "audio_end": "bhujan_end"
-    },
-    {
-      "name": "Paścimottānāsana",
-      "time": 240,
-      "audio_begin": "paschi_begin",
-      "audio_end": "paschi_end"
-    },
-    {
-      "name": "Gomukāsana",
-      "time": 120,
-      "audio_begin": "gomu_begin",
-      "polar_asana": {
-        "left_begin": "gomu_left_begin",
-        "left_end": "gomu_left_end",
-        "right_begin": "gomu_right_begin",
-        "right_end": "gomu_right_end"
-      }
-    },
-    {
-      "name": "Vajrāsana",
-      "time": 300,
-      "audio_begin": "vaj_begin",
-      "audio_end": "vaj_end"
-    },
-    {
-      "name": "Halāsana",
-      "time": 180,
-      "audio_begin": "hala_begin",
-      "audio_end": "hala_end"
-    },
-    {
-      "name": "Śavāsana",
-      "audio_begin": "shavasana_begin",
-      "time": 5,
-      "multi_part": [
-        {
-          "audio": "shavasana_leftleg",
-          "pause": 30
-        },
-        {
-          "audio": "shavasana_rightleg",
-          "pause": 30
-        },
-        {
-          "audio": "shavasana_leftarm",
-          "pause": 30
-        },
-        {
-          "audio": "shavasana_rightarm",
-          "pause": 30
-        },
-        {
-          "audio": "shavasana_thorax",
-          "pause": 60
-        },
-        {
-          "audio": "shavasana_harmony",
-          "pause": 15
-        }
-      ],
-      "audio_end": "shavasana_end"
+      "time": 7,
+      "chakra": 4,
+      "technique_audio": "bhujan_technique",
+      "technique_pause": 3,
+      "end_pause": 10,
+      "concentration_audio": "bhujan_concentration",
+      "awareness_audio": "bhujan_awareness"
     }
   ]
 }
