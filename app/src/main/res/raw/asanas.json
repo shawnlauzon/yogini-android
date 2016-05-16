@@ -1,9 +1,7 @@
 {
   "asanas": [
     {
-      "id": 1,
       "name": "Warming exercises",
-      "order": 1,
       "time": 5,
       "audio_begin": "warming_0",
       "multi_part": [
@@ -67,17 +65,13 @@
       "audio_end": "warming_end"
     },
     {
-      "id": 2,
       "name": "Pādahastāsana",
-      "order": 100,
       "time": 420,
       "audio_begin": "pad_begin",
       "audio_end": "pad_end"
     },
     {
-      "id": 5,
       "name": "Trikonāsana",
-      "order": 300,
       "time": 150,
       "audio_begin": "trik_begin",
       "polar_asana": {
@@ -88,9 +82,7 @@
       }
     },
     {
-      "id": 7,
       "name": "Garudāsana",
-      "order": 500,
       "time": 180,
       "audio_begin": "garu_begin",
       "polar_asana": {
@@ -142,9 +134,7 @@
       "audio_end": "hala_end"
     },
     {
-      "id": 100,
       "name": "Śavāsana",
-      "order": 1000000000,
       "audio_begin": "shavasana_begin",
       "time": 5,
       "multi_part": [
