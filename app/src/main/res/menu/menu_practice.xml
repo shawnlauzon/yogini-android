@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.shantikama.yogini.PracticeActivity">
     <item
+        android:id="@+id/action_skip"
+        android:title="@string/toolbar_item_skip"
+        android:icon="@drawable/ic_skip_next_white_24dp"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

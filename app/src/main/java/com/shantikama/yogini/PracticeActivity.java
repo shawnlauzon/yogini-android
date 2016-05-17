@@ -97,11 +97,15 @@ public class PracticeActivity extends AppCompatActivity {
         mAudioPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                Log.i(TAG, "Media complete");
-                mAudioPlayer.reset();
-                mAsanaController.continuePractice();
+                mediaCompleted();
             }
         });
+    }
+
+    void mediaCompleted() {
+        Log.i(TAG, "Media complete");
+        mAudioPlayer.reset();
+        mAsanaController.continuePractice();
     }
 
     @Override
@@ -133,6 +137,12 @@ public class PracticeActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_skip) {
+            if (mIsWaitingForPerformance) {
+                finishTimer();
+            } else if (mAudioPlayer.isPlaying()) {
+                mediaCompleted();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -175,12 +185,16 @@ public class PracticeActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                mIsWaitingForPerformance = false;
-                mPerformanceTimer = null;
-                mAsanaController.continuePractice();
+                finishTimer();
             }
         }.start();
         mIsWaitingForPerformance = true;
+    }
+
+    void finishTimer() {
+        mIsWaitingForPerformance = false;
+        mPerformanceTimer = null;
+        mAsanaController.continuePractice();
     }
 
     void waitFor(final int numSecs, final boolean showTimer) {
