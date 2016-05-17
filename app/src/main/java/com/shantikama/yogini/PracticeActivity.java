@@ -1,13 +1,11 @@
 package com.shantikama.yogini;
 
-import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -22,17 +20,12 @@ import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Iterator;
 
 public class PracticeActivity extends AppCompatActivity {
     private static final String TAG = "PracticeActivity";
 
     private static final String AUDIO_URL_START = "android.resource://com.shantikama.yogini/raw/";
-    public static final int MILLIS_BETWEEN_ASANAS = 5000;
-    public static final int MILLIS_BETWEEN_SIDES = 3000;
 
     private AsanaController mAsanaController;
     private boolean mIsStarted = false;
@@ -70,7 +63,7 @@ public class PracticeActivity extends AppCompatActivity {
     }
 
     private void setupAudioPlayer() {
-        mAudioPlayer = newMediaPlayer(this);
+        mAudioPlayer = MediaPlayerUtils.newMediaPlayer(this);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mAudioPlayer.setAudioAttributes(new AudioAttributes.Builder()
@@ -255,7 +248,6 @@ public class PracticeActivity extends AppCompatActivity {
         private static final int PHASE_PERFORM = 5;
         private static final int PHASE_END = 6;
         private static final int PHASE_AWARENESS = 7;
-        private static final int PHASE_FIRST = PHASE_ANNOUNCE;
         private static final int PHASE_LAST = PHASE_AWARENESS;
         private final ImmutableList<String> PHASE_STRS = ImmutableList.of("IDLE", "ANNOUNCE",
                 "TECHNIQUE", "CONCENTRATION", "BEGIN", "PERFORM", "END", "AWARENESS");
@@ -292,7 +284,7 @@ public class PracticeActivity extends AppCompatActivity {
         }
 
         public void continueNextPhase() {
-            Log.d(TAG, String.format("Finishing early phase " + PHASE_STRS.get(mCurPhase)));
+            Log.d(TAG, String.format("Finishing early phase %s", PHASE_STRS.get(mCurPhase)));
             advancePhase();
             handleState();
         }
@@ -322,7 +314,7 @@ public class PracticeActivity extends AppCompatActivity {
             }
 
             if (isPhaseSkipped()) {
-                Log.d(TAG, String.format("Skipping phase " + PHASE_STRS.get(mCurPhase)));
+                Log.d(TAG, String.format("Skipping phase %s", PHASE_STRS.get(mCurPhase)));
                 advancePhase();
             }
 
@@ -429,49 +421,4 @@ public class PracticeActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Create a MediaPlayer which doesn't give the error
-     * E/MediaPlayer: Should have subtitle controller already set
-     *
-     * @return a new MediaPlayer object
-     * @link http://stackoverflow.com/a/20149754/355039
-     */
-    static MediaPlayer newMediaPlayer(Context context) {
-
-        MediaPlayer mediaplayer = new MediaPlayer();
-
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
-            return mediaplayer;
-        }
-
-        try {
-            Class<?> cMediaTimeProvider = Class.forName("android.media.MediaTimeProvider");
-            Class<?> cSubtitleController = Class.forName("android.media.SubtitleController");
-            Class<?> iSubtitleControllerAnchor = Class.forName("android.media.SubtitleController$Anchor");
-            Class<?> iSubtitleControllerListener = Class.forName("android.media.SubtitleController$Listener");
-
-            Constructor constructor = cSubtitleController.getConstructor(new Class[]{Context.class, cMediaTimeProvider, iSubtitleControllerListener});
-
-            Object subtitleInstance = constructor.newInstance(context, null, null);
-
-            Field f = cSubtitleController.getDeclaredField("mHandler");
-
-            f.setAccessible(true);
-            try {
-                f.set(subtitleInstance, new Handler());
-            } catch (IllegalAccessException e) {
-                return mediaplayer;
-            } finally {
-                f.setAccessible(false);
-            }
-
-            Method setsubtitleanchor = mediaplayer.getClass().getMethod("setSubtitleAnchor", cSubtitleController, iSubtitleControllerAnchor);
-
-            setsubtitleanchor.invoke(mediaplayer, subtitleInstance, null);
-            //Log.e("", "subtitle is setted :p");
-        } catch (Exception e) {
-        }
-
-        return mediaplayer;
-    }
 }

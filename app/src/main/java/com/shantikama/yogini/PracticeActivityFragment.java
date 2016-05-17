@@ -15,7 +15,6 @@ import java.util.Locale;
  * A placeholder fragment containing a simple view.
  */
 public class PracticeActivityFragment extends Fragment {
-    private static final String TAG = "PracticeActivityFragment";
 
     private static final String TIMER_FORMAT = "%02d:%02d";
 

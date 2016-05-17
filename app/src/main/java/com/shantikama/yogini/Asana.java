@@ -3,7 +3,7 @@ package com.shantikama.yogini;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Created by Admin on 5/10/16.
+ * Created by Shawn Lauzon
  */
 public class Asana {
     public final int id;
@@ -17,7 +17,8 @@ public class Asana {
 
     public final ImmutableList<SequenceItem> sequence;
 
-    public Asana(int id, String name, int order, int time, int chakra, ImmutableList<SequenceItem> sequence, String announceAudio, int announcePause) {
+    public Asana(int id, String name, int order, int time, int chakra,
+                 ImmutableList<SequenceItem> sequence, String announceAudio, int announcePause) {
         this.id = id;
         this.name = name;
         this.order = order;
@@ -51,7 +52,9 @@ public class Asana {
 
         public final SkipPhase skip;
 
-        public SequenceItem(String techniqueAudio, String concentrationAudio, String awarenessAudio, int techniquePause, int concentrationPause, int beginPause, int endPause, int awarenessPause, int time, SkipPhase skip) {
+        public SequenceItem(String techniqueAudio, String concentrationAudio, String awarenessAudio,
+                            int techniquePause, int concentrationPause, int beginPause, int endPause,
+                            int awarenessPause, int time, SkipPhase skip) {
             this.techniqueAudio = techniqueAudio;
             this.concentrationAudio = concentrationAudio;
             this.awarenessAudio = awarenessAudio;
@@ -72,7 +75,8 @@ public class Asana {
         public final boolean end;
         public final boolean awareness;
 
-        public SkipPhase(boolean technique, boolean concentration, boolean begin, boolean end, boolean awareness) {
+        public SkipPhase(boolean technique, boolean concentration, boolean begin, boolean end,
+                         boolean awareness) {
             this.technique = technique;
             this.concentration = concentration;
             this.begin = begin;
