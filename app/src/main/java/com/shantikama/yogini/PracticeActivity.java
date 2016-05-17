@@ -99,14 +99,10 @@ public class PracticeActivity extends AppCompatActivity {
         mAudioPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                mediaCompleted();
+                mAudioPlayer.reset();
+                mAsanaController.continuePractice();
             }
         });
-    }
-
-    void mediaCompleted() {
-        mAudioPlayer.reset();
-        mAsanaController.continuePractice();
     }
 
     @Override
@@ -141,11 +137,12 @@ public class PracticeActivity extends AppCompatActivity {
         } else if (id == R.id.action_skip) {
             if (mPerformanceTimer != null) {
                 mPerformanceTimer.cancel();
-                mPerformanceTimer.onTick(0);
-                mPerformanceTimer.onFinish();
+                mPerformanceTimer.onTick(0); // Reset the display
+                mPerformanceTimer = null;
             } else if (mAudioPlayer.isPlaying()) {
-                mediaCompleted();
+                mAudioPlayer.reset();
             }
+            mAsanaController.continueNextPhase();
         }
 
         return super.onOptionsItemSelected(item);
@@ -260,14 +257,14 @@ public class PracticeActivity extends AppCompatActivity {
         private static final int PHASE_AWARENESS = 7;
         private static final int PHASE_FIRST = PHASE_ANNOUNCE;
         private static final int PHASE_LAST = PHASE_AWARENESS;
-        private final ImmutableList<String> PHASE_STRS = ImmutableList.of("idle", "announce",
-                "technique", "concentration", "begin", "perform", "end", "awareness");
+        private final ImmutableList<String> PHASE_STRS = ImmutableList.of("IDLE", "ANNOUNCE",
+                "TECHNIQUE", "CONCENTRATION", "BEGIN", "PERFORM", "END", "AWARENESS");
 
         private static final int STATE_IDLE = 0;
         private static final int STATE_PLAYING = 1;
         private static final int STATE_WAITING = 2;
-        private final ImmutableList<String> STATE_STRS = ImmutableList.of("idle", "playing",
-                "waiting");
+        private final ImmutableList<String> STATE_STRS = ImmutableList.of("IDLE", "PLAYING",
+                "WAITING");
 
         private Asanas mAsanas;
 
@@ -290,50 +287,45 @@ public class PracticeActivity extends AppCompatActivity {
         }
 
         public void continuePractice() {
-            boolean isAdvanced = advanceState();
-            if (isAdvanced) {
-                handleState();
+            advanceState();
+            handleState();
+        }
+
+        public void continueNextPhase() {
+            Log.d(TAG, String.format("Finishing early phase " + PHASE_STRS.get(mCurPhase)));
+            advancePhase();
+            handleState();
+        }
+
+        private void advanceState() {
+            if (mCurState == STATE_PLAYING) {
+                mCurState = STATE_WAITING;
+            } else { // just finished WAITING state
+                advancePhase();
             }
         }
 
-        private boolean advanceState() {
-            boolean isAdvanced = false;
-
-            if (mCurState == STATE_PLAYING) {
-                mCurState = STATE_WAITING;
-                isAdvanced = true;
-            } else { // just finished WAITING state
+        private void advancePhase() {
+            if (mCurPhase != PHASE_PERFORM) { // there is no perform.playing state)
                 mCurState = STATE_PLAYING;
-                if (mCurPhase == PHASE_LAST) {
-                    if (mAsanaSequenceIterator.hasNext()) {
-                        mCurPhase = PHASE_TECHNIQUE;
-                        if (mAsanaSequenceIterator.hasNext()) {
-                            mCurAsanaSequenceItem = mAsanaSequenceIterator.next();
-                            isAdvanced = true;
-                        } else {
-                            // Completed all loops in asana
-                            isAdvanced = advanceAsana();
-                        }
-                    } else {
-                        isAdvanced = advanceAsana();
-                    }
-                } else if (mCurPhase == PHASE_IDLE) {
-                    isAdvanced = advanceAsana();
+            }
+            if (mCurPhase == PHASE_LAST) {
+                if (mAsanaSequenceIterator.hasNext()) {
+                    mCurPhase = PHASE_TECHNIQUE;
+                    mCurAsanaSequenceItem = mAsanaSequenceIterator.next();
                 } else {
-                    ++mCurPhase;
-                    isAdvanced = true;
+                    advanceAsana();
                 }
+            } else if (mCurPhase == PHASE_IDLE) {
+                advanceAsana();
+            } else {
+                ++mCurPhase;
             }
 
-            if (isAdvanced && isPhaseSkipped()) {
+            if (isPhaseSkipped()) {
                 Log.d(TAG, String.format("Skipping phase " + PHASE_STRS.get(mCurPhase)));
-                mCurState = STATE_WAITING; // a bit of a hack to skip the WAITING STATE
-                return advanceState();
+                advancePhase();
             }
-            if (mCurPhase == PHASE_PERFORM) {
-                mCurState = STATE_WAITING; // there is no (perform.playing state)
-            }
-            return isAdvanced;
         }
 
         private void handleState() {
