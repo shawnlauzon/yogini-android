@@ -10,44 +10,22 @@ public class Asana {
     public final String name;
     public final int order;
     public final int time;
-    public final String audioBegin;
-    public final String audioEnd;
-    public final ImmutableList<AsanaPart> multiPart;
-    public final PolarAsana polarAsana;
+    public final int chakra;
 
-    public final String techniqueAudio;
-    public final String concentrationAudio;
-    public final String awarenessAudio;
+    public final String announceAudio;
+    public final int announcePause;
 
-    public final int techniquePause;
-    public final int concentrationPause;
-    public final int endPause;
-    public final int awarenessPause;
+    public final ImmutableList<SequenceItem> sequence;
 
-    public Asana(int id, String name, int order, int time, String audioBegin, String audioEnd, ImmutableList<AsanaPart> multiPart, PolarAsana polarAsana, String techniqueAudio, String concentrationAudio, String awarenessAudio, int techniquePause, int concentrationPause, int endPause, int awarenessPause) {
+    public Asana(int id, String name, int order, int time, int chakra, ImmutableList<SequenceItem> sequence, String announceAudio, int announcePause) {
         this.id = id;
         this.name = name;
         this.order = order;
         this.time = time;
-        this.audioBegin = audioBegin;
-        this.audioEnd = audioEnd;
-        this.multiPart = multiPart;
-        this.polarAsana = polarAsana;
-        this.techniqueAudio = techniqueAudio;
-        this.concentrationAudio = concentrationAudio;
-        this.awarenessAudio = awarenessAudio;
-        this.techniquePause = techniquePause;
-        this.concentrationPause = concentrationPause;
-        this.endPause = endPause;
-        this.awarenessPause = awarenessPause;
-    }
-
-    public boolean isMultiPart() {
-        return multiPart != null;
-    }
-
-    public boolean isPolarAsana() {
-        return polarAsana != null;
+        this.chakra = chakra;
+        this.sequence = sequence;
+        this.announceAudio = announceAudio;
+        this.announcePause = announcePause;
     }
 
     @Override
@@ -68,17 +46,27 @@ public class Asana {
         }
     }
 
-    public static class PolarAsana {
-        public final String leftBegin;
-        public final String leftEnd;
-        public final String rightBegin;
-        public final String rightEnd;
+    public static class SequenceItem {
+        public final String techniqueAudio;
+        public final String concentrationAudio;
+        public final String awarenessAudio;
 
-        public PolarAsana(String leftBegin, String leftEnd, String rightBegin, String rightEnd) {
-            this.leftBegin = leftBegin;
-            this.leftEnd = leftEnd;
-            this.rightBegin = rightBegin;
-            this.rightEnd = rightEnd;
+        public final int techniquePause;
+        public final int concentrationPause;
+        public final int endPause;
+        public final int awarenessPause;
+
+        public final int time;
+
+        public SequenceItem(String techniqueAudio, String concentrationAudio, String awarenessAudio, int techniquePause, int concentrationPause, int endPause, int awarenessPause, int time) {
+            this.techniqueAudio = techniqueAudio;
+            this.concentrationAudio = concentrationAudio;
+            this.awarenessAudio = awarenessAudio;
+            this.techniquePause = techniquePause;
+            this.concentrationPause = concentrationPause;
+            this.endPause = endPause;
+            this.awarenessPause = awarenessPause;
+            this.time = time;
         }
     }
 }

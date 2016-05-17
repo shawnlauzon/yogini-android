@@ -8,14 +8,95 @@
   ],
   "asanas": [
     {
+      "name": "Warming exercises",
+      "announce_audio": "warming_0",
+      "announce_time": 5,
+      "sequence": [
+        {
+          "technique_audio": "warming_1_begin",
+          "time": 40
+        },
+        {
+          "technique_audio": "warming_1_switch",
+          "time": 40,
+          "awareness_audio": "warming_1_end",
+          "awareness_pause": 5
+        },
+        {
+          "technique_audio": "warming_2_begin",
+          "time": 45,
+          "awareness_audio": "warming_2_end",
+          "awareness_pause": 5
+        },
+        {
+          "technique_audio": "warming_3_begin",
+          "time": 30,
+          "awareness_audio": "warming_3_end",
+          "awareness_pause": 5
+        },
+        {
+          "technique_audio": "warming_4_begin",
+          "time": 30,
+          "awareness_audio": "warming_4_end",
+          "awareness_pause": 5
+        },
+        {
+          "technique_audio": "warming_5_begin",
+          "time": 60,
+          "awareness_audio": "warming_5_end",
+          "awareness_pause": 5
+        },
+        {
+          "technique_audio": "warming_6_begin",
+          "time": 20
+        },
+        {
+          "technique_audio": "warming_6_switch",
+          "time": 20,
+          "awareness_audio": "warming_6_end"
+        }
+      ]
+    },
+    {
+      "name": "Trikonāsana",
+      "time": 7,
+      "announce_audio": "trik_announce",
+      "announce_pause": 3,
+      "sequence": [
+        {
+          "technique_audio": "trik_technique_left",
+          "technique_pause": 3,
+          "concentration_audio": "trik_concentration_left",
+          "end_pause": 3,
+          "awareness_audio": "trik_awareness_left",
+          "awareness_pause": 3
+        },
+        {
+          "technique_audio": "trik_technique_right",
+          "technique_pause": 3,
+          "concentration_audio": "trik_concentration_right",
+          "end_pause": 3,
+          "awareness_audio": "trik_awareness_right",
+          "awareness_pause": 3
+        }
+      ]
+    },
+    {
       "name": "Bhujangāsana",
       "time": 7,
       "chakra": 4,
-      "technique_audio": "bhujan_technique",
-      "technique_pause": 3,
-      "end_pause": 10,
-      "concentration_audio": "bhujan_concentration",
-      "awareness_audio": "bhujan_awareness"
+      "announce_audio": "bhujan_announce",
+      "announce_pause": 5,
+      "sequence": [
+        {
+          "technique_audio": "bhujan_technique",
+          "technique_pause": 3,
+          "concentration_audio": "bhujan_concentration",
+          "end_pause": 10,
+          "awareness_audio": "bhujan_awareness",
+          "awareness_pause": 5
+        }
+      ]
     }
   ]
 }
