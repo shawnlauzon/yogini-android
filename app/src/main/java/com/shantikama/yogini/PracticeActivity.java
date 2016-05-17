@@ -350,17 +350,16 @@ public class PracticeActivity extends AppCompatActivity {
             }
         }
 
-        private boolean advanceAsana() {
-            boolean isAdvanced = false;
+        private void advanceAsana() {
             if (mAsanaIterator.hasNext()) {
                 mCurAsana = mAsanaIterator.next();
                 mAsanaSequenceIterator = mCurAsana.sequence.iterator();
                 mCurAsanaSequenceItem = mAsanaSequenceIterator.next();
                 mCurPhase = PHASE_ANNOUNCE;
                 mCurState = STATE_PLAYING;
-                isAdvanced = true;
+            } else {
+                finish();
             }
-            return isAdvanced;
         }
 
         private String getPhaseAudio() {
