@@ -141,6 +141,7 @@ public class PracticeActivity extends AppCompatActivity {
         } else if (id == R.id.action_skip) {
             if (mPerformanceTimer != null) {
                 mPerformanceTimer.cancel();
+                mPerformanceTimer.onTick(0);
                 mPerformanceTimer.onFinish();
             } else if (mAudioPlayer.isPlaying()) {
                 mediaCompleted();
@@ -189,11 +190,11 @@ public class PracticeActivity extends AppCompatActivity {
         mPerformanceTimer = new CountDownTimer(numSecs * 1000, 10) {
             @Override
             public void onTick(long millisUntilFinished) {
+                mPerformanceMillisRemaining = millisUntilFinished;
                 if (isShowingTimer) {
                     ((PracticeActivityFragment) getSupportFragmentManager()
                             .findFragmentById(R.id.fragment)).updateTimeRemaining(mPerformanceMillisRemaining);
                 }
-                mPerformanceMillisRemaining = millisUntilFinished;
             }
 
             @Override
