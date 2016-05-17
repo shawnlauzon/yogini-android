@@ -57,11 +57,8 @@ public class PracticeActivityFragment extends Fragment {
         mProgress.setMax(time * 1000);
     }
 
-    void onTick10TimesPerSecond(long millisUntilFinished) {
+    void updateTimeRemaining(long millisUntilFinished) {
         setTimerText(millisUntilFinished);
-
-        // Because the tick is 10 times a second and our progress is in milliseconds, we increment
-        // progress by 100.
-        mProgress.incrementProgressBy(20);
+        mProgress.setProgress((int) (mProgress.getMax() - millisUntilFinished));
     }
 }
