@@ -15,53 +15,91 @@
         {
           "technique_audio": "warming_1_begin",
           "time": 40,
-          "skip": { "begin": true }
+          "skip": {
+            "begin": true,
+            "end": true
+          }
         },
         {
           "technique_audio": "warming_1_switch",
           "time": 40,
           "awareness_audio": "warming_1_end",
           "awareness_pause": 5,
-          "skip": { "begin": true, "end": true }
+          "skip": {
+            "begin": true,
+            "end": true
+          }
         },
         {
           "technique_audio": "warming_2_begin",
           "time": 45,
           "awareness_audio": "warming_2_end",
           "awareness_pause": 5,
-          "skip": { "begin": true, "end": true }
+          "skip": {
+            "begin": true,
+            "end": true
+          }
         },
         {
           "technique_audio": "warming_3_begin",
           "time": 30,
           "awareness_audio": "warming_3_end",
           "awareness_pause": 5,
-          "skip": { "begin": true, "end": true }
+          "skip": {
+            "begin": true,
+            "end": true
+          }
         },
         {
           "technique_audio": "warming_4_begin",
           "time": 30,
           "awareness_audio": "warming_4_end",
           "awareness_pause": 5,
-          "skip": { "begin": true, "end": true }
+          "skip": {
+            "begin": true,
+            "end": true
+          }
         },
         {
           "technique_audio": "warming_5_begin",
           "time": 60,
           "awareness_audio": "warming_5_end",
           "awareness_pause": 5,
-          "skip": { "begin": true, "end": true }
+          "skip": {
+            "begin": true,
+            "end": true
+          }
         },
         {
           "technique_audio": "warming_6_begin",
           "time": 20,
-          "skip": { "begin": true, "end": true }
+          "skip": {
+            "begin": true,
+            "end": true
+          }
         },
         {
           "technique_audio": "warming_6_switch",
           "time": 20,
           "awareness_audio": "warming_6_end",
-          "skip": { "begin": true, "end": true }
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pādahastāsana",
+      "time": 420,
+      "announce_audio": "pad_begin",
+      "sequence": [
+        {
+          "awareness_audio": "pad_end",
+          "skip": {
+            "begin": true,
+            "end": true
+          }
         }
       ]
     },
@@ -90,9 +128,47 @@
       ]
     },
     {
+      "name": "Garudāsana",
+      "time": 120,
+      "announce_audio": "garu_begin",
+      "sequence": [
+        {
+          "technique_audio": "garu_left_begin",
+          "awareness_audio": "garu_left_end",
+          "awareness_pause": 5,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "technique_audio": "garu_right_begin",
+          "awareness_audio": "garu_right_end",
+          "awareness_pause": 5,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pavana muktāsana",
+      "time": 240,
+      "announce_audio": "pm_begin",
+      "sequence": [
+        {
+          "awareness_audio": "pm_end",
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        }
+      ]
+    },
+    {
       "name": "Bhujangāsana",
       "time": 180,
-      "chakra": 4,
       "announce_audio": "bhujan_announce",
       "announce_pause": 5,
       "sequence": [
@@ -100,9 +176,132 @@
           "technique_audio": "bhujan_technique",
           "technique_pause": 3,
           "concentration_audio": "bhujan_concentration",
-          "end_pause": 10,
+          "end_pause": 8,
           "awareness_audio": "bhujan_awareness",
           "awareness_pause": 5
+        }
+      ]
+    },
+    {
+      "name": "Paścimottānāsana",
+      "time": 240,
+      "announce_audio": "paschi_begin",
+      "sequence": [
+        {
+          "awareness_audio": "paschi_end",
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gomukāsana",
+      "time": 120,
+      "announce_audio": "gomu_begin",
+      "sequence": [
+        {
+          "technique_audio": "gomu_left_begin",
+          "awareness_audio": "gomu_left_end",
+          "awareness_pause": 5,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "technique_audio": "gomu_right_begin",
+          "awareness_audio": "gomu_right_end",
+          "awareness_pause": 5,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vajrāsana",
+      "time": 300,
+      "announce_audio": "vaj_begin",
+      "sequence": [
+        {
+          "awareness_audio": "vaj_end",
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Halāsana",
+      "time": 180,
+      "announce_audio": "hala_begin",
+      "announce_pause": 10,
+      "sequence": [
+        {
+          "awareness_audio": "hala_end",
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Śavāsana",
+      "announce_audio": "shavasana_begin",
+      "sequence": [
+        {
+          "concentration_audio": "shavasana_leftleg",
+          "time": 30,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "concentration_audio": "shavasana_rightleg",
+          "time": 30,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "concentration_audio": "shavasana_leftarm",
+          "time": 30,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "concentration_audio": "shavasana_rightarm",
+          "time": 30,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "concentration_audio": "shavasana_thorax",
+          "time": 60,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "concentration_audio": "shavasana_harmony",
+          "time": 15,
+          "awareness_end": "shavasana_end",
+          "skip": {
+            "begin": true,
+            "end": true
+          }
         }
       ]
     }

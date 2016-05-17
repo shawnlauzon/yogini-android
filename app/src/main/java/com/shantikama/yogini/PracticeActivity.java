@@ -306,9 +306,8 @@ public class PracticeActivity extends AppCompatActivity {
         }
 
         private void advancePhase() {
-            if (mCurPhase != PHASE_PERFORM) { // there is no perform.playing state)
-                mCurState = STATE_PLAYING;
-            }
+            mCurState = STATE_PLAYING;
+
             if (mCurPhase == PHASE_LAST) {
                 if (mAsanaSequenceIterator.hasNext()) {
                     mCurPhase = PHASE_TECHNIQUE;
@@ -325,6 +324,10 @@ public class PracticeActivity extends AppCompatActivity {
             if (isPhaseSkipped()) {
                 Log.d(TAG, String.format("Skipping phase " + PHASE_STRS.get(mCurPhase)));
                 advancePhase();
+            }
+
+            if (mCurPhase != PHASE_PERFORM) { // there is no perform.playing state)
+                mCurState = STATE_PLAYING;
             }
         }
 
