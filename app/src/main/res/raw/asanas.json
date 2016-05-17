@@ -14,46 +14,54 @@
       "sequence": [
         {
           "technique_audio": "warming_1_begin",
-          "time": 40
+          "time": 40,
+          "skip": { "begin": true }
         },
         {
           "technique_audio": "warming_1_switch",
           "time": 40,
           "awareness_audio": "warming_1_end",
-          "awareness_pause": 5
+          "awareness_pause": 5,
+          "skip": { "begin": true, "end": true }
         },
         {
           "technique_audio": "warming_2_begin",
           "time": 45,
           "awareness_audio": "warming_2_end",
-          "awareness_pause": 5
+          "awareness_pause": 5,
+          "skip": { "begin": true, "end": true }
         },
         {
           "technique_audio": "warming_3_begin",
           "time": 30,
           "awareness_audio": "warming_3_end",
-          "awareness_pause": 5
+          "awareness_pause": 5,
+          "skip": { "begin": true, "end": true }
         },
         {
           "technique_audio": "warming_4_begin",
           "time": 30,
           "awareness_audio": "warming_4_end",
-          "awareness_pause": 5
+          "awareness_pause": 5,
+          "skip": { "begin": true, "end": true }
         },
         {
           "technique_audio": "warming_5_begin",
           "time": 60,
           "awareness_audio": "warming_5_end",
-          "awareness_pause": 5
+          "awareness_pause": 5,
+          "skip": { "begin": true, "end": true }
         },
         {
           "technique_audio": "warming_6_begin",
-          "time": 20
+          "time": 20,
+          "skip": { "begin": true, "end": true }
         },
         {
           "technique_audio": "warming_6_switch",
           "time": 20,
-          "awareness_audio": "warming_6_end"
+          "awareness_audio": "warming_6_end",
+          "skip": { "begin": true, "end": true }
         }
       ]
     },

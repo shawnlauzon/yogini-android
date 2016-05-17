@@ -199,6 +199,7 @@ public class PracticeActivity extends AppCompatActivity {
 
     void waitFor(final int numSecs, final boolean showTimer) {
         Log.d(TAG, String.format("Waiting for %d seconds ...", numSecs));
+        Thread.dumpStack();
 
         mPerformanceTimer = new CountDownTimer(numSecs * 1000, 10) {
             @Override
@@ -263,12 +264,13 @@ public class PracticeActivity extends AppCompatActivity {
         private static final int PHASE_TECHNIQUE = 2;
         private static final int PHASE_CONCENTRATION = 3;
         private static final int PHASE_BEGIN = 4;
-        private static final int PHASE_END = 5;
-        private static final int PHASE_AWARENESS = 6;
+        private static final int PHASE_PERFORM = 5;
+        private static final int PHASE_END = 6;
+        private static final int PHASE_AWARENESS = 7;
         private static final int PHASE_FIRST = PHASE_ANNOUNCE;
         private static final int PHASE_LAST = PHASE_AWARENESS;
         private final ImmutableList<String> PHASE_STRS = ImmutableList.of("idle", "announce",
-                "technique", "concentration", "begin", "end", "awareness");
+                "technique", "concentration", "begin", "perform", "end", "awareness");
 
         private static final int STATE_IDLE = 0;
         private static final int STATE_PLAYING = 1;
@@ -331,6 +333,15 @@ public class PracticeActivity extends AppCompatActivity {
                     isAdvanced = true;
                 }
             }
+
+            if (isAdvanced && isPhaseSkipped()) {
+                Log.d(TAG, String.format("Skipping phase " + PHASE_STRS.get(mCurPhase)));
+                mCurState = STATE_WAITING; // a bit of a hack to skip the WAITING STATE
+                return advanceState();
+            }
+            if (mCurPhase == PHASE_PERFORM) {
+                mCurState = STATE_WAITING; // there is no (perform.playing state)
+            }
             return isAdvanced;
         }
 
@@ -338,8 +349,10 @@ public class PracticeActivity extends AppCompatActivity {
             Log.d(TAG, String.format("handleState(%s, %s)", PHASE_STRS.get(mCurPhase),
                     STATE_STRS.get(mCurState)));
 
-            if (mCurState == STATE_WAITING) {
-                waitFor(getPhasePause(), mCurPhase == PHASE_BEGIN);
+            if (mCurPhase == PHASE_PERFORM) {
+                waitFor(getPhasePause(), true);
+            } else if (mCurState == STATE_WAITING) {
+                waitFor(getPhasePause(), false);
             } else if (mCurState == STATE_PLAYING) {
                 if (mCurPhase == PHASE_FIRST) {
                     show(mCurAsana, mCurAsana.time);
@@ -403,6 +416,9 @@ public class PracticeActivity extends AppCompatActivity {
                     phasePause = mCurAsanaSequenceItem.concentrationPause;
                     break;
                 case PHASE_BEGIN:
+                    phasePause = mCurAsanaSequenceItem.beginPause;
+                    break;
+                case PHASE_PERFORM:
                     phasePause = mCurAsanaSequenceItem.time > 0 ? mCurAsanaSequenceItem.time : mCurAsana.time;
                     break;
                 case PHASE_END:
@@ -415,6 +431,15 @@ public class PracticeActivity extends AppCompatActivity {
                     phasePause = 0;
             }
             return phasePause;
+        }
+
+        private boolean isPhaseSkipped() {
+            return mCurAsanaSequenceItem.skip != null &&
+                    ((mCurPhase == PHASE_TECHNIQUE && mCurAsanaSequenceItem.skip.technique) ||
+                            (mCurPhase == PHASE_CONCENTRATION && mCurAsanaSequenceItem.skip.concentration) ||
+                            (mCurPhase == PHASE_BEGIN && mCurAsanaSequenceItem.skip.begin) ||
+                            (mCurPhase == PHASE_END && mCurAsanaSequenceItem.skip.end) ||
+                            (mCurPhase == PHASE_AWARENESS && mCurAsanaSequenceItem.skip.awareness));
         }
     }
 

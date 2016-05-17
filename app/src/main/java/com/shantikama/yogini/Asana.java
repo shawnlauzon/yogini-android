@@ -36,16 +36,6 @@ public class Asana {
                 '}';
     }
 
-    public static class AsanaPart {
-        public final String audio;
-        public final int pause;
-
-        public AsanaPart(String audio, int pause) {
-            this.audio = audio;
-            this.pause = pause;
-        }
-    }
-
     public static class SequenceItem {
         public final String techniqueAudio;
         public final String concentrationAudio;
@@ -53,20 +43,41 @@ public class Asana {
 
         public final int techniquePause;
         public final int concentrationPause;
+        public final int beginPause;
         public final int endPause;
         public final int awarenessPause;
 
         public final int time;
 
-        public SequenceItem(String techniqueAudio, String concentrationAudio, String awarenessAudio, int techniquePause, int concentrationPause, int endPause, int awarenessPause, int time) {
+        public final SkipPhase skip;
+
+        public SequenceItem(String techniqueAudio, String concentrationAudio, String awarenessAudio, int techniquePause, int concentrationPause, int beginPause, int endPause, int awarenessPause, int time, SkipPhase skip) {
             this.techniqueAudio = techniqueAudio;
             this.concentrationAudio = concentrationAudio;
             this.awarenessAudio = awarenessAudio;
             this.techniquePause = techniquePause;
             this.concentrationPause = concentrationPause;
+            this.beginPause = beginPause;
             this.endPause = endPause;
             this.awarenessPause = awarenessPause;
             this.time = time;
+            this.skip = skip;
+        }
+    }
+
+    public static class SkipPhase {
+        public final boolean technique;
+        public final boolean concentration;
+        public final boolean begin;
+        public final boolean end;
+        public final boolean awareness;
+
+        public SkipPhase(boolean technique, boolean concentration, boolean begin, boolean end, boolean awareness) {
+            this.technique = technique;
+            this.concentration = concentration;
+            this.begin = begin;
+            this.end = end;
+            this.awareness = awareness;
         }
     }
 }
