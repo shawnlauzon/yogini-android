@@ -204,7 +204,7 @@
     },
     {
       "name": "Gomukāsana",
-      "time": 120,
+      "time": 150,
       "announce_audio": "gomu_begin",
       "sequence": [
         {
@@ -229,7 +229,7 @@
     },
     {
       "name": "Vajrāsana",
-      "time": 300,
+      "time": 420,
       "announce_audio": "vaj_begin",
       "sequence": [
         {
