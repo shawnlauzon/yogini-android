@@ -351,6 +351,8 @@ public class PracticeActivity extends AppCompatActivity {
                 mCurState = STATE_PLAYING;
             } else {
                 finish();
+                // FIXME Should be a better way to quit out of this.
+                throw new RuntimeException();
             }
         }
 
