@@ -103,7 +103,9 @@
             "end": true
           }
         }
-      ]
+      ],
+      "stretch_audio": "pad_stretch",
+      "stretch_pause": 10
     },
     {
       "name": "Trikonāsana",
@@ -238,7 +240,9 @@
             "end": true
           }
         }
-      ]
+      ],
+      "stretch_audio": "vaj_stretch",
+      "stretch_pause": 20
     },
     {
       "name": "Halāsana",

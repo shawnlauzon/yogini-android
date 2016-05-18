@@ -17,16 +17,22 @@ public class Asana {
 
     public final ImmutableList<SequenceItem> sequence;
 
-    public Asana(int id, String name, int order, int time, int chakra,
-                 ImmutableList<SequenceItem> sequence, String announceAudio, int announcePause) {
+    public final String stretchAudio;
+    public final int stretchPause;
+
+    public Asana(int id, String name, int order, int time, int chakra, String announceAudio,
+                 int announcePause, ImmutableList<SequenceItem> sequence, String stretchAudio,
+                 int stretchPause) {
         this.id = id;
         this.name = name;
         this.order = order;
         this.time = time;
         this.chakra = chakra;
-        this.sequence = sequence;
         this.announceAudio = announceAudio;
         this.announcePause = announcePause;
+        this.sequence = sequence;
+        this.stretchAudio = stretchAudio;
+        this.stretchPause = stretchPause;
     }
 
     @Override

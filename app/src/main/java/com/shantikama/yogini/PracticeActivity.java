@@ -248,9 +248,9 @@ public class PracticeActivity extends AppCompatActivity {
         private static final int PHASE_PERFORM = 5;
         private static final int PHASE_END = 6;
         private static final int PHASE_AWARENESS = 7;
-        private static final int PHASE_LAST = PHASE_AWARENESS;
+        private static final int PHASE_STRETCH = 8;
         private final ImmutableList<String> PHASE_STRS = ImmutableList.of("IDLE", "ANNOUNCE",
-                "TECHNIQUE", "CONCENTRATION", "BEGIN", "PERFORM", "END", "AWARENESS");
+                "TECHNIQUE", "CONCENTRATION", "BEGIN", "PERFORM", "END", "AWARENESS", "STRETCH");
 
         private static final int STATE_IDLE = 0;
         private static final int STATE_PLAYING = 1;
@@ -300,14 +300,11 @@ public class PracticeActivity extends AppCompatActivity {
         private void advancePhase() {
             mCurState = STATE_PLAYING;
 
-            if (mCurPhase == PHASE_LAST) {
-                if (mAsanaSequenceIterator.hasNext()) {
-                    mCurPhase = PHASE_TECHNIQUE;
-                    mCurAsanaSequenceItem = mAsanaSequenceIterator.next();
-                } else {
-                    advanceAsana();
-                }
-            } else if (mCurPhase == PHASE_IDLE) {
+            if (mCurPhase == PHASE_AWARENESS && mAsanaSequenceIterator.hasNext()) {
+                mCurPhase = PHASE_TECHNIQUE;
+                mCurAsanaSequenceItem = mAsanaSequenceIterator.next();
+
+            } else if (mCurPhase == PHASE_IDLE || mCurPhase == PHASE_STRETCH) {
                 advanceAsana();
             } else {
                 ++mCurPhase;
@@ -377,6 +374,9 @@ public class PracticeActivity extends AppCompatActivity {
                 case PHASE_AWARENESS:
                     phaseAudio = mCurAsanaSequenceItem.awarenessAudio;
                     break;
+                case PHASE_STRETCH:
+                    phaseAudio = mCurAsana.stretchAudio;
+                    break;
                 default:
                     phaseAudio = null;
             }
@@ -406,6 +406,9 @@ public class PracticeActivity extends AppCompatActivity {
                     break;
                 case PHASE_AWARENESS:
                     phasePause = mCurAsanaSequenceItem.awarenessPause;
+                    break;
+                case PHASE_STRETCH:
+                    phasePause = mCurAsana.stretchPause;
                     break;
                 default:
                     phasePause = 0;
