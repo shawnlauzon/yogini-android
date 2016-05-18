@@ -10,7 +10,7 @@
     {
       "name": "Warming exercises",
       "announce_audio": "warming_0",
-      "announce_pause": 5,
+      "announce_pause": 8,
       "sequence": [
         {
           "technique_audio": "warming_1_begin",
@@ -24,7 +24,7 @@
           "technique_audio": "warming_1_switch",
           "time": 45,
           "awareness_audio": "warming_1_end",
-          "awareness_pause": 5,
+          "awareness_pause": 8,
           "skip": {
             "begin": true,
             "end": true
@@ -82,6 +82,7 @@
           "technique_audio": "warming_6_switch",
           "time": 20,
           "awareness_audio": "warming_6_end",
+          "awareness_pause": 10,
           "skip": {
             "begin": true,
             "end": true
@@ -96,6 +97,7 @@
       "sequence": [
         {
           "awareness_audio": "pad_end",
+          "awareness_pause": 10,
           "skip": {
             "begin": true,
             "end": true
@@ -115,7 +117,7 @@
           "concentration_audio": "trik_concentration_left",
           "end_pause": 3,
           "awareness_audio": "trik_awareness_left",
-          "awareness_pause": 5
+          "awareness_pause": 10
         },
         {
           "technique_audio": "trik_technique_right",
@@ -123,7 +125,7 @@
           "concentration_audio": "trik_concentration_right",
           "end_pause": 3,
           "awareness_audio": "trik_awareness_right",
-          "awareness_pause": 5
+          "awareness_pause": 10
         }
       ]
     },
@@ -135,7 +137,7 @@
         {
           "technique_audio": "garu_left_begin",
           "awareness_audio": "garu_left_end",
-          "awareness_pause": 5,
+          "awareness_pause": 10,
           "skip": {
             "begin": true,
             "end": true
@@ -144,7 +146,7 @@
         {
           "technique_audio": "garu_right_begin",
           "awareness_audio": "garu_right_end",
-          "awareness_pause": 5,
+          "awareness_pause": 10,
           "skip": {
             "begin": true,
             "end": true
@@ -159,6 +161,7 @@
       "sequence": [
         {
           "awareness_audio": "pm_end",
+          "awareness_pause": 10,
           "skip": {
             "begin": true,
             "end": true
@@ -178,7 +181,7 @@
           "concentration_audio": "bhujan_concentration",
           "end_pause": 8,
           "awareness_audio": "bhujan_awareness",
-          "awareness_pause": 5
+          "awareness_pause": 10
         }
       ]
     },
@@ -189,6 +192,7 @@
       "sequence": [
         {
           "awareness_audio": "paschi_end",
+          "awareness_pause": 10,
           "skip": {
             "begin": true,
             "end": true
@@ -204,7 +208,7 @@
         {
           "technique_audio": "gomu_left_begin",
           "awareness_audio": "gomu_left_end",
-          "awareness_pause": 5,
+          "awareness_pause": 8,
           "skip": {
             "begin": true,
             "end": true
@@ -213,7 +217,7 @@
         {
           "technique_audio": "gomu_right_begin",
           "awareness_audio": "gomu_right_end",
-          "awareness_pause": 5,
+          "awareness_pause": 10,
           "skip": {
             "begin": true,
             "end": true
@@ -228,6 +232,7 @@
       "sequence": [
         {
           "awareness_audio": "vaj_end",
+          "awareness_pause": 10,
           "skip": {
             "begin": true,
             "end": true
@@ -243,6 +248,7 @@
       "sequence": [
         {
           "awareness_audio": "hala_end",
+          "awareness_pause": 10,
           "skip": {
             "begin": true,
             "end": true
@@ -288,7 +294,7 @@
           }
         },
         {
-          "technique_audio": "shavasana_rightleg_technique",
+          "technique_audio": "shavasana_rightarm_technique",
           "time": 30,
           "awareness_audio": "shavasana_rightarm_awareness",
           "awareness_pause":5,
@@ -315,7 +321,7 @@
         },
         {
           "technique_audio": "shavasana_back",
-          "time": 10,
+          "time": 15,
           "skip": {
             "begin": true,
             "end": true
