@@ -252,52 +252,117 @@
     },
     {
       "name": "Śavāsana",
-      "announce_audio": "shavasana_begin",
+      "announce_audio": "shavasana_announce",
+      "announce_pause": 5,
       "sequence": [
         {
-          "concentration_audio": "shavasana_leftleg",
+          "technique_audio": "shavasana_technique",
+          "technique_pause": 5,
+          "concentration_audio": "shavasana_leftleg_technique",
           "time": 30,
+          "awareness_audio": "shavasana_leftleg_awareness",
+          "awareness_pause":5,
           "skip": {
             "begin": true,
             "end": true
           }
         },
         {
-          "concentration_audio": "shavasana_rightleg",
+          "technique_audio": "shavasana_rightleg_technique",
           "time": 30,
+          "awareness_audio": "shavasana_rightleg_awareness",
+          "awareness_pause":5,
           "skip": {
             "begin": true,
             "end": true
           }
         },
         {
-          "concentration_audio": "shavasana_leftarm",
+          "technique_audio": "shavasana_leftarm_technique",
           "time": 30,
+          "awareness_audio": "shavasana_leftarm_awareness",
+          "awareness_pause":5,
           "skip": {
             "begin": true,
             "end": true
           }
         },
         {
-          "concentration_audio": "shavasana_rightarm",
+          "technique_audio": "shavasana_rightleg_technique",
           "time": 30,
+          "awareness_audio": "shavasana_rightarm_awareness",
+          "awareness_pause":5,
           "skip": {
             "begin": true,
             "end": true
           }
         },
         {
-          "concentration_audio": "shavasana_thorax",
-          "time": 60,
+          "technique_audio": "shavasana_buttocks",
+          "time": 5,
           "skip": {
             "begin": true,
             "end": true
           }
         },
         {
-          "concentration_audio": "shavasana_harmony",
+          "technique_audio": "shavasana_pelvis_abdomen",
+          "time": 10,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "technique_audio": "shavasana_back",
+          "time": 10,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "technique_audio": "shavasana_chest_shoulders",
+          "time": 10,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "technique_audio": "shavasana_neck",
+          "time": 10,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "technique_audio": "shavasana_head",
+          "time": 20,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "technique_audio": "shavasana_global_relaxation",
+          "technique_pause": 35,
+          "concentration_audio": "shavasana_microcosm",
+          "time": 30,
+          "awareness_audio": "shavasana_grateful",
+          "awareness_pause": 15,
+          "skip": {
+            "begin": true,
+            "end": true
+          }
+        },
+        {
+          "technique_audio": "shavasana_harmony",
+          "technique_pause": 20,
+          "concentration_audio": "shavasana_slowlymove",
           "time": 15,
-          "awareness_end": "shavasana_end",
+          "awareness_audio": "shavasana_namaste",
           "skip": {
             "begin": true,
             "end": true
