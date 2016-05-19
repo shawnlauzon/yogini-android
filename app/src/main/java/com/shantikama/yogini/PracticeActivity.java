@@ -177,7 +177,7 @@ public class PracticeActivity extends AppCompatActivity {
         Log.d(TAG, String.format("Waiting for %d seconds ...", numSecs));
         isShowingTimer = showTimer;
 
-        mPerformanceTimer = new CountDownTimer(numSecs * 1000, 10) {
+        mPerformanceTimer = new CountDownTimer(numSecs * 1000, 100) {
             @Override
             public void onTick(long millisUntilFinished) {
                 mPerformanceMillisRemaining = millisUntilFinished;

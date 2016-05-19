@@ -103,9 +103,7 @@
             "end": true
           }
         }
-      ],
-      "stretch_audio": "pad_stretch",
-      "stretch_pause": 10
+      ]
     },
     {
       "name": "Trikonāsana",
@@ -129,12 +127,15 @@
           "awareness_audio": "trik_awareness_right",
           "awareness_pause": 10
         }
-      ]
+      ],
+      "stretch_audio": "trik_stretch",
+      "stretch_pause": 10
     },
     {
       "name": "Garudāsana",
       "time": 120,
       "announce_audio": "garu_begin",
+      "announce_pause": 10,
       "sequence": [
         {
           "technique_audio": "garu_left_begin",
@@ -242,13 +243,13 @@
         }
       ],
       "stretch_audio": "vaj_stretch",
-      "stretch_pause": 20
+      "stretch_pause": 40
     },
     {
       "name": "Halāsana",
       "time": 180,
       "announce_audio": "hala_begin",
-      "announce_pause": 10,
+      "announce_pause": 20,
       "sequence": [
         {
           "awareness_audio": "hala_end",
@@ -263,7 +264,7 @@
     {
       "name": "Śavāsana",
       "announce_audio": "shavasana_announce",
-      "announce_pause": 5,
+      "announce_pause": 20,
       "sequence": [
         {
           "technique_audio": "shavasana_technique",
@@ -369,7 +370,7 @@
         },
         {
           "technique_audio": "shavasana_harmony",
-          "technique_pause": 20,
+          "technique_pause": 15,
           "concentration_audio": "shavasana_slowlymove",
           "time": 15,
           "awareness_audio": "shavasana_namaste",
