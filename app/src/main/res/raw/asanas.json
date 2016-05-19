@@ -115,7 +115,7 @@
           "technique_audio": "trik_technique_left",
           "technique_pause": 1,
           "concentration_audio": "trik_concentration_left",
-          "end_pause": 3,
+          "end_pause": 5,
           "awareness_audio": "trik_awareness_left",
           "awareness_pause": 10
         },
@@ -123,7 +123,7 @@
           "technique_audio": "trik_technique_right",
           "technique_pause": 1,
           "concentration_audio": "trik_concentration_right",
-          "end_pause": 3,
+          "end_pause": 5,
           "awareness_audio": "trik_awareness_right",
           "awareness_pause": 10
         }
@@ -200,6 +200,30 @@
             "begin": true,
             "end": true
           }
+        }
+      ]
+    },
+    {
+      "name": "Jānuśirṣāsana",
+      "time": 180,
+      "announce_audio": "janu_announce",
+      "announce_pause": 3,
+      "sequence": [
+        {
+          "technique_audio": "janu_left_technique",
+          "technique_pause": 1,
+          "concentration_audio": "janu_left_concentration",
+          "end_pause": 5,
+          "awareness_audio": "janu_left_awareness",
+          "awareness_pause": 10
+        },
+        {
+          "technique_audio": "janu_right_technique",
+          "technique_pause": 1,
+          "concentration_audio": "janu_right_concentration",
+          "end_pause": 5,
+          "awareness_audio": "janu_right_awareness",
+          "awareness_pause": 10
         }
       ]
     },
