@@ -21,11 +21,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Iterator;
+import java.util.ListIterator;
 
 public class PracticeActivity extends AppCompatActivity {
     private static final String TAG = "PracticeActivity";
 
     private static final String AUDIO_URL_START = "android.resource://com.shantikama.yogini/raw/";
+
+    private static final String TAG_IS_STARTED = "TAG_IS_STARTED";
+    private static final String TAG_PERFORMANCE_MILIS_REMAINING = "TAG_PERFORMANCE_MILIS_REMAINING";
+    private static final String TAG_IS_COUNTDOWN_PAUSED = "TAG_IS_COUNTDOWN_PAUSED";
+    private static final String TAG_IS_SHOWING_TIMER = "TAG_IS_SHOWING_TIMER";
+    private static final String TAG_IS_PRACTICE_PAUSED = "TAG_IS_PRACTICE_PAUSED";
+    private static final String TAG_AUDIO_PLAYER_POSITION = "TAG_AUDIO_PLAYER_POSITION";
 
     private AsanaController mAsanaController;
     private boolean mIsStarted = false;
@@ -34,8 +42,8 @@ public class PracticeActivity extends AppCompatActivity {
 
     private CountDownTimer mPerformanceTimer;
     private boolean mIsCountdownPaused;
-    private long mPerformanceMillisRemaining;
-    private boolean isShowingTimer;
+    private int mPerformanceMillisRemaining;
+    private boolean mIsShowingTimer;
 
     private FloatingActionButton mFab;
     private boolean mIsPracticePaused = true;
@@ -54,12 +62,19 @@ public class PracticeActivity extends AppCompatActivity {
                 fabPressed();
             }
         });
-        showPlayButton();
 
         setupAudioPlayer();
 
         final Reader asanasJson = new InputStreamReader(getResources().openRawResource(R.raw.asanas));
         mAsanaController = new AsanaController(GsonUtils.newGson().fromJson(asanasJson, Asanas.class));
+
+        if (savedInstanceState != null) {
+            initState(savedInstanceState);
+        }
+
+        updateFabImage();
+
+        // TODO Show a nice image of the entire practice
     }
 
     private void setupAudioPlayer() {
@@ -76,6 +91,7 @@ public class PracticeActivity extends AppCompatActivity {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 Log.e(TAG, "MediaPlayer error: " + what + "(" + extra + ")");
+                Thread.dumpStack();
                 // TODO display to user
                 return false;
             }
@@ -106,8 +122,148 @@ public class PracticeActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(TAG_IS_STARTED, mIsStarted);
+        if (mIsStarted) {
+            outState.putBoolean(TAG_IS_COUNTDOWN_PAUSED, mIsCountdownPaused);
+            outState.putBoolean(TAG_IS_PRACTICE_PAUSED, mIsPracticePaused);
+            outState.putBoolean(TAG_IS_SHOWING_TIMER, mIsShowingTimer);
+            outState.putInt(TAG_PERFORMANCE_MILIS_REMAINING, mPerformanceMillisRemaining);
+            if (mAudioPlayer.isPlaying()) {
+                outState.putInt(TAG_AUDIO_PLAYER_POSITION, mAudioPlayer.getCurrentPosition());
+            }
+            mAsanaController.onSaveInstanceState(outState);
+
+            if (mPerformanceTimer != null) {
+                mPerformanceTimer.cancel();
+                mPerformanceTimer = null;
+            }
+        }
+    }
+
+    private void initState(Bundle savedInstanceState) {
+        mIsStarted = savedInstanceState.getBoolean(TAG_IS_STARTED);
+        if (mIsStarted) {
+            mIsCountdownPaused = savedInstanceState.getBoolean(TAG_IS_COUNTDOWN_PAUSED);
+            mIsPracticePaused = savedInstanceState.getBoolean(TAG_IS_PRACTICE_PAUSED);
+            mIsShowingTimer = savedInstanceState.getBoolean(TAG_IS_SHOWING_TIMER);
+            mPerformanceMillisRemaining = savedInstanceState.getInt(TAG_PERFORMANCE_MILIS_REMAINING);
+
+            mAsanaController.initState(savedInstanceState);
+
+            final int audioPlayerPosition = savedInstanceState.getInt(TAG_AUDIO_PLAYER_POSITION, -1);
+            if (audioPlayerPosition >= 0) {
+                mAudioPlayer.seekTo(savedInstanceState.getInt(TAG_AUDIO_PLAYER_POSITION));
+            }
+            if (mIsPracticePaused) {
+                mAudioPlayer.pause();
+            }
+        }
+    }
+
+    void show(Asana asana, int requestTimeMillis) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PracticeActivityFragment fragment = (PracticeActivityFragment) fragmentManager
+                .findFragmentById(R.id.fragment);
+        fragment.updateAsana(asana, getActualTime(requestTimeMillis));
+    }
+
+    private int getActualTime(int requestedTimeMillis) {
+        return mPerformanceMillisRemaining > 0 ? mPerformanceMillisRemaining : requestedTimeMillis;
+    }
+
+    void playAudio(String audio) {
+        if (audio == null) {
+            Log.d(TAG, "Skipping null audio");
+            mAsanaController.continuePractice();
+        } else {
+            Log.d(TAG, String.format("Playing audio %s ...", audio));
+            try {
+                mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + audio));
+                mAudioPlayer.prepare();
+                resumeAudio();
+            } catch (IOException e) {
+                // TODO handle
+                e.printStackTrace();
+            }
+        }
+    }
+
+    void pauseAudio() {
+        mAudioPlayer.pause();
+    }
+
+    private void resumeAudio() throws IOException {
+        mAudioPlayer.start();
+    }
+
+    void waitFor(final int numMillisInPhase, final boolean showTimer) {
+        final long waitTimeMs = getActualTime(numMillisInPhase);
+        mIsShowingTimer = showTimer;
+
+        mPerformanceTimer = new CountDownTimer(waitTimeMs, 100) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mPerformanceMillisRemaining = (int) millisUntilFinished;
+                if (mIsShowingTimer) {
+                    ((PracticeActivityFragment) getSupportFragmentManager()
+                            .findFragmentById(R.id.fragment)).updateTimeRemaining(mPerformanceMillisRemaining);
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                Log.d(TAG, String.format("Finished timer %s", mPerformanceTimer));
+                mPerformanceTimer = null;
+                mPerformanceMillisRemaining = -1;
+                mAsanaController.continuePractice();
+            }
+        };
+        Log.d(TAG, String.format("Created timer %s for %d ms", mPerformanceTimer, waitTimeMs));
+
+        mPerformanceTimer.start();
+    }
+
+    private void fabPressed() {
+        try {
+            if (mIsPracticePaused) { // user pressed the play button
+                mIsPracticePaused = false;
+                if (!mIsStarted) { // Only at very beginning of routine
+                    mAsanaController.startPractice();
+                    mIsStarted = true;
+                } else if (mIsCountdownPaused) {
+                    waitFor(mPerformanceMillisRemaining, mIsShowingTimer);
+                    mIsCountdownPaused = false;
+                } else {
+                    resumeAudio();
+                }
+            } else { // user pressed the pause button
+                mIsPracticePaused = true;
+                if (mAudioPlayer.isPlaying()) {
+                    pauseAudio();
+                } else {
+                    mPerformanceTimer.cancel();
+                    mPerformanceTimer = null;
+                    mIsCountdownPaused = true;
+                }
+            }
+        } catch (IOException e) {
+            // TODO Show problem to user
+            e.printStackTrace();
+        }
+        updateFabImage();
+    }
+
+    private void updateFabImage() {
+        final int drawableId;
+        if (mIsPracticePaused) {
+            drawableId = android.R.drawable.ic_media_play;
+        } else {
+            drawableId = android.R.drawable.ic_media_pause;
+        }
+        mFab.setImageResource(drawableId);
     }
 
     @Override
@@ -141,104 +297,12 @@ public class PracticeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void show(Asana asana, int time) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        PracticeActivityFragment fragment = (PracticeActivityFragment) fragmentManager
-                .findFragmentById(R.id.fragment);
-        fragment.updateAsana(asana, time);
-    }
-
-    void playAudio(String audio) {
-        if (audio == null) {
-            Log.d(TAG, "Skipping null audio");
-            mAsanaController.continuePractice();
-        } else {
-            Log.d(TAG, String.format("Playing audio %s ...", audio));
-            try {
-                mAudioPlayer.setDataSource(this, Uri.parse(AUDIO_URL_START + audio));
-                mAudioPlayer.prepare();
-                resumeAudio();
-            } catch (IOException e) {
-                // TODO handle
-                e.printStackTrace();
-            }
-        }
-    }
-
-    void pauseAudio() {
-        mAudioPlayer.pause();
-    }
-
-    private void resumeAudio() throws IOException {
-        mAudioPlayer.start();
-    }
-
-    void waitFor(final int numSecs, final boolean showTimer) {
-        Log.d(TAG, String.format("Waiting for %d seconds ...", numSecs));
-        isShowingTimer = showTimer;
-
-        mPerformanceTimer = new CountDownTimer(numSecs * 1000, 100) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                mPerformanceMillisRemaining = millisUntilFinished;
-                if (isShowingTimer) {
-                    ((PracticeActivityFragment) getSupportFragmentManager()
-                            .findFragmentById(R.id.fragment)).updateTimeRemaining(mPerformanceMillisRemaining);
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                Log.d(TAG, String.format("Finished timer %s", mPerformanceTimer));
-                mPerformanceTimer = null;
-                mAsanaController.continuePractice();
-            }
-        };
-        Log.d(TAG, String.format("Created timer %s for %d seconds", mPerformanceTimer, numSecs));
-
-        mPerformanceTimer.start();
-    }
-
-    private void fabPressed() {
-        try {
-            if (mIsPracticePaused) { // user pressed the play button
-                showPauseButton();
-                if (!mIsStarted) { // Only at very beginning of routine
-                    mAsanaController.startPractice();
-                    mIsStarted = true;
-                } else if (mIsCountdownPaused) {
-                    waitFor((int) mPerformanceMillisRemaining / 1000, isShowingTimer);
-                    mIsCountdownPaused = false;
-                } else {
-                    resumeAudio();
-                }
-            } else { // user pressed the pause button
-                showPlayButton();
-                if (mAudioPlayer.isPlaying()) {
-                    pauseAudio();
-                } else {
-                    mPerformanceTimer.cancel();
-                    mPerformanceTimer = null;
-                    mIsCountdownPaused = true;
-                }
-            }
-        } catch (IOException e) {
-            // TODO Show problem to user
-            e.printStackTrace();
-        }
-    }
-
-    private void showPauseButton() {
-        mFab.setImageResource(android.R.drawable.ic_media_pause);
-        mIsPracticePaused = false;
-    }
-
-    private void showPlayButton() {
-        mFab.setImageResource(android.R.drawable.ic_media_play);
-        mIsPracticePaused = true;
-    }
-
     private class AsanaController {
+        private static final String TAG_CUR_ASANA_ID = "TAG_CUR_ASANA_ID";
+        private static final String TAG_CUR_ASANA_SEQUENCE_ITEM_POS = "TAG_CUR_ASANA_SEQUENCE_ITEM_POS";
+        private static final String TAG_CUR_PHASE = "TAG_CUR_PHASE";
+        private static final String TAG_CUR_STATE = "TAG_CUR_STATE";
+
         // Phase numbers must be in ascending order with no gaps
         private static final int PHASE_IDLE = 0;
         private static final int PHASE_ANNOUNCE = 1;
@@ -261,7 +325,7 @@ public class PracticeActivity extends AppCompatActivity {
         private Asanas mAsanas;
 
         private Iterator<Asana> mAsanaIterator;
-        private Iterator<Asana.SequenceItem> mAsanaSequenceIterator;
+        private ListIterator<Asana.SequenceItem> mAsanaSequenceIterator;
 
         private Asana mCurAsana;
         private Asana.SequenceItem mCurAsanaSequenceItem;
@@ -273,8 +337,53 @@ public class PracticeActivity extends AppCompatActivity {
             mAsanas = asanas;
         }
 
+        void onSaveInstanceState(Bundle outState) {
+            if (mCurAsana != null) {
+                outState.putInt(TAG_CUR_ASANA_ID, mCurAsana.id);
+            }
+            if (mAsanaSequenceIterator != null) {
+                outState.putInt(TAG_CUR_ASANA_SEQUENCE_ITEM_POS, mAsanaSequenceIterator.previousIndex());
+            }
+
+            outState.putInt(TAG_CUR_PHASE, mCurPhase);
+            outState.putInt(TAG_CUR_STATE, mCurState);
+        }
+
+        void initState(Bundle savedInstanceState) {
+            final int savedAsanaId = savedInstanceState.getInt(TAG_CUR_ASANA_ID, -1);
+            if (savedAsanaId >= 0) {
+                mAsanaIterator = mAsanas.asanas.iterator();
+                while (mAsanaIterator.hasNext()) {
+                    // Advance to the asana we saved
+                    mCurAsana = mAsanaIterator.next();
+                    if (mCurAsana.id == savedAsanaId) {
+                        break;
+                    }
+                }
+                final int savedSequenceItemPos = savedInstanceState.getInt(TAG_CUR_ASANA_SEQUENCE_ITEM_POS, -1);
+                if (savedSequenceItemPos >= 0) {
+                    Log.d(TAG, "Advancing to sequence " + savedSequenceItemPos);
+                    mAsanaSequenceIterator = mCurAsana.sequence.listIterator();
+                    int pos = 0;
+                    do {
+                        mCurAsanaSequenceItem = mAsanaSequenceIterator.next();
+                    } while (++pos <= savedSequenceItemPos);
+                }
+            }
+
+            mCurPhase = savedInstanceState.getInt(TAG_CUR_PHASE);
+            mCurState = savedInstanceState.getInt(TAG_CUR_STATE);
+
+            show(mCurAsana, mCurAsana.time);
+            handleState();
+        }
+
         public void startPractice() {
-            mAsanaIterator = mAsanas.asanas.iterator();
+            if (mAsanaIterator == null) {
+                // On rotation, this will be already advanced to the correct location
+                mAsanaIterator = mAsanas.asanas.iterator();
+            }
+
             continuePractice();
         }
 
@@ -325,15 +434,15 @@ public class PracticeActivity extends AppCompatActivity {
                     STATE_STRS.get(mCurState)));
 
             if (mCurPhase == PHASE_ANNOUNCE) {
-                show(mCurAsana, mCurAsana.time);
+                show(mCurAsana, mCurAsana.time * 1000);
             } else if (mCurPhase == PHASE_TECHNIQUE) {
                 if (mCurAsanaSequenceItem.time > 0) {
-                    show(mCurAsana, mCurAsanaSequenceItem.time);
+                    show(mCurAsana, mCurAsanaSequenceItem.time * 1000);
                 }
             }
 
             if (mCurState == STATE_WAITING) {
-                waitFor(getPhasePause(), mCurPhase == PHASE_PERFORM);
+                waitFor(getPhasePauseMillis(), mCurPhase == PHASE_PERFORM);
             } else if (mCurState == STATE_PLAYING) {
                 playAudio(getPhaseAudio());
             }
@@ -342,7 +451,7 @@ public class PracticeActivity extends AppCompatActivity {
         private void advanceAsana() {
             if (mAsanaIterator.hasNext()) {
                 mCurAsana = mAsanaIterator.next();
-                mAsanaSequenceIterator = mCurAsana.sequence.iterator();
+                mAsanaSequenceIterator = mCurAsana.sequence.listIterator();
                 mCurAsanaSequenceItem = mAsanaSequenceIterator.next();
                 mCurPhase = PHASE_ANNOUNCE;
                 mCurState = STATE_PLAYING;
@@ -383,37 +492,37 @@ public class PracticeActivity extends AppCompatActivity {
             return phaseAudio;
         }
 
-        private int getPhasePause() {
-            final int phasePause;
+        private int getPhasePauseMillis() {
+            final int phasePauseSecs;
             switch (mCurPhase) {
                 case PHASE_ANNOUNCE:
-                    phasePause = mCurAsana.announcePause;
+                    phasePauseSecs = mCurAsana.announcePause;
                     break;
                 case PHASE_TECHNIQUE:
-                    phasePause = mCurAsanaSequenceItem.techniquePause;
+                    phasePauseSecs = mCurAsanaSequenceItem.techniquePause;
                     break;
                 case PHASE_CONCENTRATION:
-                    phasePause = mCurAsanaSequenceItem.concentrationPause;
+                    phasePauseSecs = mCurAsanaSequenceItem.concentrationPause;
                     break;
                 case PHASE_BEGIN:
-                    phasePause = mCurAsanaSequenceItem.beginPause;
+                    phasePauseSecs = mCurAsanaSequenceItem.beginPause;
                     break;
                 case PHASE_PERFORM:
-                    phasePause = mCurAsanaSequenceItem.time > 0 ? mCurAsanaSequenceItem.time : mCurAsana.time;
+                    phasePauseSecs = mCurAsanaSequenceItem.time > 0 ? mCurAsanaSequenceItem.time : mCurAsana.time;
                     break;
                 case PHASE_END:
-                    phasePause = mCurAsanaSequenceItem.endPause;
+                    phasePauseSecs = mCurAsanaSequenceItem.endPause;
                     break;
                 case PHASE_AWARENESS:
-                    phasePause = mCurAsanaSequenceItem.awarenessPause;
+                    phasePauseSecs = mCurAsanaSequenceItem.awarenessPause;
                     break;
                 case PHASE_STRETCH:
-                    phasePause = mCurAsana.stretchPause;
+                    phasePauseSecs = mCurAsana.stretchPause;
                     break;
                 default:
-                    phasePause = 0;
+                    phasePauseSecs = 0;
             }
-            return phasePause;
+            return phasePauseSecs * 1000;
         }
 
         private boolean isPhaseSkipped() {
@@ -425,5 +534,4 @@ public class PracticeActivity extends AppCompatActivity {
                             (mCurPhase == PHASE_AWARENESS && mCurAsanaSequenceItem.skip.awareness));
         }
     }
-
 }
