@@ -32,6 +32,9 @@ public class PracticeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "PracticeActivity";
 
+    public static final String KEY_PRACTICE_NAME = "KEY_PRACTICE_NAME";
+    public static final String KEY_PRACTICE_JSON = "KEY_PRACTICE_JSON";
+
     private static final String AUDIO_URL_START = "android.resource://com.shantikama.yogini/raw/";
 
     private static final String TAG_IS_STARTED = "TAG_IS_STARTED";
@@ -80,7 +83,16 @@ public class PracticeActivity extends AppCompatActivity
 
         setupAudioPlayer();
 
-        final Reader asanasJson = new InputStreamReader(getResources().openRawResource(R.raw.asanas));
+        Bundle bundle = getIntent().getExtras();
+        final int practiceJsonResId;
+        if (bundle != null) {
+            setTitle(bundle.getString(KEY_PRACTICE_NAME));
+            practiceJsonResId = getResources().getIdentifier(bundle.getString(KEY_PRACTICE_JSON), "raw",
+                    this.getPackageName());
+        } else {
+            practiceJsonResId = R.raw.asanas;
+        }
+        final Reader asanasJson = new InputStreamReader(getResources().openRawResource(practiceJsonResId));
         mAsanaController = new AsanaController(GsonUtils.newGson().fromJson(asanasJson, Asanas.class));
 
         if (savedInstanceState != null) {

@@ -10,6 +10,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Locale;
 
 public class StartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,6 +39,48 @@ public class StartActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        setupContent();
+    }
+
+    private void setupContent() {
+        final Reader indexJson = new InputStreamReader(getResources().openRawResource(R.raw.index));
+        final Index index = GsonUtils.newGson().fromJson(indexJson, Index.class);
+
+        final ListView listView = (ListView) findViewById(R.id.practices);
+        if (listView != null) {
+            listView.setAdapter(new ArrayAdapter<Practice>(this,
+                    R.layout.list_item_practice, R.id.name, index.practices) {
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                    if (convertView == null) {
+                        convertView = getLayoutInflater().inflate(R.layout.list_item_practice, listView, false);
+                    }
+
+                    final Practice practice = index.practices.get(position);
+                    ((TextView) convertView.findViewById(R.id.name)).setText(practice.name);
+                    ((TextView) convertView.findViewById(R.id.num_minutes)).setText(
+                            String.format(Locale.getDefault(), "%d", practice.timeMinutes));
+
+                    return convertView;
+                }
+            });
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    final Practice practice = index.practices.get(position);
+                    Intent intent = new Intent(StartActivity.this, PracticeActivity.class);
+                    intent.putExtra(PracticeActivity.KEY_PRACTICE_NAME, practice.name);
+                    intent.putExtra(PracticeActivity.KEY_PRACTICE_JSON, practice.json);
+                    startActivity(intent);
+                }
+            });
+        }
+
+//        for (Practice p :index.practices) {
+//            View v = inflater.inflate(R.layout.list_item_practice, list, false);
+//            list.addView(v);
+//        }
     }
 
     @Override
