@@ -1,5 +1,6 @@
 package com.shantikama.yogini;
 
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -7,7 +8,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,7 +28,8 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-public class PracticeActivity extends AppCompatActivity {
+public class PracticeActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "PracticeActivity";
 
     private static final String AUDIO_URL_START = "android.resource://com.shantikama.yogini/raw/";
@@ -63,6 +69,15 @@ public class PracticeActivity extends AppCompatActivity {
             }
         });
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         setupAudioPlayer();
 
         final Reader asanasJson = new InputStreamReader(getResources().openRawResource(R.raw.asanas));
@@ -75,6 +90,16 @@ public class PracticeActivity extends AppCompatActivity {
         updateFabImage();
 
         // TODO Show a nice image of the entire practice
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void setupAudioPlayer() {
@@ -295,6 +320,24 @@ public class PracticeActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_begin) {
+            final Intent intent = new Intent(this, PracticeActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_manage) {
+            final Intent intent = new Intent(this, PracticeActivity.class);
+            startActivity(intent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private class AsanaController {
