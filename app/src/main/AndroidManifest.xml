@@ -22,7 +22,25 @@
             android:name=".ui.PracticeActivity"
             android:label="1½ hour practice"
             android:parentActivityName=".ui.StartActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.AsanaListActivity"
+            android:label="@string/title_asana_list"
+            android:parentActivityName=".ui.PracticeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.shantikama.yogini.ui.PracticeActivity" />
+        </activity>
+        <activity
+            android:name=".ui.AsanaDetailActivity"
+            android:label="@string/title_asana_detail"
+            android:parentActivityName=".ui.AsanaListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.shantikama.yogini.ui.AsanaListActivity" />
+        </activity>
     </application>
 
 </manifest>

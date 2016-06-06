@@ -9,6 +9,7 @@ import com.shantikama.yogini.utils.GsonUtils;
  * Created by Admin on 100/10/16.
  */
 public class Asanas {
+    public final String name;
     public final String beginAudio;
     public final String endAudio;
     public final String remaining30Sec;
@@ -20,6 +21,7 @@ public class Asanas {
     public ImmutableList<Asana> asanas;
 
     private Asanas() {
+        this.name = null;
         this.beginAudio = null;
         this.endAudio = null;
         this.remaining30Sec = null;
@@ -30,9 +32,10 @@ public class Asanas {
         this.asanas = null;
     }
 
-    public Asanas(String beginAudio, String endAudio, String remaining30Sec, String remaining1Min,
+    public Asanas(String name, String beginAudio, String endAudio, String remaining30Sec, String remaining1Min,
                   ImmutableList<String> chakras, int timeMinutes, String parent,
                   ImmutableList<Asana> asanas) {
+        this.name = name;
         this.beginAudio = beginAudio;
         this.endAudio = endAudio;
         this.remaining30Sec = remaining30Sec;
@@ -63,6 +66,7 @@ public class Asanas {
 
     public Asanas newInstanceWithResolvedParent(Asanas parentAsanas) {
         return new Asanas(
+                name == null ? parentAsanas.name : name,
                 beginAudio == null ? parentAsanas.beginAudio : beginAudio,
                 endAudio == null ? parentAsanas.endAudio : endAudio,
                 remaining30Sec == null ? parentAsanas.remaining30Sec : remaining30Sec,

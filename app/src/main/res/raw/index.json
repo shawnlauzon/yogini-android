@@ -1,16 +1,19 @@
 {
   "practices": [
     {
+      "id": "64285a6a-8ed3-426f-91a6-c5f971c239b2",
       "name": "Basic Agama practice",
       "time_minutes": 90,
       "json": "basic_agama_practice"
     },
     {
+      "id": "3bb02f03-fdff-427d-86aa-2c9c9af13a17",
       "name": "Short Agama practice",
       "time_minutes": 60,
       "json": "short_agama_practice"
     },
     {
+      "id": "4539f74b-8885-4f00-a261-0000fc379ef1",
       "name": "All asanas",
       "time_minutes": 90,
       "json": "asanas"

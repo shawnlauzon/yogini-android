@@ -1,7 +1,6 @@
 package com.shantikama.yogini;
 
 import com.google.common.collect.ImmutableList;
-import com.shantikama.yogini.ui.PracticeInfo;
 
 /**
  * Created by Admin on 100/10/16.
@@ -11,5 +10,14 @@ public class Index {
 
     public Index(ImmutableList<PracticeInfo> practices) {
         this.practices = practices;
+    }
+
+    public PracticeInfo getById(String id) {
+        for (PracticeInfo pi : practices) {
+            if (id.equals(pi.id)) {
+                return pi;
+            }
+        }
+        return null;
     }
 }

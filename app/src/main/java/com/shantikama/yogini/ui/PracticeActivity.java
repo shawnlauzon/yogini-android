@@ -23,8 +23,8 @@ import android.view.View;
 import com.google.common.collect.ImmutableList;
 import com.shantikama.yogini.Asana;
 import com.shantikama.yogini.Asanas;
+import com.shantikama.yogini.JsonLibrary;
 import com.shantikama.yogini.R;
-import com.shantikama.yogini.utils.GsonUtils;
 import com.shantikama.yogini.utils.MediaPlayerUtils;
 
 import java.io.IOException;
@@ -35,8 +35,7 @@ public class PracticeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "PracticeActivity";
 
-    public static final String KEY_PRACTICE_NAME = "KEY_PRACTICE_NAME";
-    public static final String KEY_PRACTICE_JSON = "KEY_PRACTICE_JSON";
+    public static final String KEY_PRACTICE_ID = "KEY_PRACTICE_ID";
 
     private static final String AUDIO_URL_START = "android.resource://com.shantikama.yogini/raw/";
 
@@ -87,16 +86,11 @@ public class PracticeActivity extends AppCompatActivity
         setupAudioPlayer();
 
         Bundle bundle = getIntent().getExtras();
-        final int practiceJsonResId;
-        if (bundle != null) {
-            setTitle(bundle.getString(KEY_PRACTICE_NAME));
-            practiceJsonResId = GsonUtils.getRawResId(this, bundle.getString(KEY_PRACTICE_JSON));
-        } else {
-            practiceJsonResId = R.raw.asanas;
-        }
+        assert bundle != null;
 
-        Asanas unresolvedAsanas = GsonUtils.deserialize(this, practiceJsonResId, Asanas.class);
-        mAsanaController = new AsanaController(unresolvedAsanas.newInstanceWithResolvedParent(this));
+        Asanas asanas = JsonLibrary.getInstance().getAsanas(this, bundle.getString(KEY_PRACTICE_ID));
+        setTitle(asanas.name);
+        mAsanaController = new AsanaController(asanas);
 
         if (savedInstanceState != null) {
             initState(savedInstanceState);
@@ -321,7 +315,10 @@ public class PracticeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_details) {
+            Intent intent = new Intent(this, AsanaListActivity.class);
+            intent.putExtras(getIntent().getExtras());
+            startActivity(intent);
             return true;
         } else if (id == R.id.action_skip) {
             if (mPerformanceTimer != null) {
@@ -351,6 +348,7 @@ public class PracticeActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        assert drawer != null;
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -421,6 +419,7 @@ public class PracticeActivity extends AppCompatActivity
                 final int savedSequenceItemPos = savedInstanceState.getInt(TAG_CUR_ASANA_SEQUENCE_ITEM_POS, -1);
                 if (savedSequenceItemPos >= 0) {
                     Log.d(TAG, "Advancing to sequence " + savedSequenceItemPos);
+                    assert mCurAsana.sequence != null;
                     mAsanaSequenceIterator = mCurAsana.sequence.listIterator();
                     int pos = 0;
                     do {
@@ -509,6 +508,7 @@ public class PracticeActivity extends AppCompatActivity
         private void advanceAsana() {
             if (mAsanaIterator.hasNext()) {
                 mCurAsana = mAsanaIterator.next();
+                assert mCurAsana.sequence != null;
                 mAsanaSequenceIterator = mCurAsana.sequence.listIterator();
                 mCurAsanaSequenceItem = mAsanaSequenceIterator.next();
                 mCurPhase = PHASE_ANNOUNCE;

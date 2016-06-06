@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">Yogini</string>
     <string name="action_settings">Settings</string>
+    <string name="action_details">Details</string>
     <string name="toolbar_item_skip">Skip</string>
     <string name="title_activity_start">StartActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_asana_list">Asanas</string>
+    <string name="title_asana_detail">Asana Detail</string>
 </resources>

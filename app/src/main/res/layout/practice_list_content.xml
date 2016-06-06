@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/practice_list_item_height"
-    android:paddingLeft="@dimen/practice_list_item_horizontal_padding"
-    android:paddingRight="@dimen/practice_list_item_horizontal_padding">
+    android:paddingLeft="@dimen/text_margin"
+    android:paddingRight="@dimen/text_margin">
 
     <LinearLayout
         android:id="@+id/time"

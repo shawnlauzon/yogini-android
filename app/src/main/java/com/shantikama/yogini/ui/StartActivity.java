@@ -18,8 +18,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.shantikama.yogini.Index;
+import com.shantikama.yogini.JsonLibrary;
+import com.shantikama.yogini.PracticeInfo;
 import com.shantikama.yogini.R;
-import com.shantikama.yogini.utils.GsonUtils;
 
 import java.util.Locale;
 
@@ -34,28 +35,30 @@ public class StartActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        assert drawer != null;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
         setupContent();
     }
 
     private void setupContent() {
-        final Index index = GsonUtils.deserialize(this, R.raw.index, Index.class);
+        final Index index = JsonLibrary.getInstance().getIndex(this);
 
         final ListView listView = (ListView) findViewById(R.id.practices);
         if (listView != null) {
             listView.setAdapter(new ArrayAdapter<PracticeInfo>(this,
-                    R.layout.list_item_practice, R.id.name, index.practices) {
+                    R.layout.practice_list_content, R.id.name, index.practices) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
                     if (convertView == null) {
-                        convertView = getLayoutInflater().inflate(R.layout.list_item_practice, listView, false);
+                        convertView = getLayoutInflater().inflate(R.layout.practice_list_content, listView, false);
                     }
 
                     final PracticeInfo practiceInfo = index.practices.get(position);
@@ -71,8 +74,7 @@ public class StartActivity extends AppCompatActivity
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     final PracticeInfo practiceInfo = index.practices.get(position);
                     Intent intent = new Intent(StartActivity.this, PracticeActivity.class);
-                    intent.putExtra(PracticeActivity.KEY_PRACTICE_NAME, practiceInfo.name);
-                    intent.putExtra(PracticeActivity.KEY_PRACTICE_JSON, practiceInfo.json);
+                    intent.putExtra(PracticeActivity.KEY_PRACTICE_ID, practiceInfo.id);
                     startActivity(intent);
                 }
             });
@@ -82,6 +84,7 @@ public class StartActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        assert drawer != null;
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -125,6 +128,7 @@ public class StartActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        assert drawer != null;
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
