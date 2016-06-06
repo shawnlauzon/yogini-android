@@ -141,7 +141,9 @@ public class AsanaListActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(AsanaDetailFragment.ARG_ITEM_ID, String.valueOf(holder.mItem.id));
+                        arguments.putString(AsanaDetailFragment.ARG_PRACTICE_ID,
+                                getIntent().getStringExtra(PracticeActivity.KEY_PRACTICE_ID));
+                        arguments.putInt(AsanaDetailFragment.ARG_ASANA_ID, holder.mItem.id);
                         AsanaDetailFragment fragment = new AsanaDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -150,7 +152,9 @@ public class AsanaListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, AsanaDetailActivity.class);
-                        intent.putExtra(AsanaDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        intent.putExtra(AsanaDetailFragment.ARG_PRACTICE_ID,
+                                getIntent().getStringExtra(PracticeActivity.KEY_PRACTICE_ID));
+                        intent.putExtra(AsanaDetailFragment.ARG_ASANA_ID, holder.mItem.id);
 
                         context.startActivity(intent);
                     }

@@ -56,8 +56,10 @@ public class AsanaDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(AsanaDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(AsanaDetailFragment.ARG_ITEM_ID));
+            arguments.putString(AsanaDetailFragment.ARG_PRACTICE_ID,
+                    getIntent().getStringExtra(AsanaDetailFragment.ARG_PRACTICE_ID));
+            arguments.putInt(AsanaDetailFragment.ARG_ASANA_ID,
+                    getIntent().getIntExtra(AsanaDetailFragment.ARG_ASANA_ID, -1));
             AsanaDetailFragment fragment = new AsanaDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

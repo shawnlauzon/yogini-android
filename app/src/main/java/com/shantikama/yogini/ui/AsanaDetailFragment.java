@@ -9,8 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.shantikama.yogini.Asana;
+import com.shantikama.yogini.JsonLibrary;
 import com.shantikama.yogini.R;
-import com.shantikama.yogini.ui.dummy.DummyContent;
 
 /**
  * A fragment representing a single Asana detail screen.
@@ -19,16 +20,11 @@ import com.shantikama.yogini.ui.dummy.DummyContent;
  * on handsets.
  */
 public class AsanaDetailFragment extends Fragment {
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
-    public static final String ARG_ITEM_ID = "item_id";
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
-    private DummyContent.DummyItem mItem;
+    public static final String ARG_PRACTICE_ID = "practice_id";
+    public static final String ARG_ASANA_ID = "asana_id";
+
+    private Asana mAsana;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -41,16 +37,17 @@ public class AsanaDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
+        if (getArguments().containsKey(ARG_ASANA_ID)) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            mAsana = JsonLibrary.getInstance().getAsanas(getActivity(),
+                    getArguments().getString(ARG_PRACTICE_ID)).getById(getArguments().getInt(ARG_ASANA_ID));
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.content);
+                appBarLayout.setTitle(mAsana.name);
             }
         }
     }
@@ -61,8 +58,8 @@ public class AsanaDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.asana_detail, container, false);
 
         // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.asana_detail)).setText(mItem.details);
+        if (mAsana != null) {
+            ((TextView) rootView.findViewById(R.id.asana_detail)).setText(String.valueOf(mAsana.time));
         }
 
         return rootView;
