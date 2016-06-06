@@ -1,6 +1,7 @@
 package com.shantikama.yogini;
 
 import com.google.common.collect.ImmutableList;
+import com.shantikama.yogini.ui.PracticeInfo;
 
 /**
  * Created by Admin on 100/10/16.

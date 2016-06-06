@@ -1,4 +1,4 @@
-package com.shantikama.yogini;
+package com.shantikama.yogini.ui;
 
 import android.content.Intent;
 import android.media.AudioAttributes;
@@ -21,6 +21,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.common.collect.ImmutableList;
+import com.shantikama.yogini.Asana;
+import com.shantikama.yogini.Asanas;
+import com.shantikama.yogini.R;
+import com.shantikama.yogini.utils.GsonUtils;
+import com.shantikama.yogini.utils.MediaPlayerUtils;
 
 import java.io.IOException;
 import java.util.Iterator;

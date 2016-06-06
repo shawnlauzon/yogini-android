@@ -1,4 +1,4 @@
-package com.shantikama.yogini;
+package com.shantikama.yogini.utils;
 
 import android.content.Context;
 import android.media.MediaPlayer;

@@ -1,4 +1,4 @@
-package com.shantikama.yogini;
+package com.shantikama.yogini.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.shantikama.yogini.Index;
+import com.shantikama.yogini.R;
+import com.shantikama.yogini.utils.GsonUtils;
 
 import java.util.Locale;
 

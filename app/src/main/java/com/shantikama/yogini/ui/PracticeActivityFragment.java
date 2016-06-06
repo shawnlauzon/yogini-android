@@ -1,4 +1,4 @@
-package com.shantikama.yogini;
+package com.shantikama.yogini.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.shantikama.yogini.Asana;
+import com.shantikama.yogini.R;
 
 import java.util.Locale;
 

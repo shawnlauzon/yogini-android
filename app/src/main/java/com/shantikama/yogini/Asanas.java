@@ -3,6 +3,7 @@ package com.shantikama.yogini;
 import android.content.Context;
 
 import com.google.common.collect.ImmutableList;
+import com.shantikama.yogini.utils.GsonUtils;
 
 /**
  * Created by Admin on 100/10/16.

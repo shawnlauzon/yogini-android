@@ -1,4 +1,4 @@
-package com.shantikama.yogini;
+package com.shantikama.yogini.ui;
 
 /**
  * Created by Shawn Lauzon
