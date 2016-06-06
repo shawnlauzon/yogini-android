@@ -1,0 +1,31 @@
+{
+  "name": "Short Agama practice",
+  "time_minutes": "60",
+  "parent": "asanas",
+  "asanas": [
+    {
+      "id": 0
+    },
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "id": 5
+    },
+    {
+      "id": 6
+    },
+    {
+      "id": 8
+    },
+    {
+      "id": 11
+    }
+  ]
+}
