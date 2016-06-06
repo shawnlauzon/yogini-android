@@ -17,8 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.Locale;
 
 public class StartActivity extends AppCompatActivity
@@ -44,12 +42,11 @@ public class StartActivity extends AppCompatActivity
     }
 
     private void setupContent() {
-        final Reader indexJson = new InputStreamReader(getResources().openRawResource(R.raw.index));
-        final Index index = GsonUtils.newGson().fromJson(indexJson, Index.class);
+        final Index index = GsonUtils.deserialize(this, R.raw.index, Index.class);
 
         final ListView listView = (ListView) findViewById(R.id.practices);
         if (listView != null) {
-            listView.setAdapter(new ArrayAdapter<Practice>(this,
+            listView.setAdapter(new ArrayAdapter<PracticeInfo>(this,
                     R.layout.list_item_practice, R.id.name, index.practices) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -57,10 +54,10 @@ public class StartActivity extends AppCompatActivity
                         convertView = getLayoutInflater().inflate(R.layout.list_item_practice, listView, false);
                     }
 
-                    final Practice practice = index.practices.get(position);
-                    ((TextView) convertView.findViewById(R.id.name)).setText(practice.name);
+                    final PracticeInfo practiceInfo = index.practices.get(position);
+                    ((TextView) convertView.findViewById(R.id.name)).setText(practiceInfo.name);
                     ((TextView) convertView.findViewById(R.id.num_minutes)).setText(
-                            String.format(Locale.getDefault(), "%d", practice.timeMinutes));
+                            String.format(Locale.getDefault(), "%d", practiceInfo.timeMinutes));
 
                     return convertView;
                 }
@@ -68,19 +65,14 @@ public class StartActivity extends AppCompatActivity
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    final Practice practice = index.practices.get(position);
+                    final PracticeInfo practiceInfo = index.practices.get(position);
                     Intent intent = new Intent(StartActivity.this, PracticeActivity.class);
-                    intent.putExtra(PracticeActivity.KEY_PRACTICE_NAME, practice.name);
-                    intent.putExtra(PracticeActivity.KEY_PRACTICE_JSON, practice.json);
+                    intent.putExtra(PracticeActivity.KEY_PRACTICE_NAME, practiceInfo.name);
+                    intent.putExtra(PracticeActivity.KEY_PRACTICE_JSON, practiceInfo.json);
                     startActivity(intent);
                 }
             });
         }
-
-//        for (Practice p :index.practices) {
-//            View v = inflater.inflate(R.layout.list_item_practice, list, false);
-//            list.addView(v);
-//        }
     }
 
     @Override

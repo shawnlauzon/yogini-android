@@ -12,6 +12,7 @@
       "name": "Warming exercises",
       "announce_audio": "warming_0",
       "announce_pause": 8,
+      "time": 0,
       "sequence": [
         {
           "technique_audio": "warming_1_begin",
@@ -301,6 +302,7 @@
       "name": "Śavāsana",
       "announce_audio": "shavasana_announce",
       "announce_pause": 20,
+      "time": 0,
       "sequence": [
         {
           "technique_audio": "shavasana_technique",

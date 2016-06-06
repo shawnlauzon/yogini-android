@@ -20,6 +20,19 @@ public class Asana {
     public final String stretchAudio;
     public final int stretchPause;
 
+    private Asana() {
+        this.id = -1;
+        this.name = null;
+        this.order = -1;
+        this.time = -1;
+        this.chakra = -1;
+        this.announceAudio = null;
+        this.announcePause = -1;
+        this.sequence = null;
+        this.stretchAudio = null;
+        this.stretchPause = -1;
+    }
+
     public Asana(int id, String name, int order, int time, int chakra, String announceAudio,
                  int announcePause, ImmutableList<SequenceItem> sequence, String stretchAudio,
                  int stretchPause) {
@@ -33,6 +46,28 @@ public class Asana {
         this.sequence = sequence;
         this.stretchAudio = stretchAudio;
         this.stretchPause = stretchPause;
+    }
+
+    public Asana newInstanceWithResolvedParent(Asana parent) {
+        return new Asana(id,
+                name == null ? parent.name : name,
+                order == -1 ? parent.order : order,
+                time == -1 ? parent.time : time,
+                chakra == -1 ? parent.chakra : chakra,
+                announceAudio == null ? parent.announceAudio : announceAudio,
+                announcePause == -1 ? parent.announcePause : announcePause,
+                sequence == null ? parent.sequence : newListWithResolvedParent(parent.sequence),
+                stretchAudio == null ? parent.stretchAudio : stretchAudio,
+                stretchPause == -1 ? parent.stretchPause : stretchPause
+        );
+    }
+
+    private ImmutableList<SequenceItem> newListWithResolvedParent(ImmutableList<SequenceItem> parentSeq) {
+        ImmutableList.Builder<SequenceItem> builder = new ImmutableList.Builder<>();
+        for (int i = 0; i < sequence.size(); i++) {
+            builder.add(sequence.get(i).newInstanceWithResolvedParent(parentSeq.get(i)));
+        }
+        return builder.build();
     }
 
     @Override
@@ -58,9 +93,22 @@ public class Asana {
 
         public final SkipPhase skip;
 
+        private SequenceItem() {
+            this.techniqueAudio = null;
+            this.concentrationAudio = null;
+            this.awarenessAudio = null;
+            this.techniquePause = -1;
+            this.concentrationPause = -1;
+            this.beginPause = -1;
+            this.endPause = -1;
+            this.awarenessPause = -1;
+            this.time = -1;
+            this.skip = null;
+        }
+
         public SequenceItem(String techniqueAudio, String concentrationAudio, String awarenessAudio,
-                            int techniquePause, int concentrationPause, int beginPause, int endPause,
-                            int awarenessPause, int time, SkipPhase skip) {
+                            int techniquePause, int concentrationPause, int beginPause,
+                            int endPause, int awarenessPause, int time, SkipPhase skip) {
             this.techniqueAudio = techniqueAudio;
             this.concentrationAudio = concentrationAudio;
             this.awarenessAudio = awarenessAudio;
@@ -71,6 +119,21 @@ public class Asana {
             this.awarenessPause = awarenessPause;
             this.time = time;
             this.skip = skip;
+        }
+
+        public SequenceItem newInstanceWithResolvedParent(SequenceItem parent) {
+            return new SequenceItem(
+                    techniqueAudio == null ? parent.techniqueAudio : techniqueAudio,
+                    concentrationAudio == null ? parent.concentrationAudio : concentrationAudio,
+                    awarenessAudio == null ? parent.awarenessAudio : awarenessAudio,
+                    techniquePause == -1 ? parent.techniquePause : techniquePause,
+                    concentrationPause == -1 ? parent.concentrationPause : concentrationPause,
+                    beginPause == -1 ? parent.beginPause : beginPause,
+                    endPause == -1 ? parent.endPause : endPause,
+                    awarenessPause == -1 ? parent.awarenessPause : awarenessPause,
+                    time == -1 ? parent.time : time,
+                    skip == null ? parent.skip : skip.newInstanceWithResolvedParent(parent.skip)
+            );
         }
     }
 
@@ -83,11 +146,21 @@ public class Asana {
 
         public SkipPhase(boolean technique, boolean concentration, boolean begin, boolean end,
                          boolean awareness) {
-            this.technique = technique;
-            this.concentration = concentration;
-            this.begin = begin;
-            this.end = end;
-            this.awareness = awareness;
+            this.technique = false;
+            this.concentration = false;
+            this.begin = false;
+            this.end = false;
+            this.awareness = false;
+        }
+
+        public SkipPhase newInstanceWithResolvedParent(SkipPhase parent) {
+            return new SkipPhase(
+                    technique == false ? parent.technique : technique,
+                    concentration == false ? parent.concentration : concentration,
+                    begin == false ? parent.begin : begin,
+                    end == false ? parent.end : end,
+                    awareness == false ? parent.awareness : awareness
+            );
         }
     }
 }

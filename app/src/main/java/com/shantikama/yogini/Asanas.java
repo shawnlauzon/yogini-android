@@ -1,5 +1,7 @@
 package com.shantikama.yogini;
 
+import android.content.Context;
+
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -11,14 +13,31 @@ public class Asanas {
     public final String remaining30Sec;
     public final String remaining1Min;
     public ImmutableList<String> chakras;
+    public final int timeMinutes;
+    public final String parent;
 
     public ImmutableList<Asana> asanas;
 
-    public Asanas(String beginAudio, String endAudio, String remaining30Sec, String remaining1Min, ImmutableList<String> chakras, ImmutableList<Asana> asanas) {
+    private Asanas() {
+        this.beginAudio = null;
+        this.endAudio = null;
+        this.remaining30Sec = null;
+        this.remaining1Min = null;
+        this.timeMinutes = -1;
+        this.parent = null;
+        this.chakras = null;
+        this.asanas = null;
+    }
+
+    public Asanas(String beginAudio, String endAudio, String remaining30Sec, String remaining1Min,
+                  ImmutableList<String> chakras, int timeMinutes, String parent,
+                  ImmutableList<Asana> asanas) {
         this.beginAudio = beginAudio;
         this.endAudio = endAudio;
         this.remaining30Sec = remaining30Sec;
         this.remaining1Min = remaining1Min;
+        this.timeMinutes = timeMinutes;
+        this.parent = parent;
         this.chakras = chakras;
         this.asanas = asanas;
     }
@@ -32,17 +51,33 @@ public class Asanas {
         return null;
     }
 
-    public Asana getByPosition(int position) {
-        if (asanas.size() - 1 < position) {
-            return null;
+    public Asanas newInstanceWithResolvedParent(Context context) {
+        if (parent == null) {
+            return this;
+        } else {
+            return newInstanceWithResolvedParent(GsonUtils.deserialize(context,
+                    GsonUtils.getRawResId(context, parent), Asanas.class));
         }
-        return asanas.get(position);
     }
 
-    @Override
-    public String toString() {
-        return "Asanas{" +
-                "asanas=" + asanas +
-                '}';
+    public Asanas newInstanceWithResolvedParent(Asanas parentAsanas) {
+        return new Asanas(
+                beginAudio == null ? parentAsanas.beginAudio : beginAudio,
+                endAudio == null ? parentAsanas.endAudio : endAudio,
+                remaining30Sec == null ? parentAsanas.remaining30Sec : remaining30Sec,
+                remaining1Min == null ? parentAsanas.remaining1Min : remaining1Min,
+                chakras == null ? parentAsanas.chakras : chakras,
+                timeMinutes == -1 ? parentAsanas.timeMinutes : timeMinutes,
+                parent == null ? parentAsanas.parent : parent,
+                asanas == null ? parentAsanas.asanas : newListWithResolvedParent(parentAsanas));
     }
+
+    private ImmutableList<Asana> newListWithResolvedParent(Asanas parentAsanas) {
+        ImmutableList.Builder<Asana> builder = new ImmutableList.Builder<>();
+        for (Asana a : asanas) {
+            builder.add(a.newInstanceWithResolvedParent(parentAsanas.getById(a.id)));
+        }
+        return builder.build();
+    }
+
 }

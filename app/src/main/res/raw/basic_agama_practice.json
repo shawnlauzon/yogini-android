@@ -1,7 +1,7 @@
 {
   "name": "Basic Agama practice",
   "time_minutes": "90",
-  "parent": "asanas.json",
+  "parent": "asanas",
   "asanas": [
     {
       "id": 0

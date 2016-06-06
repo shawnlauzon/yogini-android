@@ -23,8 +23,6 @@ import android.view.View;
 import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.Iterator;
 import java.util.ListIterator;
 
@@ -87,13 +85,13 @@ public class PracticeActivity extends AppCompatActivity
         final int practiceJsonResId;
         if (bundle != null) {
             setTitle(bundle.getString(KEY_PRACTICE_NAME));
-            practiceJsonResId = getResources().getIdentifier(bundle.getString(KEY_PRACTICE_JSON), "raw",
-                    this.getPackageName());
+            practiceJsonResId = GsonUtils.getRawResId(this, bundle.getString(KEY_PRACTICE_JSON));
         } else {
             practiceJsonResId = R.raw.asanas;
         }
-        final Reader asanasJson = new InputStreamReader(getResources().openRawResource(practiceJsonResId));
-        mAsanaController = new AsanaController(GsonUtils.newGson().fromJson(asanasJson, Asanas.class));
+
+        Asanas unresolvedAsanas = GsonUtils.deserialize(this, practiceJsonResId, Asanas.class);
+        mAsanaController = new AsanaController(unresolvedAsanas.newInstanceWithResolvedParent(this));
 
         if (savedInstanceState != null) {
             initState(savedInstanceState);

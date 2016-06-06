@@ -1,5 +1,7 @@
 package com.shantikama.yogini;
 
+import android.content.Context;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.FieldNamingPolicy;
@@ -10,6 +12,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -17,11 +21,22 @@ import java.util.List;
  * Created by Admin on 5/14/16.
  */
 public class GsonUtils {
+    private static final Gson GSON = newGson();
+
     public static Gson newGson() {
         return new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(ImmutableList.class, new ImmutableListDeserializer())
                 .create();
+    }
+
+    public static <T> T deserialize(Context context, int resId, Class<T> clazz) {
+        final Reader stream = new InputStreamReader(context.getResources().openRawResource(resId));
+        return GSON.fromJson(stream, clazz);
+    }
+
+    public static int getRawResId(Context context, String name) {
+        return context.getResources().getIdentifier(name, "raw", context.getPackageName());
     }
 
     static class ImmutableListDeserializer implements JsonDeserializer<ImmutableList<?>> {
