@@ -34,6 +34,8 @@ import java.util.List;
  */
 public class AsanaListActivity extends AppCompatActivity {
 
+    public static final String ARG_PRACTICE_ID = "practice_id";
+
     private Asanas mAsanas;
 
     /**
@@ -48,7 +50,7 @@ public class AsanaListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_asana_list);
 
         mAsanas = JsonLibrary.getInstance().getAsanas(this,
-                getIntent().getStringExtra(PracticeActivity.KEY_PRACTICE_ID));
+                getIntent().getStringExtra(ARG_PRACTICE_ID));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         assert toolbar != null;
@@ -124,14 +126,13 @@ public class AsanaListActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.asana_list_content, parent, false);
+                    .inflate(android.R.layout.simple_list_item_1, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(String.valueOf(mValues.get(position).id));
             holder.mNameView.setText(mValues.get(position).name);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -140,8 +141,8 @@ public class AsanaListActivity extends AppCompatActivity {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
                         arguments.putString(AsanaDetailFragment.ARG_PRACTICE_ID,
-                                getIntent().getStringExtra(PracticeActivity.KEY_PRACTICE_ID));
-                        arguments.putInt(AsanaDetailFragment.ARG_ASANA_ID, holder.mItem.id);
+                                getIntent().getStringExtra(ARG_PRACTICE_ID));
+                        arguments.putString(AsanaDetailFragment.ARG_ASANA_ID, holder.mItem.id);
                         AsanaDetailFragment fragment = new AsanaDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -151,7 +152,7 @@ public class AsanaListActivity extends AppCompatActivity {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, AsanaDetailActivity.class);
                         intent.putExtra(AsanaDetailFragment.ARG_PRACTICE_ID,
-                                getIntent().getStringExtra(PracticeActivity.KEY_PRACTICE_ID));
+                                getIntent().getStringExtra(ARG_PRACTICE_ID));
                         intent.putExtra(AsanaDetailFragment.ARG_ASANA_ID, holder.mItem.id);
 
                         context.startActivity(intent);
@@ -167,15 +168,13 @@ public class AsanaListActivity extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
-            public final TextView mIdView;
             public final TextView mNameView;
             public Asana mItem;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mIdView = (TextView) view.findViewById(R.id.id);
-                mNameView = (TextView) view.findViewById(R.id.name);
+                mNameView = (TextView) view.findViewById(android.R.id.text1);
             }
 
             @Override

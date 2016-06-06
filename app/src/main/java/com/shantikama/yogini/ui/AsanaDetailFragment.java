@@ -42,7 +42,7 @@ public class AsanaDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             mAsana = JsonLibrary.getInstance().getAsanas(getActivity(),
-                    getArguments().getString(ARG_PRACTICE_ID)).getById(getArguments().getInt(ARG_ASANA_ID));
+                    getArguments().getString(ARG_PRACTICE_ID)).getById(getArguments().getString(ARG_ASANA_ID));
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);

@@ -58,8 +58,8 @@ public class AsanaDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putString(AsanaDetailFragment.ARG_PRACTICE_ID,
                     getIntent().getStringExtra(AsanaDetailFragment.ARG_PRACTICE_ID));
-            arguments.putInt(AsanaDetailFragment.ARG_ASANA_ID,
-                    getIntent().getIntExtra(AsanaDetailFragment.ARG_ASANA_ID, -1));
+            arguments.putString(AsanaDetailFragment.ARG_ASANA_ID,
+                    getIntent().getStringExtra(AsanaDetailFragment.ARG_ASANA_ID));
             AsanaDetailFragment fragment = new AsanaDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

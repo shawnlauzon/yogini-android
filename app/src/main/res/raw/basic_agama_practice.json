@@ -4,40 +4,40 @@
   "parent": "asanas",
   "asanas": [
     {
-      "id": 0
+      "id": "warm"
     },
     {
-      "id": 1
+      "id": "pad"
     },
     {
-      "id": 2
+      "id": "trik"
     },
     {
-      "id": 3
+      "id": "garu"
     },
     {
-      "id": 4
+      "id": "pav"
     },
     {
-      "id": 5
+      "id": "bhujan"
     },
     {
-      "id": 6
+      "id": "pash"
     },
     {
-      "id": 7
+      "id": "janu"
     },
     {
-      "id": 8
+      "id": "gomu"
     },
     {
-      "id": 9
+      "id": "vaj"
     },
     {
-      "id": 10
+      "id": "hal"
     },
     {
-      "id": 11
+      "id": "shav"
     }
   ]
 }

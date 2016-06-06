@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
  * Created by Shawn Lauzon
  */
 public class Asana {
-    public final int id;
+    public final String id;
     public final String name;
     public final int order;
     public final int time;
@@ -21,7 +21,7 @@ public class Asana {
     public final int stretchPause;
 
     private Asana() {
-        this.id = -1;
+        this.id = null;
         this.name = null;
         this.order = -1;
         this.time = -1;
@@ -33,7 +33,7 @@ public class Asana {
         this.stretchPause = -1;
     }
 
-    public Asana(int id, String name, int order, int time, int chakra, String announceAudio,
+    public Asana(String id, String name, int order, int time, int chakra, String announceAudio,
                  int announcePause, ImmutableList<SequenceItem> sequence, String stretchAudio,
                  int stretchPause) {
         this.id = id;

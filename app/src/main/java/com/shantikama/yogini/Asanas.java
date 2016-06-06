@@ -46,9 +46,9 @@ public class Asanas {
         this.asanas = asanas;
     }
 
-    public Asana getById(int asanaId) {
+    public Asana getById(String asanaId) {
         for (Asana a : asanas) {
-            if (asanaId == a.id) {
+            if (asanaId.equals(a.id)) {
                 return a;
             }
         }

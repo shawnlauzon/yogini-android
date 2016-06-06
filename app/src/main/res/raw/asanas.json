@@ -9,7 +9,7 @@
   ],
   "asanas": [
     {
-      "id": 0,
+      "id": "warm",
       "name": "Warming exercises",
       "announce_audio": "warming_0",
       "announce_pause": 8,
@@ -94,7 +94,7 @@
       ]
     },
     {
-      "id": 1,
+      "id": "pad",
       "name": "Pādahastāsana",
       "time": 420,
       "announce_audio": "pad_begin",
@@ -110,7 +110,7 @@
       ]
     },
     {
-      "id": 2,
+      "id": "trik",
       "name": "Trikonāsana",
       "time": 150,
       "announce_audio": "trik_announce",
@@ -137,7 +137,7 @@
       "stretch_pause": 10
     },
     {
-      "id": 3,
+      "id": "garu",
       "name": "Garudāsana",
       "time": 120,
       "announce_audio": "garu_begin",
@@ -164,7 +164,7 @@
       ]
     },
     {
-      "id": 4,
+      "id": "pav",
       "name": "Pavana muktāsana",
       "time": 240,
       "announce_audio": "pm_begin",
@@ -180,7 +180,7 @@
       ]
     },
     {
-      "id": 5,
+      "id": "bhujan",
       "name": "Bhujangāsana",
       "time": 180,
       "announce_audio": "bhujan_announce",
@@ -197,7 +197,7 @@
       ]
     },
     {
-      "id": 6,
+      "id": "pash",
       "name": "Paścimottānāsana",
       "time": 240,
       "announce_audio": "paschi_begin",
@@ -213,7 +213,7 @@
       ]
     },
     {
-      "id": 7,
+      "id": "janu",
       "name": "Jānuśirṣāsana",
       "time": 180,
       "announce_audio": "janu_announce",
@@ -238,7 +238,7 @@
       ]
     },
     {
-      "id": 8,
+      "id": "gomu",
       "name": "Gomukāsana",
       "time": 150,
       "announce_audio": "gomu_begin",
@@ -264,7 +264,7 @@
       ]
     },
     {
-      "id": 9,
+      "id": "vaj",
       "name": "Vajrāsana",
       "time": 420,
       "announce_audio": "vaj_begin",
@@ -282,7 +282,7 @@
       "stretch_pause": 40
     },
     {
-      "id": 10,
+      "id": "hal",
       "name": "Halāsana",
       "time": 180,
       "announce_audio": "hala_begin",
@@ -299,7 +299,7 @@
       ]
     },
     {
-      "id": 11,
+      "id": "shav",
       "name": "Śavāsana",
       "announce_audio": "shavasana_announce",
       "announce_pause": 20,

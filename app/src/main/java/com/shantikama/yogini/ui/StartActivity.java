@@ -74,7 +74,7 @@ public class StartActivity extends AppCompatActivity
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     final PracticeInfo practiceInfo = index.practices.get(position);
                     Intent intent = new Intent(StartActivity.this, PracticeActivity.class);
-                    intent.putExtra(PracticeActivity.KEY_PRACTICE_ID, practiceInfo.id);
+                    intent.putExtra(PracticeActivity.ARG_PRACTICE_ID, practiceInfo.id);
                     startActivity(intent);
                 }
             });

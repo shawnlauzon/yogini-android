@@ -35,7 +35,7 @@ public class PracticeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "PracticeActivity";
 
-    public static final String KEY_PRACTICE_ID = "KEY_PRACTICE_ID";
+    public static final String ARG_PRACTICE_ID = "practice_id";
 
     private static final String AUDIO_URL_START = "android.resource://com.shantikama.yogini/raw/";
 
@@ -88,7 +88,7 @@ public class PracticeActivity extends AppCompatActivity
         Bundle bundle = getIntent().getExtras();
         assert bundle != null;
 
-        Asanas asanas = JsonLibrary.getInstance().getAsanas(this, bundle.getString(KEY_PRACTICE_ID));
+        Asanas asanas = JsonLibrary.getInstance().getAsanas(this, bundle.getString(ARG_PRACTICE_ID));
         setTitle(asanas.name);
         mAsanaController = new AsanaController(asanas);
 
@@ -317,7 +317,8 @@ public class PracticeActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_details) {
             Intent intent = new Intent(this, AsanaListActivity.class);
-            intent.putExtras(getIntent().getExtras());
+            intent.putExtra(AsanaListActivity.ARG_PRACTICE_ID,
+                    getIntent().getStringExtra(ARG_PRACTICE_ID));
             startActivity(intent);
             return true;
         } else if (id == R.id.action_skip) {
@@ -395,7 +396,7 @@ public class PracticeActivity extends AppCompatActivity
 
         void onSaveInstanceState(Bundle outState) {
             if (mCurAsana != null) {
-                outState.putInt(TAG_CUR_ASANA_ID, mCurAsana.id);
+                outState.putString(TAG_CUR_ASANA_ID, mCurAsana.id);
             }
             if (mAsanaSequenceIterator != null) {
                 outState.putInt(TAG_CUR_ASANA_SEQUENCE_ITEM_POS, mAsanaSequenceIterator.previousIndex());
@@ -412,7 +413,7 @@ public class PracticeActivity extends AppCompatActivity
                 while (mAsanaIterator.hasNext()) {
                     // Advance to the asana we saved
                     mCurAsana = mAsanaIterator.next();
-                    if (mCurAsana.id == savedAsanaId) {
+                    if (mCurAsana.id.equals(savedAsanaId)) {
                         break;
                     }
                 }
