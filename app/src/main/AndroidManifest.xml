@@ -21,11 +21,17 @@
         <activity
             android:name=".ui.PracticeActivity"
             android:label="1½ hour practice"
+            android:launchMode="singleTop"
             android:parentActivityName=".ui.StartActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.shantikama.yogini.ui.StartActivity" />
+        </activity>
         <activity
             android:name=".ui.AsanaListActivity"
             android:label="@string/title_asana_list"
+            android:launchMode="singleTop"
             android:parentActivityName=".ui.PracticeActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
