@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +83,13 @@ public class AsanaListActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.asanas, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
@@ -96,6 +104,8 @@ public class AsanaListActivity extends AppCompatActivity {
             //
             NavUtils.navigateUpFromSameTask(this);
             return true;
+        } else if (id == R.id.action_edit) {
+            // TODO Allow add / remove reorder asanas
         }
         return super.onOptionsItemSelected(item);
     }
