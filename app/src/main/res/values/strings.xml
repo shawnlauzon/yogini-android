@@ -12,5 +12,16 @@
     <string name="title_asana_list">Asanas</string>
     <string name="title_asana_detail">Asana Detail</string>
 
-    <string name="asana_time">%1$d minutes</string>
+    <string name="btn_remove">Remove</string>
+    <string name="btn_cancel">Cancel</string>
+    
+    <plurals name="asana_time">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+
+    <plurals name="alert_remove_asanas">
+        <item quantity="one">Remove %1$d asana?</item>
+        <item quantity="other">Remove %1$d asanas?</item>
+    </plurals>
 </resources>

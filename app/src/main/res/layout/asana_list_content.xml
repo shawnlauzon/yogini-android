@@ -19,7 +19,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/text_margin"
-        android:text="@string/asana_time"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView

@@ -1,12 +1,14 @@
 package com.shantikama.yogini.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
@@ -133,7 +135,9 @@ public class AsanaListActivity extends AppCompatActivity {
 
             // TODO Rather than text, make this an image, perhaps like a pie chart of 10 minutes
             if (holder.mAsana.time > 0) {
-                holder.mTimeView.setText(String.format(getString(R.string.asana_time), holder.mAsana.time / 60));
+                final int timeMins = holder.mAsana.time / 60;
+                holder.mTimeView.setText(getResources().getQuantityString(
+                        R.plurals.asana_time, timeMins, timeMins, timeMins));
             } else {
                 holder.mTimeView.setText("");
             }
@@ -197,7 +201,6 @@ public class AsanaListActivity extends AppCompatActivity {
         }
     }
 
-
     class AsanaMultiChoiceModalListener implements AbsListView.MultiChoiceModeListener {
 
         private ListView mListView;
@@ -208,7 +211,7 @@ public class AsanaListActivity extends AppCompatActivity {
 
         @Override
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-            mode.setTitle(mListView.getCheckedItemCount() + " selected");
+            mode.setTitle(String.valueOf(mListView.getCheckedItemCount()));
         }
 
         @Override
@@ -229,17 +232,31 @@ public class AsanaListActivity extends AppCompatActivity {
             // Respond to clicks on the actions in the CAB
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    deleteSelectedItems();
-                    mode.finish(); // Action picked, so close the CAB
+                    confirmDelete(mode);
                     return true;
                 default:
                     return false;
             }
         }
 
-        private void deleteSelectedItems() {
+        private void confirmDelete(final ActionMode mode) {
+            new AlertDialog.Builder(AsanaListActivity.this)
+                    .setMessage(getResources().getQuantityString(R.plurals.alert_remove_asanas,
+                            mListView.getCheckedItemCount(), mListView.getCheckedItemCount()))
+                    .setPositiveButton(R.string.btn_remove, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteSelectedItems(mode);
+                        }
+                    })
+                    .setNegativeButton(R.string.btn_cancel, null)
+                    .create().show();
+        }
+
+        private void deleteSelectedItems(ActionMode mode) {
             SparseBooleanArray selected = mListView.getCheckedItemPositions();
             System.out.println("Should delete " + selected);
+            mode.finish(); // Action picked, so close the CAB
         }
 
         @Override
