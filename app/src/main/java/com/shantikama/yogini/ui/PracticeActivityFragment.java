@@ -51,7 +51,7 @@ public class PracticeActivityFragment extends Fragment {
     }
 
     void updateAsana(Asana asana, int timeMillis) {
-        mAsanaName.setText(asana.name);
+        mAsanaName.setText(asana.getName());
 
         setTimerText(timeMillis);
 

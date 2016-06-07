@@ -30,8 +30,9 @@ public class JsonLibrary {
     public Asanas getAsanas(Context context, String practiceId) {
         if (!mAllPractices.containsKey(practiceId)) {
             int jsonResId = GsonUtils.getRawResId(context, mIndex.getById(practiceId).json);
-            Asanas unresolvedAsanas = GsonUtils.deserialize(context, jsonResId, Asanas.class);
-            mAllPractices.put(practiceId, unresolvedAsanas.newInstanceWithResolvedParent(context));
+            Asanas asanas = GsonUtils.deserialize(context, jsonResId, Asanas.class);
+            asanas.resolveParent(context);
+            mAllPractices.put(practiceId, asanas);
         }
         return mAllPractices.get(practiceId);
     }

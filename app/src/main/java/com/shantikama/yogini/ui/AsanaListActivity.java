@@ -67,7 +67,7 @@ public class AsanaListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         assert toolbar != null;
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getIntent().getStringExtra(mAsanas.name));
+        toolbar.setTitle(getIntent().getStringExtra(mAsanas.getName()));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
@@ -127,7 +127,7 @@ public class AsanaListActivity extends AppCompatActivity {
     }
 
     private void setupListView(@NonNull ListView listView) {
-        listView.setAdapter(new AsanaListViewAdapter(mAsanas.asanas));
+        listView.setAdapter(new AsanaListViewAdapter(mAsanas.getAsanas()));
         listView.setMultiChoiceModeListener(new AsanaMultiChoiceModalListener(listView));
         listView.setOnItemClickListener(new OnAsanaClickListener());
     }
@@ -147,11 +147,11 @@ public class AsanaListActivity extends AppCompatActivity {
             }
             final ViewHolder holder = (ViewHolder) convertView.getTag();
             holder.mAsana = getItem(position);
-            holder.mNameView.setText(holder.mAsana.name);
+            holder.mNameView.setText(holder.mAsana.getName());
 
             // TODO Rather than text, make this an image, perhaps like a pie chart of 10 minutes
-            if (holder.mAsana.time > 0) {
-                final int timeMins = holder.mAsana.time / 60;
+            if (holder.mAsana.getTime() > 0) {
+                final int timeMins = holder.mAsana.getTime() / 60;
                 holder.mTimeView.setText(getResources().getQuantityString(
                         R.plurals.asana_time, timeMins, timeMins, timeMins));
             } else {
@@ -199,7 +199,7 @@ public class AsanaListActivity extends AppCompatActivity {
                 Bundle arguments = new Bundle();
                 arguments.putString(AsanaDetailFragment.ARG_PRACTICE_ID,
                         getIntent().getStringExtra(ARG_PRACTICE_ID));
-                arguments.putString(AsanaDetailFragment.ARG_ASANA_ID, holder.mAsana.id);
+                arguments.putString(AsanaDetailFragment.ARG_ASANA_ID, holder.mAsana.getId());
                 AsanaDetailFragment fragment = new AsanaDetailFragment();
                 fragment.setArguments(arguments);
                 getSupportFragmentManager().beginTransaction()
@@ -210,7 +210,7 @@ public class AsanaListActivity extends AppCompatActivity {
                 Intent intent = new Intent(context, AsanaDetailActivity.class);
                 intent.putExtra(AsanaDetailFragment.ARG_PRACTICE_ID,
                         getIntent().getStringExtra(ARG_PRACTICE_ID));
-                intent.putExtra(AsanaDetailFragment.ARG_ASANA_ID, holder.mAsana.id);
+                intent.putExtra(AsanaDetailFragment.ARG_ASANA_ID, holder.mAsana.getId());
                 context.startActivity(intent);
             }
 
@@ -284,7 +284,7 @@ public class AsanaListActivity extends AppCompatActivity {
             timePicker.setMaxValue(60);
 
             if (mListView.getCheckedItemCount() == 1) {
-                timePicker.setValue(mAsanas.asanas.get(mListView.getCheckedItemPositions().keyAt(0)).time / 60);
+                timePicker.setValue(mAsanas.getAsanas().get(mListView.getCheckedItemPositions().keyAt(0)).getTime() / 60);
             }
 
             AlertDialog dialog = new AlertDialog.Builder(AsanaListActivity.this)

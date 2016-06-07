@@ -89,7 +89,7 @@ public class PracticeActivity extends AppCompatActivity
         assert bundle != null;
 
         Asanas asanas = JsonLibrary.getInstance().getAsanas(this, bundle.getString(ARG_PRACTICE_ID));
-        setTitle(asanas.name);
+        setTitle(asanas.getName());
         mAsanaController = new AsanaController(asanas);
 
         if (savedInstanceState != null) {
@@ -396,7 +396,7 @@ public class PracticeActivity extends AppCompatActivity
 
         void onSaveInstanceState(Bundle outState) {
             if (mCurAsana != null) {
-                outState.putString(TAG_CUR_ASANA_ID, mCurAsana.id);
+                outState.putString(TAG_CUR_ASANA_ID, mCurAsana.getId());
             }
             if (mAsanaSequenceIterator != null) {
                 outState.putInt(TAG_CUR_ASANA_SEQUENCE_ITEM_POS, mAsanaSequenceIterator.previousIndex());
@@ -409,19 +409,19 @@ public class PracticeActivity extends AppCompatActivity
         void initState(Bundle savedInstanceState) {
             final int savedAsanaId = savedInstanceState.getInt(TAG_CUR_ASANA_ID, -1);
             if (savedAsanaId >= 0) {
-                mAsanaIterator = mAsanas.asanas.iterator();
+                mAsanaIterator = mAsanas.getAsanas().iterator();
                 while (mAsanaIterator.hasNext()) {
                     // Advance to the asana we saved
                     mCurAsana = mAsanaIterator.next();
-                    if (mCurAsana.id.equals(savedAsanaId)) {
+                    if (mCurAsana.getId().equals(savedAsanaId)) {
                         break;
                     }
                 }
                 final int savedSequenceItemPos = savedInstanceState.getInt(TAG_CUR_ASANA_SEQUENCE_ITEM_POS, -1);
                 if (savedSequenceItemPos >= 0) {
                     Log.d(TAG, "Advancing to sequence " + savedSequenceItemPos);
-                    assert mCurAsana.sequence != null;
-                    mAsanaSequenceIterator = mCurAsana.sequence.listIterator();
+                    assert mCurAsana.getSequence() != null;
+                    mAsanaSequenceIterator = mCurAsana.getSequence().listIterator();
                     int pos = 0;
                     do {
                         mCurAsanaSequenceItem = mAsanaSequenceIterator.next();
@@ -432,14 +432,14 @@ public class PracticeActivity extends AppCompatActivity
             mCurPhase = savedInstanceState.getInt(TAG_CUR_PHASE);
             mCurState = savedInstanceState.getInt(TAG_CUR_STATE);
 
-            show(mCurAsana, mCurAsana.time);
+            show(mCurAsana, mCurAsana.getTime());
             handleState();
         }
 
         public void startPractice() {
             if (mAsanaIterator == null) {
                 // On rotation, this will be already advanced to the correct location
-                mAsanaIterator = mAsanas.asanas.iterator();
+                mAsanaIterator = mAsanas.getAsanas().iterator();
             }
 
             continuePractice();
@@ -492,10 +492,10 @@ public class PracticeActivity extends AppCompatActivity
                     STATE_STRS.get(mCurState)));
 
             if (mCurPhase == PHASE_ANNOUNCE) {
-                show(mCurAsana, mCurAsana.time * 1000);
+                show(mCurAsana, mCurAsana.getTime() * 1000);
             } else if (mCurPhase == PHASE_TECHNIQUE) {
-                if (mCurAsanaSequenceItem.time > 0) {
-                    show(mCurAsana, mCurAsanaSequenceItem.time * 1000);
+                if (mCurAsanaSequenceItem.getTime() > 0) {
+                    show(mCurAsana, mCurAsanaSequenceItem.getTime() * 1000);
                 }
             }
 
@@ -509,8 +509,8 @@ public class PracticeActivity extends AppCompatActivity
         private void advanceAsana() {
             if (mAsanaIterator.hasNext()) {
                 mCurAsana = mAsanaIterator.next();
-                assert mCurAsana.sequence != null;
-                mAsanaSequenceIterator = mCurAsana.sequence.listIterator();
+                assert mCurAsana.getSequence() != null;
+                mAsanaSequenceIterator = mCurAsana.getSequence().listIterator();
                 mCurAsanaSequenceItem = mAsanaSequenceIterator.next();
                 mCurPhase = PHASE_ANNOUNCE;
                 mCurState = STATE_PLAYING;
@@ -525,25 +525,25 @@ public class PracticeActivity extends AppCompatActivity
             final String phaseAudio;
             switch (mCurPhase) {
                 case PHASE_ANNOUNCE:
-                    phaseAudio = mCurAsana.announceAudio;
+                    phaseAudio = mCurAsana.getAnnounceAudio();
                     break;
                 case PHASE_TECHNIQUE:
-                    phaseAudio = mCurAsanaSequenceItem.techniqueAudio;
+                    phaseAudio = mCurAsanaSequenceItem.getTechniqueAudio();
                     break;
                 case PHASE_CONCENTRATION:
-                    phaseAudio = mCurAsanaSequenceItem.concentrationAudio;
+                    phaseAudio = mCurAsanaSequenceItem.getConcentrationAudio();
                     break;
                 case PHASE_BEGIN:
-                    phaseAudio = mAsanas.beginAudio;
+                    phaseAudio = mAsanas.getBeginAudio();
                     break;
                 case PHASE_END:
-                    phaseAudio = mAsanas.endAudio;
+                    phaseAudio = mAsanas.getEndAudio();
                     break;
                 case PHASE_AWARENESS:
-                    phaseAudio = mCurAsanaSequenceItem.awarenessAudio;
+                    phaseAudio = mCurAsanaSequenceItem.getAwarenessAudio();
                     break;
                 case PHASE_STRETCH:
-                    phaseAudio = mCurAsana.stretchAudio;
+                    phaseAudio = mCurAsana.getStretchAudio();
                     break;
                 default:
                     phaseAudio = null;
@@ -555,28 +555,29 @@ public class PracticeActivity extends AppCompatActivity
             final int phasePauseSecs;
             switch (mCurPhase) {
                 case PHASE_ANNOUNCE:
-                    phasePauseSecs = mCurAsana.announcePause;
+                    phasePauseSecs = mCurAsana.getAnnouncePause();
                     break;
                 case PHASE_TECHNIQUE:
-                    phasePauseSecs = mCurAsanaSequenceItem.techniquePause;
+                    phasePauseSecs = mCurAsanaSequenceItem.getTechniquePause();
                     break;
                 case PHASE_CONCENTRATION:
-                    phasePauseSecs = mCurAsanaSequenceItem.concentrationPause;
+                    phasePauseSecs = mCurAsanaSequenceItem.getConcentrationPause();
                     break;
                 case PHASE_BEGIN:
-                    phasePauseSecs = mCurAsanaSequenceItem.beginPause;
+                    phasePauseSecs = mCurAsanaSequenceItem.getBeginPause();
                     break;
                 case PHASE_PERFORM:
-                    phasePauseSecs = mCurAsanaSequenceItem.time > 0 ? mCurAsanaSequenceItem.time : mCurAsana.time;
+                    final int time = mCurAsanaSequenceItem.getTime();
+                    phasePauseSecs = time > 0 ? time : mCurAsana.getTime();
                     break;
                 case PHASE_END:
-                    phasePauseSecs = mCurAsanaSequenceItem.endPause;
+                    phasePauseSecs = mCurAsanaSequenceItem.getEndPause();
                     break;
                 case PHASE_AWARENESS:
-                    phasePauseSecs = mCurAsanaSequenceItem.awarenessPause;
+                    phasePauseSecs = mCurAsanaSequenceItem.getAwarenessPause();
                     break;
                 case PHASE_STRETCH:
-                    phasePauseSecs = mCurAsana.stretchPause;
+                    phasePauseSecs = mCurAsana.getStretchPause();
                     break;
                 default:
                     phasePauseSecs = 0;
@@ -585,12 +586,11 @@ public class PracticeActivity extends AppCompatActivity
         }
 
         private boolean isPhaseSkipped() {
-            return mCurAsanaSequenceItem.skip != null &&
-                    ((mCurPhase == PHASE_TECHNIQUE && mCurAsanaSequenceItem.skip.technique) ||
-                            (mCurPhase == PHASE_CONCENTRATION && mCurAsanaSequenceItem.skip.concentration) ||
-                            (mCurPhase == PHASE_BEGIN && mCurAsanaSequenceItem.skip.begin) ||
-                            (mCurPhase == PHASE_END && mCurAsanaSequenceItem.skip.end) ||
-                            (mCurPhase == PHASE_AWARENESS && mCurAsanaSequenceItem.skip.awareness));
+            return ((mCurPhase == PHASE_TECHNIQUE && mCurAsanaSequenceItem.isSkipped(Asana.SequenceItem.PHASE_TECHNIQUE)) ||
+                    (mCurPhase == PHASE_CONCENTRATION && mCurAsanaSequenceItem.isSkipped(Asana.SequenceItem.PHASE_CONCENTRATION)) ||
+                    (mCurPhase == PHASE_BEGIN && mCurAsanaSequenceItem.isSkipped(Asana.SequenceItem.PHASE_BEGIN)) ||
+                    (mCurPhase == PHASE_END && mCurAsanaSequenceItem.isSkipped(Asana.SequenceItem.PHASE_END)) ||
+                    (mCurPhase == PHASE_AWARENESS && mCurAsanaSequenceItem.isSkipped(Asana.SequenceItem.PHASE_AWARENESS)));
         }
     }
 }

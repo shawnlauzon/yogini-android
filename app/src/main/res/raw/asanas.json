@@ -1,12 +1,11 @@
 {
   "name": "All asanas",
+  "id": "76738951-a913-4b3d-a902-dc2e03c0c47c",
+  "published": true,
   "remaining_30sec": "remaining_30sec",
   "remaining_1min": "remaining_1min",
   "begin_audio": "begin",
   "end_audio": "end",
-  "chakras": [
-    "anahata"
-  ],
   "asanas": [
     {
       "id": "warm",
@@ -18,78 +17,54 @@
         {
           "technique_audio": "warming_1_begin",
           "time": 45,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "warming_1_switch",
           "time": 45,
           "awareness_audio": "warming_1_end",
           "awareness_pause": 8,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "warming_2_begin",
           "time": 55,
           "awareness_audio": "warming_2_end",
           "awareness_pause": 8,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "warming_3_begin",
           "time": 35,
           "awareness_audio": "warming_3_end",
           "awareness_pause": 8,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "warming_4_begin",
           "time": 30,
           "awareness_audio": "warming_4_end",
           "awareness_pause": 8,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "warming_5_begin",
           "time": 150,
           "awareness_audio": "warming_5_end",
           "awareness_pause": 8,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "warming_6_begin",
           "time": 20,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "warming_6_switch",
           "time": 20,
           "awareness_audio": "warming_6_end",
           "awareness_pause": 10,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         }
       ]
     },
@@ -102,10 +77,7 @@
         {
           "awareness_audio": "pad_end",
           "awareness_pause": 10,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         }
       ]
     },
@@ -147,19 +119,13 @@
           "technique_audio": "garu_left_begin",
           "awareness_audio": "garu_left_end",
           "awareness_pause": 10,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "garu_right_begin",
           "awareness_audio": "garu_right_end",
           "awareness_pause": 10,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         }
       ]
     },
@@ -172,10 +138,7 @@
         {
           "awareness_audio": "pm_end",
           "awareness_pause": 10,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         }
       ]
     },
@@ -205,10 +168,7 @@
         {
           "awareness_audio": "paschi_end",
           "awareness_pause": 10,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         }
       ]
     },
@@ -247,19 +207,13 @@
           "technique_audio": "gomu_left_begin",
           "awareness_audio": "gomu_left_end",
           "awareness_pause": 8,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "gomu_right_begin",
           "awareness_audio": "gomu_right_end",
           "awareness_pause": 10,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         }
       ]
     },
@@ -272,10 +226,7 @@
         {
           "awareness_audio": "vaj_end",
           "awareness_pause": 10,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         }
       ],
       "stretch_audio": "vaj_stretch",
@@ -291,10 +242,7 @@
         {
           "awareness_audio": "hala_end",
           "awareness_pause": 10,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         }
       ]
     },
@@ -312,88 +260,58 @@
           "time": 30,
           "awareness_audio": "shavasana_leftleg_awareness",
           "awareness_pause":5,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "shavasana_rightleg_technique",
           "time": 30,
           "awareness_audio": "shavasana_rightleg_awareness",
           "awareness_pause":5,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "shavasana_leftarm_technique",
           "time": 30,
           "awareness_audio": "shavasana_leftarm_awareness",
           "awareness_pause":5,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "shavasana_rightarm_technique",
           "time": 30,
           "awareness_audio": "shavasana_rightarm_awareness",
           "awareness_pause":5,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "shavasana_buttocks",
           "time": 5,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "shavasana_pelvis_abdomen",
           "time": 10,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "shavasana_back",
           "time": 15,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "shavasana_chest_shoulders",
           "time": 10,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "shavasana_neck",
           "time": 10,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "shavasana_head",
           "time": 30,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "shavasana_global_relaxation",
@@ -402,10 +320,7 @@
           "time": 60,
           "awareness_audio": "shavasana_grateful",
           "awareness_pause": 15,
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         },
         {
           "technique_audio": "shavasana_harmony",
@@ -413,10 +328,7 @@
           "concentration_audio": "shavasana_slowlymove",
           "time": 15,
           "awareness_audio": "shavasana_namaste",
-          "skip": {
-            "begin": true,
-            "end": true
-          }
+          "skipPhases": [ "begin", "end" ]
         }
       ]
     }

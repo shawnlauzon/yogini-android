@@ -3,86 +3,92 @@ package com.shantikama.yogini;
 import android.content.Context;
 
 import com.google.common.collect.ImmutableList;
-import com.shantikama.yogini.utils.GsonUtils;
 
 /**
- * Created by Admin on 100/10/16.
+ * Created by Shawn Lauzon.
  */
 public class Asanas {
-    public final String name;
-    public final String beginAudio;
-    public final String endAudio;
-    public final String remaining30Sec;
-    public final String remaining1Min;
-    public ImmutableList<String> chakras;
-    public final int timeMinutes;
-    public final String parent;
+    private String name;
+    private boolean published;
 
-    public ImmutableList<Asana> asanas;
+    private String beginAudio;
+    private String endAudio;
+    private String remaining30Sec;
+    private String remaining1Min;
+    private int timeMinutes;
+    private String parent;
+
+    private ImmutableList<Asana> asanas;
+
+    private Asanas mParent;
 
     private Asanas() {
         this.name = null;
+        this.published = false;
         this.beginAudio = null;
         this.endAudio = null;
         this.remaining30Sec = null;
         this.remaining1Min = null;
         this.timeMinutes = -1;
         this.parent = null;
-        this.chakras = null;
         this.asanas = null;
-    }
-
-    public Asanas(String name, String beginAudio, String endAudio, String remaining30Sec, String remaining1Min,
-                  ImmutableList<String> chakras, int timeMinutes, String parent,
-                  ImmutableList<Asana> asanas) {
-        this.name = name;
-        this.beginAudio = beginAudio;
-        this.endAudio = endAudio;
-        this.remaining30Sec = remaining30Sec;
-        this.remaining1Min = remaining1Min;
-        this.timeMinutes = timeMinutes;
-        this.parent = parent;
-        this.chakras = chakras;
-        this.asanas = asanas;
     }
 
     public Asana getById(String asanaId) {
         for (Asana a : asanas) {
-            if (asanaId.equals(a.id)) {
+            if (asanaId.equals(a.getId())) {
                 return a;
             }
         }
         return null;
     }
 
-    public Asanas newInstanceWithResolvedParent(Context context) {
-        if (parent == null) {
-            return this;
-        } else {
-            return newInstanceWithResolvedParent(GsonUtils.deserialize(context,
-                    GsonUtils.getRawResId(context, parent), Asanas.class));
+    public void resolveParent(Context context) {
+        if (parent != null) {
+            mParent = JsonLibrary.getInstance().getAsanas(context, parent);
+            for (Asana a : asanas) {
+                a.resolveParent(mParent);
+            }
         }
     }
 
-    public Asanas newInstanceWithResolvedParent(Asanas parentAsanas) {
-        return new Asanas(
-                name == null ? parentAsanas.name : name,
-                beginAudio == null ? parentAsanas.beginAudio : beginAudio,
-                endAudio == null ? parentAsanas.endAudio : endAudio,
-                remaining30Sec == null ? parentAsanas.remaining30Sec : remaining30Sec,
-                remaining1Min == null ? parentAsanas.remaining1Min : remaining1Min,
-                chakras == null ? parentAsanas.chakras : chakras,
-                timeMinutes == -1 ? parentAsanas.timeMinutes : timeMinutes,
-                parent == null ? parentAsanas.parent : parent,
-                asanas == null ? parentAsanas.asanas : newListWithResolvedParent(parentAsanas));
+    public String getName() {
+        return name != null ? name : mParent.getName();
     }
 
-    private ImmutableList<Asana> newListWithResolvedParent(Asanas parentAsanas) {
-        ImmutableList.Builder<Asana> builder = new ImmutableList.Builder<>();
-        for (Asana a : asanas) {
-            builder.add(a.newInstanceWithResolvedParent(parentAsanas.getById(a.id)));
-        }
-        return builder.build();
+    public boolean isPublished() {
+        return published;
     }
 
+    public String getBeginAudio() {
+        return beginAudio != null ? beginAudio : (mParent != null ? mParent.getBeginAudio() : null);
+    }
+
+    public String getEndAudio() {
+        return endAudio != null ? endAudio : (mParent != null ? mParent.getEndAudio() : null);
+    }
+
+    public String getRemaining30Sec() {
+        return remaining30Sec != null ? remaining30Sec : (mParent != null ? mParent.getRemaining30Sec() : null);
+    }
+
+    public String getRemaining1Min() {
+        return remaining1Min != null ? remaining1Min : (mParent != null ? mParent.getRemaining1Min() : null);
+    }
+
+    public int getTimeMinutes() {
+        return timeMinutes != -1 ? timeMinutes : (mParent != null ? mParent.getTimeMinutes() : 0);
+    }
+
+    public String getParent() {
+        return parent;
+    }
+
+    public ImmutableList<Asana> getAsanas() {
+        return asanas != null ? asanas : mParent.getAsanas();
+    }
+
+    public void setAsanas(ImmutableList<Asana> asanas) {
+        this.asanas = asanas;
+    }
 }

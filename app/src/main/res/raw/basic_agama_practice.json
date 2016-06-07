@@ -1,7 +1,8 @@
 {
   "name": "Basic Agama practice",
   "time_minutes": "90",
-  "parent": "asanas",
+  "parent": "76738951-a913-4b3d-a902-dc2e03c0c47c",
+  "published": true,
   "asanas": [
     {
       "id": "warm"

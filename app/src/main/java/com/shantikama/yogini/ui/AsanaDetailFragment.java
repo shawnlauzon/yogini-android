@@ -47,7 +47,7 @@ public class AsanaDetailFragment extends Fragment {
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mAsana.name);
+                appBarLayout.setTitle(mAsana.getName());
             }
         }
     }
@@ -59,7 +59,7 @@ public class AsanaDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (mAsana != null) {
-            ((TextView) rootView.findViewById(R.id.asana_detail)).setText(String.valueOf(mAsana.time));
+            ((TextView) rootView.findViewById(R.id.asana_detail)).setText(String.valueOf(mAsana.getTime()));
         }
 
         return rootView;
