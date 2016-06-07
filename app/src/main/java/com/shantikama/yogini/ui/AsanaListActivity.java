@@ -48,6 +48,8 @@ public class AsanaListActivity extends AppCompatActivity {
     // FIXME share better
     Asanas mAsanas;
 
+    boolean mIsDirty = false;
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -96,6 +98,15 @@ public class AsanaListActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.asana_list, menu);
+
+        menu.findItem(R.id.action_save).setVisible(mIsDirty);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
@@ -108,6 +119,9 @@ public class AsanaListActivity extends AppCompatActivity {
             //
             NavUtils.navigateUpFromSameTask(this);
             return true;
+        } else if (id == R.id.action_save) {
+            mIsDirty = false;
+            invalidateOptionsMenu();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -265,26 +279,34 @@ public class AsanaListActivity extends AppCompatActivity {
         }
 
         private void displayTimeChanger(final ActionMode mode) {
-            NumberPicker time = new NumberPicker(AsanaListActivity.this);
-            time.setMinValue(0);
-            time.setMaxValue(60);
+            final NumberPicker timePicker = new NumberPicker(AsanaListActivity.this);
+            timePicker.setMinValue(0);
+            timePicker.setMaxValue(60);
 
             if (mListView.getCheckedItemCount() == 1) {
-                time.setValue(mAsanas.asanas.get(mListView.getCheckedItemPositions().keyAt(0)).time / 60);
+                timePicker.setValue(mAsanas.asanas.get(mListView.getCheckedItemPositions().keyAt(0)).time / 60);
             }
 
             AlertDialog dialog = new AlertDialog.Builder(AsanaListActivity.this)
                     .setTitle(R.string.dialog_title_minutes)
-                    .setView(time)
+                    .setView(timePicker)
                     .setPositiveButton(R.string.btn_update, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            deleteSelectedItems(mode);
+                            updateSelectedItems(mode, timePicker.getValue());
                         }
                     })
                     .setNegativeButton(R.string.btn_cancel, null)
                     .create();
             dialog.show();
+        }
+
+        private void updateSelectedItems(ActionMode mode, int newTime) {
+            SparseBooleanArray selected = mListView.getCheckedItemPositions();
+            System.out.println("Should update " + selected);
+            mode.finish(); // Action picked, so close the CAB
+            mIsDirty = true;
+            invalidateOptionsMenu();
         }
 
         @Override

@@ -5,6 +5,7 @@
     <string name="action_delete">Delete</string>
     <string name="action_edit">Edit</string>
     <string name="action_time">Modify time</string>
+    <string name="action_save">Save</string>
     <string name="toolbar_item_skip">Skip</string>
     <string name="title_activity_start">StartActivity</string>
 
