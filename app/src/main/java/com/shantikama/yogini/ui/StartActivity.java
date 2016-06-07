@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.shantikama.yogini.Index;
 import com.shantikama.yogini.JsonLibrary;
-import com.shantikama.yogini.PracticeInfo;
+import com.shantikama.yogini.PerformanceInfo;
 import com.shantikama.yogini.R;
 
 import java.util.Locale;
@@ -53,18 +53,18 @@ public class StartActivity extends AppCompatActivity
 
         final ListView listView = (ListView) findViewById(R.id.practices);
         if (listView != null) {
-            listView.setAdapter(new ArrayAdapter<PracticeInfo>(this,
-                    R.layout.practice_list_content, R.id.name, index.practices) {
+            listView.setAdapter(new ArrayAdapter<PerformanceInfo>(this,
+                    R.layout.practice_list_content, R.id.name, index.getPerformances()) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
                     if (convertView == null) {
                         convertView = getLayoutInflater().inflate(R.layout.practice_list_content, listView, false);
                     }
 
-                    final PracticeInfo practiceInfo = index.practices.get(position);
-                    ((TextView) convertView.findViewById(R.id.name)).setText(practiceInfo.name);
+                    final PerformanceInfo performanceInfo = index.get(position);
+                    ((TextView) convertView.findViewById(R.id.name)).setText(performanceInfo.name);
                     ((TextView) convertView.findViewById(R.id.num_minutes)).setText(
-                            String.format(Locale.getDefault(), "%d", practiceInfo.timeMinutes));
+                            String.format(Locale.getDefault(), "%d", performanceInfo.timeMinutes));
 
                     return convertView;
                 }
@@ -72,9 +72,9 @@ public class StartActivity extends AppCompatActivity
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    final PracticeInfo practiceInfo = index.practices.get(position);
-                    Intent intent = new Intent(StartActivity.this, PracticeActivity.class);
-                    intent.putExtra(PracticeActivity.ARG_PRACTICE_ID, practiceInfo.id);
+                    final PerformanceInfo performanceInfo = index.get(position);
+                    Intent intent = new Intent(StartActivity.this, PerformanceActivity.class);
+                    intent.putExtra(PerformanceActivity.ARG_PRACTICE_ID, performanceInfo.id);
                     startActivity(intent);
                 }
             });
@@ -120,10 +120,10 @@ public class StartActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_begin) {
-            final Intent intent = new Intent(this, PracticeActivity.class);
+            final Intent intent = new Intent(this, PerformanceActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_manage) {
-            final Intent intent = new Intent(this, PracticeActivity.class);
+            final Intent intent = new Intent(this, PerformanceActivity.class);
             startActivity(intent);
         }
 

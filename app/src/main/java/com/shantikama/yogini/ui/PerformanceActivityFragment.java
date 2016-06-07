@@ -17,7 +17,7 @@ import java.util.Locale;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PracticeActivityFragment extends Fragment {
+public class PerformanceActivityFragment extends Fragment {
 
     private static final String TIMER_FORMAT = "%02d:%02d";
 
@@ -25,7 +25,7 @@ public class PracticeActivityFragment extends Fragment {
     private TextView mTimer;
     private ProgressBar mProgress;
 
-    public PracticeActivityFragment() {
+    public PerformanceActivityFragment() {
     }
 
     @Override

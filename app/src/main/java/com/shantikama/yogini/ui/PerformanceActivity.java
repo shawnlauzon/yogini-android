@@ -22,8 +22,8 @@ import android.view.View;
 
 import com.google.common.collect.ImmutableList;
 import com.shantikama.yogini.Asana;
-import com.shantikama.yogini.Asanas;
 import com.shantikama.yogini.JsonLibrary;
+import com.shantikama.yogini.Performance;
 import com.shantikama.yogini.R;
 import com.shantikama.yogini.utils.MediaPlayerUtils;
 
@@ -31,9 +31,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-public class PracticeActivity extends AppCompatActivity
+public class PerformanceActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "PracticeActivity";
+    private static final String TAG = "PerformanceActivity";
 
     public static final String ARG_PRACTICE_ID = "practice_id";
 
@@ -88,7 +88,7 @@ public class PracticeActivity extends AppCompatActivity
         Bundle bundle = getIntent().getExtras();
         assert bundle != null;
 
-        Asanas asanas = JsonLibrary.getInstance().getAsanas(this, bundle.getString(ARG_PRACTICE_ID));
+        Performance asanas = JsonLibrary.getInstance().getPerformance(this, bundle.getString(ARG_PRACTICE_ID));
         setTitle(asanas.getName());
         mAsanaController = new AsanaController(asanas);
 
@@ -199,7 +199,7 @@ public class PracticeActivity extends AppCompatActivity
 
     void show(Asana asana, int requestTimeMillis) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        PracticeActivityFragment fragment = (PracticeActivityFragment) fragmentManager
+        PerformanceActivityFragment fragment = (PerformanceActivityFragment) fragmentManager
                 .findFragmentById(R.id.fragment);
         fragment.updateAsana(asana, getActualTime(requestTimeMillis));
     }
@@ -242,7 +242,7 @@ public class PracticeActivity extends AppCompatActivity
             public void onTick(long millisUntilFinished) {
                 mPerformanceMillisRemaining = (int) millisUntilFinished;
                 if (mIsShowingTimer) {
-                    ((PracticeActivityFragment) getSupportFragmentManager()
+                    ((PerformanceActivityFragment) getSupportFragmentManager()
                             .findFragmentById(R.id.fragment)).updateTimeRemaining(mPerformanceMillisRemaining);
                 }
             }
@@ -341,10 +341,10 @@ public class PracticeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_begin) {
-            final Intent intent = new Intent(this, PracticeActivity.class);
+            final Intent intent = new Intent(this, PerformanceActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_manage) {
-            final Intent intent = new Intent(this, PracticeActivity.class);
+            final Intent intent = new Intent(this, PerformanceActivity.class);
             startActivity(intent);
         }
 
@@ -379,7 +379,7 @@ public class PracticeActivity extends AppCompatActivity
         private final ImmutableList<String> STATE_STRS = ImmutableList.of("IDLE", "PLAYING",
                 "WAITING");
 
-        private Asanas mAsanas;
+        private Performance mAsanas;
 
         private Iterator<Asana> mAsanaIterator;
         private ListIterator<Asana.SequenceItem> mAsanaSequenceIterator;
@@ -390,7 +390,7 @@ public class PracticeActivity extends AppCompatActivity
         private int mCurPhase = PHASE_IDLE;
         private int mCurState = STATE_IDLE;
 
-        public AsanaController(Asanas asanas) {
+        public AsanaController(Performance asanas) {
             mAsanas = asanas;
         }
 

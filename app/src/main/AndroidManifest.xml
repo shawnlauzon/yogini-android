@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.PracticeActivity"
+            android:name=".ui.PerformanceActivity"
             android:label="1½ hour practice"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.StartActivity"
@@ -32,11 +32,11 @@
             android:name=".ui.AsanaListActivity"
             android:label="@string/title_asana_list"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.PracticeActivity"
+            android:parentActivityName=".ui.PerformanceActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.shantikama.yogini.ui.PracticeActivity" />
+                android:value=".ui.PerformanceActivity" />
         </activity>
         <activity
             android:name=".ui.AsanaDetailActivity"

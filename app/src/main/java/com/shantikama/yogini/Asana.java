@@ -39,8 +39,8 @@ public class Asana {
         this.stretchPause = UNDEFINED;
     }
 
-    public void resolveParent(Asanas parentPractice) {
-        mParent = parentPractice.getById(id);
+    public void resolveParent(Performance parentPerformance) {
+        mParent = parentPerformance.getById(id);
         if (sequence != null) {
             for (int i = 0; i < sequence.size(); i++) {
                 sequence.get(i).resolveParent(mParent, i);

@@ -41,7 +41,7 @@ public class AsanaDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mAsana = JsonLibrary.getInstance().getAsanas(getActivity(),
+            mAsana = JsonLibrary.getInstance().getPerformance(getActivity(),
                     getArguments().getString(ARG_PRACTICE_ID)).getById(getArguments().getString(ARG_ASANA_ID));
 
             Activity activity = this.getActivity();

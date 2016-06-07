@@ -14,7 +14,7 @@ public class JsonLibrary {
     private static final JsonLibrary sInstance = new JsonLibrary();
 
     private Index mIndex;
-    private final Map<String, Asanas> mAllPractices = new HashMap<>();
+    private final Map<String, Performance> mAllPerformances = new HashMap<>();
 
     public static JsonLibrary getInstance() {
         return sInstance;
@@ -27,13 +27,13 @@ public class JsonLibrary {
         return mIndex;
     }
 
-    public Asanas getAsanas(Context context, String practiceId) {
-        if (!mAllPractices.containsKey(practiceId)) {
+    public Performance getPerformance(Context context, String practiceId) {
+        if (!mAllPerformances.containsKey(practiceId)) {
             int jsonResId = GsonUtils.getRawResId(context, mIndex.getById(practiceId).json);
-            Asanas asanas = GsonUtils.deserialize(context, jsonResId, Asanas.class);
+            Performance asanas = GsonUtils.deserialize(context, jsonResId, Performance.class);
             asanas.resolveParent(context);
-            mAllPractices.put(practiceId, asanas);
+            mAllPerformances.put(practiceId, asanas);
         }
-        return mAllPractices.get(practiceId);
+        return mAllPerformances.get(practiceId);
     }
 }

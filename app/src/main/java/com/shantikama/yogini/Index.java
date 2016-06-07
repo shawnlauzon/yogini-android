@@ -3,21 +3,29 @@ package com.shantikama.yogini;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Created by Admin on 100/10/16.
+ * Created by Shawn Lauzon
  */
 public class Index {
-    public ImmutableList<PracticeInfo> practices;
+    private ImmutableList<PerformanceInfo> performances;
 
-    public Index(ImmutableList<PracticeInfo> practices) {
-        this.practices = practices;
+    private Index() {
+        this.performances = null;
     }
 
-    public PracticeInfo getById(String id) {
-        for (PracticeInfo pi : practices) {
+    public PerformanceInfo getById(String id) {
+        for (PerformanceInfo pi : performances) {
             if (id.equals(pi.id)) {
                 return pi;
             }
         }
         return null;
+    }
+
+    public PerformanceInfo get(int position) {
+        return getPerformances().get(position);
+    }
+
+    public ImmutableList<PerformanceInfo> getPerformances() {
+        return performances;
     }
 }

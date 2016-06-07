@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * Created by Shawn Lauzon.
  */
-public class Asanas {
+public class Performance {
     private String name;
     private boolean published;
 
@@ -20,9 +20,9 @@ public class Asanas {
 
     private ImmutableList<Asana> asanas;
 
-    private Asanas mParent;
+    private Performance mParent;
 
-    private Asanas() {
+    private Performance() {
         this.name = null;
         this.published = false;
         this.beginAudio = null;
@@ -45,7 +45,7 @@ public class Asanas {
 
     public void resolveParent(Context context) {
         if (parent != null) {
-            mParent = JsonLibrary.getInstance().getAsanas(context, parent);
+            mParent = JsonLibrary.getInstance().getPerformance(context, parent);
             for (Asana a : asanas) {
                 a.resolveParent(mParent);
             }

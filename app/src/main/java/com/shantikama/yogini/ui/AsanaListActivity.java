@@ -27,8 +27,8 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.shantikama.yogini.Asana;
-import com.shantikama.yogini.Asanas;
 import com.shantikama.yogini.JsonLibrary;
+import com.shantikama.yogini.Performance;
 import com.shantikama.yogini.R;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public class AsanaListActivity extends AppCompatActivity {
     public static final String ARG_PRACTICE_ID = "practice_id";
 
     // FIXME share better
-    Asanas mAsanas;
+    Performance mPerformance;
 
     boolean mIsDirty = false;
 
@@ -61,13 +61,13 @@ public class AsanaListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_asana_list);
 
-        mAsanas = JsonLibrary.getInstance().getAsanas(this,
+        mPerformance = JsonLibrary.getInstance().getPerformance(this,
                 getIntent().getStringExtra(ARG_PRACTICE_ID));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         assert toolbar != null;
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getIntent().getStringExtra(mAsanas.getName()));
+        toolbar.setTitle(getIntent().getStringExtra(mPerformance.getName()));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
@@ -127,7 +127,7 @@ public class AsanaListActivity extends AppCompatActivity {
     }
 
     private void setupListView(@NonNull ListView listView) {
-        listView.setAdapter(new AsanaListViewAdapter(mAsanas.getAsanas()));
+        listView.setAdapter(new AsanaListViewAdapter(mPerformance.getAsanas()));
         listView.setMultiChoiceModeListener(new AsanaMultiChoiceModalListener(listView));
         listView.setOnItemClickListener(new OnAsanaClickListener());
     }
@@ -284,7 +284,7 @@ public class AsanaListActivity extends AppCompatActivity {
             timePicker.setMaxValue(60);
 
             if (mListView.getCheckedItemCount() == 1) {
-                timePicker.setValue(mAsanas.getAsanas().get(mListView.getCheckedItemPositions().keyAt(0)).getTime() / 60);
+                timePicker.setValue(mPerformance.getAsanas().get(mListView.getCheckedItemPositions().keyAt(0)).getTime() / 60);
             }
 
             AlertDialog dialog = new AlertDialog.Builder(AsanaListActivity.this)
