@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.common.collect.ImmutableList;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -21,7 +22,7 @@ public class Performance {
     private int timeMinutes;
     private String parent;
 
-    private ImmutableList<Asana> asanas;
+    private List<Asana> asanas;
 
     private Performance mParent;
 
@@ -116,7 +117,7 @@ public class Performance {
         return parent;
     }
 
-    public ImmutableList<Asana> getAsanas() {
+    public List<Asana> getAsanas() {
         return asanas != null ? asanas : mParent.getAsanas();
     }
 

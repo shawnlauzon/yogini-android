@@ -2,6 +2,7 @@ package com.shantikama.yogini;
 
 import com.google.common.collect.ImmutableList;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,7 +20,7 @@ public class Asana {
     private String announceAudio;
     private int announcePause;
 
-    private ImmutableList<SequenceItem> sequence;
+    private List<SequenceItem> sequence;
 
     private String stretchAudio;
     private int stretchPause;
@@ -76,13 +77,15 @@ public class Asana {
         return time != UNDEFINED ? time : (mParent != null ? mParent.getTime() : 0);
     }
 
+    /**
+     * Update the time for this asana, in seconds
+     */
     public void updateTime(int time) {
         this.time = time;
     }
 
     public int getChakra() {
-        return chakra != UNDEFINED ? chakra :
-                (mParent != null ? mParent.getChakra() : 0);
+        return chakra != UNDEFINED ? chakra : (mParent != null ? mParent.getChakra() : 0);
     }
 
     public void updateChakra(int chakra) {
@@ -90,8 +93,7 @@ public class Asana {
     }
 
     public String getAnnounceAudio() {
-        return announceAudio != null ? announceAudio :
-                (mParent != null ? mParent.getAnnounceAudio() : null);
+        return announceAudio != null ? announceAudio : (mParent != null ? mParent.getAnnounceAudio() : null);
     }
 
     public void updateAnnounceAudio(String announceAudio) {
@@ -99,17 +101,15 @@ public class Asana {
     }
 
     public int getAnnouncePause() {
-        return announcePause != UNDEFINED ? announcePause :
-                (mParent != null ? mParent.getAnnouncePause() : 0);
+        return announcePause != UNDEFINED ? announcePause : (mParent != null ? mParent.getAnnouncePause() : 0);
     }
 
     public void updateAnnouncePause(int announcePause) {
         this.announcePause = announcePause;
     }
 
-    public ImmutableList<SequenceItem> getSequence() {
-        return sequence != null ? sequence :
-                (mParent != null ? mParent.getSequence() : null);
+    public List<SequenceItem> getSequence() {
+        return sequence != null ? sequence : (mParent != null ? mParent.getSequence() : null);
     }
 
     public void updateSequence(ImmutableList<SequenceItem> sequence) {
@@ -117,8 +117,7 @@ public class Asana {
     }
 
     public String getStretchAudio() {
-        return stretchAudio != null ? stretchAudio :
-                (mParent != null ? mParent.getStretchAudio() : null);
+        return stretchAudio != null ? stretchAudio : (mParent != null ? mParent.getStretchAudio() : null);
     }
 
     public void updateStretchAudio(String stretchAudio) {
@@ -126,8 +125,7 @@ public class Asana {
     }
 
     public int getStretchPause() {
-        return stretchPause != UNDEFINED ? stretchPause :
-                (mParent != null ? mParent.getStretchPause() : 0);
+        return stretchPause != UNDEFINED ? stretchPause : (mParent != null ? mParent.getStretchPause() : 0);
     }
 
     public void updateStretchPause(int stretchPause) {

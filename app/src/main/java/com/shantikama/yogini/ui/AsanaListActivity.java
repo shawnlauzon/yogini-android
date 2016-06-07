@@ -158,8 +158,9 @@ public class AsanaListActivity extends AppCompatActivity {
     }
 
     private void setupListView(@NonNull ListView listView) {
-        listView.setAdapter(new AsanaListViewAdapter(mPerformance.getAsanas()));
-        listView.setMultiChoiceModeListener(new AsanaMultiChoiceModalListener(listView));
+        ArrayAdapter adapter = new AsanaListViewAdapter(mPerformance.getAsanas());
+        listView.setAdapter(adapter);
+        listView.setMultiChoiceModeListener(new AsanaMultiChoiceModalListener(listView, adapter));
         listView.setOnItemClickListener(new OnAsanaClickListener());
     }
 
@@ -259,9 +260,11 @@ public class AsanaListActivity extends AppCompatActivity {
     class AsanaMultiChoiceModalListener implements AbsListView.MultiChoiceModeListener {
 
         private ListView mListView;
+        private ArrayAdapter<Asana> mAdapter;
 
-        AsanaMultiChoiceModalListener(ListView listView) {
+        AsanaMultiChoiceModalListener(ListView listView, ArrayAdapter<Asana> adapter) {
             this.mListView = listView;
+            this.mAdapter = adapter;
         }
 
         @Override
@@ -313,8 +316,14 @@ public class AsanaListActivity extends AppCompatActivity {
 
         private void deleteSelectedItems(ActionMode mode) {
             SparseBooleanArray selected = mListView.getCheckedItemPositions();
-            System.out.println("Should delete " + selected);
+            for (int i = 0; i < selected.size(); i++) {
+                if (selected.valueAt(i)) {
+                    final int selectedPos = selected.keyAt(i);
+                    mPerformance.getAsanas().remove(selectedPos);
+                }
+            }
             mode.finish(); // Action picked, so close the CAB
+            mAdapter.notifyDataSetChanged();
             onPerformanceUpdated();
         }
 
@@ -343,8 +352,14 @@ public class AsanaListActivity extends AppCompatActivity {
 
         private void updateSelectedItems(ActionMode mode, int newTime) {
             SparseBooleanArray selected = mListView.getCheckedItemPositions();
-            System.out.println("Should update " + selected);
+            for (int i = 0; i < selected.size(); i++) {
+                if (selected.valueAt(i)) {
+                    final int selectedPos = selected.keyAt(i);
+                    mPerformance.getAsanas().get(selectedPos).updateTime(newTime * 60);
+                }
+            }
             mode.finish(); // Action picked, so close the CAB
+            mAdapter.notifyDataSetChanged();
             onPerformanceUpdated();
         }
 
