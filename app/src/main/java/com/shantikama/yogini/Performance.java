@@ -57,7 +57,7 @@ public class Performance {
     }
 
     public PerformanceInfo newPerformanceInfo() {
-        return new PerformanceInfo(id, name, 0, id.replaceAll("-", ""));
+        return new PerformanceInfo(id, name, 0);
     }
 
     public void save(Context context) {
@@ -65,7 +65,7 @@ public class Performance {
             throw new IllegalStateException("Cannot store published performances");
         }
 
-        JsonLibrary.getInstance().save(context, id.replaceAll("-", "") + ".json", this);
+        JsonLibrary.getInstance().save(context, PerformanceInfo.idToFilename(id), this);
     }
 
     public String saveNew(Context context) {

@@ -115,17 +115,16 @@ public class JsonLibrary {
             Performance asanas;
             PerformanceInfo pi = getIndex(context).getById(performanceId);
             if (pi != null) {
-                int jsonResId = GsonUtils.getRawResId(context, pi.json);
-                asanas = GsonUtils.deserialize(context, jsonResId, Performance.class);
+                asanas = GsonUtils.deserialize(context, pi.idToResId(context), Performance.class);
             } else {
                 pi = mLocalIndex.getById(performanceId);
                 if (pi == null) {
                     throw new NoSuchElementException();
                 }
                 try {
-                    asanas = load(context, pi.json, Performance.class);
+                    asanas = load(context, pi.idToFilename(), Performance.class);
                 } catch (FileNotFoundException e) {
-                    Log.e(TAG, "Could not find file in index " + pi.json);
+                    Log.e(TAG, "Could not find file in index " + pi.idToFilename());
                     throw Throwables.propagate(e);
                 }
             }
