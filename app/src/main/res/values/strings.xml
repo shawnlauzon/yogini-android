@@ -4,17 +4,21 @@
     <string name="action_details">Details</string>
     <string name="action_delete">Delete</string>
     <string name="action_edit">Edit</string>
+    <string name="action_time">Modify time</string>
     <string name="toolbar_item_skip">Skip</string>
     <string name="title_activity_start">StartActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="title_asana_list">Asanas</string>
     <string name="title_asana_detail">Asana Detail</string>
+    <string name="dialog_title_minutes">Minutes</string>
 
     <string name="btn_remove">Remove</string>
     <string name="btn_cancel">Cancel</string>
-    
+    <string name="btn_update">Update</string>
+
     <plurals name="asana_time">
         <item quantity="one">%d minute</item>
         <item quantity="other">%d minutes</item>

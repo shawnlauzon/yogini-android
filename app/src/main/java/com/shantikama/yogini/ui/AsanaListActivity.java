@@ -23,6 +23,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.shantikama.yogini.Asana;
@@ -44,7 +45,8 @@ public class AsanaListActivity extends AppCompatActivity {
 
     public static final String ARG_PRACTICE_ID = "practice_id";
 
-    private Asanas mAsanas;
+    // FIXME share better
+    Asanas mAsanas;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -234,6 +236,9 @@ public class AsanaListActivity extends AppCompatActivity {
                 case R.id.action_delete:
                     confirmDelete(mode);
                     return true;
+                case R.id.action_time:
+                    displayTimeChanger(mode);
+                    return true;
                 default:
                     return false;
             }
@@ -257,6 +262,29 @@ public class AsanaListActivity extends AppCompatActivity {
             SparseBooleanArray selected = mListView.getCheckedItemPositions();
             System.out.println("Should delete " + selected);
             mode.finish(); // Action picked, so close the CAB
+        }
+
+        private void displayTimeChanger(final ActionMode mode) {
+            NumberPicker time = new NumberPicker(AsanaListActivity.this);
+            time.setMinValue(0);
+            time.setMaxValue(60);
+
+            if (mListView.getCheckedItemCount() == 1) {
+                time.setValue(mAsanas.asanas.get(mListView.getCheckedItemPositions().keyAt(0)).time / 60);
+            }
+
+            AlertDialog dialog = new AlertDialog.Builder(AsanaListActivity.this)
+                    .setTitle(R.string.dialog_title_minutes)
+                    .setView(time)
+                    .setPositiveButton(R.string.btn_update, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteSelectedItems(mode);
+                        }
+                    })
+                    .setNegativeButton(R.string.btn_cancel, null)
+                    .create();
+            dialog.show();
         }
 
         @Override
