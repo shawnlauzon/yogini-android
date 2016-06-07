@@ -4,11 +4,14 @@ import android.content.Context;
 
 import com.google.common.collect.ImmutableList;
 
+import java.util.UUID;
+
 /**
  * Created by Shawn Lauzon.
  */
 public class Performance {
     private String name;
+    private String id;
     private boolean published;
 
     private String beginAudio;
@@ -24,6 +27,7 @@ public class Performance {
 
     private Performance() {
         this.name = null;
+        this.id = null;
         this.published = false;
         this.beginAudio = null;
         this.endAudio = null;
@@ -52,8 +56,36 @@ public class Performance {
         }
     }
 
+    public PerformanceInfo newPerformanceInfo() {
+        return new PerformanceInfo(id, name, 0, id.replaceAll("-", ""));
+    }
+
+    public void save(Context context) {
+        if (published) {
+            throw new IllegalStateException("Cannot store published performances");
+        }
+
+        JsonLibrary.getInstance().save(context, id.replaceAll("-", "") + ".json", this);
+    }
+
+    public String saveNew(Context context) {
+        id = UUID.randomUUID().toString();
+        published = false;
+        save(context);
+        JsonLibrary.getInstance().addPerformance(context, this);
+        return id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
     public String getName() {
         return name != null ? name : mParent.getName();
+    }
+
+    public void updateName(String name) {
+        this.name = name;
     }
 
     public boolean isPublished() {

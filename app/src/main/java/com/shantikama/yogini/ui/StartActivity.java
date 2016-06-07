@@ -17,11 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.shantikama.yogini.Index;
 import com.shantikama.yogini.JsonLibrary;
 import com.shantikama.yogini.PerformanceInfo;
 import com.shantikama.yogini.R;
 
+import java.util.List;
 import java.util.Locale;
 
 public class StartActivity extends AppCompatActivity
@@ -49,19 +49,19 @@ public class StartActivity extends AppCompatActivity
     }
 
     private void setupContent() {
-        final Index index = JsonLibrary.getInstance().getIndex(this);
+        final List<PerformanceInfo> performances = JsonLibrary.getInstance().getPerformances(this);
 
         final ListView listView = (ListView) findViewById(R.id.practices);
         if (listView != null) {
             listView.setAdapter(new ArrayAdapter<PerformanceInfo>(this,
-                    R.layout.practice_list_content, R.id.name, index.getPerformances()) {
+                    R.layout.practice_list_content, R.id.name, performances) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
                     if (convertView == null) {
                         convertView = getLayoutInflater().inflate(R.layout.practice_list_content, listView, false);
                     }
 
-                    final PerformanceInfo performanceInfo = index.get(position);
+                    final PerformanceInfo performanceInfo = performances.get(position);
                     ((TextView) convertView.findViewById(R.id.name)).setText(performanceInfo.name);
                     ((TextView) convertView.findViewById(R.id.num_minutes)).setText(
                             String.format(Locale.getDefault(), "%d", performanceInfo.timeMinutes));
@@ -72,7 +72,7 @@ public class StartActivity extends AppCompatActivity
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    final PerformanceInfo performanceInfo = index.get(position);
+                    final PerformanceInfo performanceInfo = performances.get(position);
                     Intent intent = new Intent(StartActivity.this, PerformanceActivity.class);
                     intent.putExtra(PerformanceActivity.ARG_PRACTICE_ID, performanceInfo.id);
                     startActivity(intent);

@@ -21,7 +21,7 @@ import java.util.List;
  * Created by Admin on 5/14/16.
  */
 public class GsonUtils {
-    private static final Gson GSON = newGson();
+    public static final Gson GSON = newGson();
 
     public static Gson newGson() {
         return new GsonBuilder()

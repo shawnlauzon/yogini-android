@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -45,10 +46,9 @@ public class AsanaListActivity extends AppCompatActivity {
 
     public static final String ARG_PRACTICE_ID = "practice_id";
 
-    // FIXME share better
-    Performance mPerformance;
+    private Performance mPerformance;
 
-    boolean mIsDirty = false;
+    private boolean mIsDirty = false;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -120,16 +120,55 @@ public class AsanaListActivity extends AppCompatActivity {
             NavUtils.navigateUpFromSameTask(this);
             return true;
         } else if (id == R.id.action_save) {
+            savePerformance();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void savePerformance() {
+        if (mPerformance.isPublished()) {
+            showSaveNewPerformanceDialog();
+        } else {
+            mPerformance.save(this);
             mIsDirty = false;
             invalidateOptionsMenu();
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    private void showSaveNewPerformanceDialog() {
+        final EditText editText = new EditText(AsanaListActivity.this);
+        editText.setText(String.format(getString(R.string.default_modified_performance_name),
+                mPerformance.getName()));
+
+        new AlertDialog.Builder(AsanaListActivity.this)
+                .setTitle(R.string.dialog_save_performance)
+                .setView(editText)
+                .setPositiveButton(R.string.btn_save, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPerformance.updateName(editText.getText().toString());
+                        mPerformance.saveNew(AsanaListActivity.this);
+                        mIsDirty = false;
+                        invalidateOptionsMenu();
+                    }
+                })
+                .setNegativeButton(R.string.btn_cancel, null)
+                .create().show();
     }
 
     private void setupListView(@NonNull ListView listView) {
         listView.setAdapter(new AsanaListViewAdapter(mPerformance.getAsanas()));
         listView.setMultiChoiceModeListener(new AsanaMultiChoiceModalListener(listView));
         listView.setOnItemClickListener(new OnAsanaClickListener());
+    }
+
+    /**
+     * Called by listener when user updated the list of asanas.
+     */
+    void onPerformanceUpdated() {
+        mIsDirty = true;
+        invalidateOptionsMenu();
     }
 
     class AsanaListViewAdapter extends ArrayAdapter<Asana> {
@@ -276,6 +315,7 @@ public class AsanaListActivity extends AppCompatActivity {
             SparseBooleanArray selected = mListView.getCheckedItemPositions();
             System.out.println("Should delete " + selected);
             mode.finish(); // Action picked, so close the CAB
+            onPerformanceUpdated();
         }
 
         private void displayTimeChanger(final ActionMode mode) {
@@ -305,8 +345,7 @@ public class AsanaListActivity extends AppCompatActivity {
             SparseBooleanArray selected = mListView.getCheckedItemPositions();
             System.out.println("Should update " + selected);
             mode.finish(); // Action picked, so close the CAB
-            mIsDirty = true;
-            invalidateOptionsMenu();
+            onPerformanceUpdated();
         }
 
         @Override

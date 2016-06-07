@@ -1,15 +1,16 @@
 package com.shantikama.yogini;
 
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Shawn Lauzon
  */
 public class Index {
-    private ImmutableList<PerformanceInfo> performances;
+    private List<PerformanceInfo> performances;
 
-    private Index() {
-        this.performances = null;
+    public Index() {
+        this.performances = new ArrayList<>();
     }
 
     public PerformanceInfo getById(String id) {
@@ -21,11 +22,11 @@ public class Index {
         return null;
     }
 
-    public PerformanceInfo get(int position) {
-        return getPerformances().get(position);
+    public List<PerformanceInfo> getPerformances() {
+        return performances;
     }
 
-    public ImmutableList<PerformanceInfo> getPerformances() {
-        return performances;
+    public void addPerformance(PerformanceInfo pi) {
+        performances.add(pi);
     }
 }

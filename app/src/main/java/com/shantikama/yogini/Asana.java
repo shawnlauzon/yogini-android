@@ -52,7 +52,7 @@ public class Asana {
         return id;
     }
 
-    public void setId(String id) {
+    public void updateId(String id) {
         this.id = id;
     }
 
@@ -60,7 +60,7 @@ public class Asana {
         return name != null ? name : (mParent != null ? mParent.getName() : null);
     }
 
-    public void setName(String name) {
+    public void updateName(String name) {
         this.name = name;
     }
 
@@ -68,7 +68,7 @@ public class Asana {
         return order != UNDEFINED ? order : (mParent != null ? mParent.getOrder() : 0);
     }
 
-    public void setOrder(int order) {
+    public void updateOrder(int order) {
         this.order = order;
     }
 
@@ -76,7 +76,7 @@ public class Asana {
         return time != UNDEFINED ? time : (mParent != null ? mParent.getTime() : 0);
     }
 
-    public void setTime(int time) {
+    public void updateTime(int time) {
         this.time = time;
     }
 
@@ -85,7 +85,7 @@ public class Asana {
                 (mParent != null ? mParent.getChakra() : 0);
     }
 
-    public void setChakra(int chakra) {
+    public void updateChakra(int chakra) {
         this.chakra = chakra;
     }
 
@@ -94,7 +94,7 @@ public class Asana {
                 (mParent != null ? mParent.getAnnounceAudio() : null);
     }
 
-    public void setAnnounceAudio(String announceAudio) {
+    public void updateAnnounceAudio(String announceAudio) {
         this.announceAudio = announceAudio;
     }
 
@@ -103,7 +103,7 @@ public class Asana {
                 (mParent != null ? mParent.getAnnouncePause() : 0);
     }
 
-    public void setAnnouncePause(int announcePause) {
+    public void updateAnnouncePause(int announcePause) {
         this.announcePause = announcePause;
     }
 
@@ -112,7 +112,7 @@ public class Asana {
                 (mParent != null ? mParent.getSequence() : null);
     }
 
-    public void setSequence(ImmutableList<SequenceItem> sequence) {
+    public void updateSequence(ImmutableList<SequenceItem> sequence) {
         this.sequence = sequence;
     }
 
@@ -121,7 +121,7 @@ public class Asana {
                 (mParent != null ? mParent.getStretchAudio() : null);
     }
 
-    public void setStretchAudio(String stretchAudio) {
+    public void updateStretchAudio(String stretchAudio) {
         this.stretchAudio = stretchAudio;
     }
 
@@ -130,7 +130,7 @@ public class Asana {
                 (mParent != null ? mParent.getStretchPause() : 0);
     }
 
-    public void setStretchPause(int stretchPause) {
+    public void updateStretchPause(int stretchPause) {
         this.stretchPause = stretchPause;
     }
 
@@ -174,7 +174,7 @@ public class Asana {
                     (mParent != null ? mParent.getTechniqueAudio() : null);
         }
 
-        public void setTechniqueAudio(String techniqueAudio) {
+        public void updateTechniqueAudio(String techniqueAudio) {
             this.techniqueAudio = techniqueAudio;
         }
 
@@ -183,7 +183,7 @@ public class Asana {
                     (mParent != null ? mParent.getConcentrationAudio() : null);
         }
 
-        public void setConcentrationAudio(String concentrationAudio) {
+        public void updateConcentrationAudio(String concentrationAudio) {
             this.concentrationAudio = concentrationAudio;
         }
 
@@ -192,63 +192,63 @@ public class Asana {
                     (mParent != null ? mParent.getAwarenessAudio() : null);
         }
 
-        public void setAwarenessAudio(String awarenessAudio) {
+        public void updateAwarenessAudio(String awarenessAudio) {
             this.awarenessAudio = awarenessAudio;
         }
 
         public int getTechniquePause() {
-            return techniquePause != -1 ? techniquePause :
+            return techniquePause != UNDEFINED ? techniquePause :
                     (mParent != null ? mParent.getTechniquePause() : 0);
         }
 
-        public void setTechniquePause(int techniquePause) {
+        public void updateTechniquePause(int techniquePause) {
             this.techniquePause = techniquePause;
         }
 
         public int getConcentrationPause() {
-            return concentrationPause != -1 ? concentrationPause :
+            return concentrationPause != UNDEFINED ? concentrationPause :
                     (mParent != null ? mParent.getConcentrationPause() : 0);
         }
 
-        public void setConcentrationPause(int concentrationPause) {
+        public void updateConcentrationPause(int concentrationPause) {
             this.concentrationPause = concentrationPause;
         }
 
         public int getBeginPause() {
-            return beginPause != -1 ? beginPause :
+            return beginPause != UNDEFINED ? beginPause :
                     (mParent != null ? mParent.getBeginPause() : 0);
 
         }
 
-        public void setBeginPause(int beginPause) {
+        public void updateBeginPause(int beginPause) {
             this.beginPause = beginPause;
         }
 
         public int getEndPause() {
-            return endPause != -1 ? endPause :
+            return endPause != UNDEFINED ? endPause :
                     (mParent != null ? mParent.getEndPause() : 0);
         }
 
-        public void setEndPause(int endPause) {
+        public void updateEndPause(int endPause) {
             this.endPause = endPause;
         }
 
         public int getAwarenessPause() {
-            return awarenessPause != -1 ? awarenessPause :
+            return awarenessPause != UNDEFINED ? awarenessPause :
                     (mParent != null ? mParent.getAwarenessPause() : 0);
 
         }
 
-        public void setAwarenessPause(int awarenessPause) {
+        public void updateAwarenessPause(int awarenessPause) {
             this.awarenessPause = awarenessPause;
         }
 
         public int getTime() {
-            return time != -1 ? time :
+            return time != UNDEFINED ? time :
                     (mParent != null ? mParent.getTime() : 0);
         }
 
-        public void setTime(int time) {
+        public void updateTime(int time) {
             this.time = time;
         }
 
@@ -262,7 +262,7 @@ public class Asana {
             return skipPhases != null && skipPhases.contains(phase);
         }
 
-        public void setSkipPhases(Set<String> skipPhases) {
+        public void updateSkipPhases(Set<String> skipPhases) {
             this.mSkipPhases = skipPhases;
         }
     }
