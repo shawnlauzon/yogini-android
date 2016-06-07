@@ -11,11 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shantikama.yogini.Asana;
 import com.shantikama.yogini.Asanas;
@@ -86,13 +86,6 @@ public class AsanaListActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.asanas, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
@@ -105,8 +98,6 @@ public class AsanaListActivity extends AppCompatActivity {
             //
             NavUtils.navigateUpFromSameTask(this);
             return true;
-        } else if (id == R.id.action_edit) {
-            // TODO Allow add / remove reorder asanas
         }
         return super.onOptionsItemSelected(item);
     }
@@ -136,6 +127,7 @@ public class AsanaListActivity extends AppCompatActivity {
             holder.mAsana = mValues.get(position);
             holder.mNameView.setText(holder.mAsana.name);
 
+            // TODO Rather than text, make this an image, perhaps like a pie chart of 10 minutes
             if (holder.mAsana.time > 0) {
                 holder.mTimeView.setText(String.format(getString(R.string.asana_time), holder.mAsana.time / 60));
             } else {
@@ -170,7 +162,8 @@ public class AsanaListActivity extends AppCompatActivity {
             holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    return false;
+                    Toast.makeText(AsanaListActivity.this, "clicked", Toast.LENGTH_SHORT).show();
+                    return true;
                 }
             });
         }
