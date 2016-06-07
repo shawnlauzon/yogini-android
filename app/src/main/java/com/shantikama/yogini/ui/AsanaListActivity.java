@@ -8,14 +8,20 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.shantikama.yogini.Asana;
 import com.shantikama.yogini.Asanas;
@@ -72,9 +78,9 @@ public class AsanaListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        View recyclerView = findViewById(R.id.asana_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        View listView = findViewById(R.id.asana_list);
+        assert listView != null;
+        setupListView((ListView) listView);
 
         if (findViewById(R.id.asana_detail_container) != null) {
             // The detail container view will be present only in the
@@ -102,29 +108,27 @@ public class AsanaListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(mAsanas.asanas));
+    private void setupListView(@NonNull ListView listView) {
+        listView.setAdapter(new AsanaListViewAdapter(mAsanas.asanas));
+        listView.setMultiChoiceModeListener(new AsanaMultiChoiceModalListener(listView));
+        listView.setOnItemClickListener(new OnAsanaClickListener());
     }
 
-    public class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+    class AsanaListViewAdapter extends ArrayAdapter<Asana> {
+        private final List<Asana> mAsanas;
 
-        private final List<Asana> mValues;
-
-        public SimpleItemRecyclerViewAdapter(List<Asana> items) {
-            mValues = items;
+        public AsanaListViewAdapter(List<Asana> items) {
+            super(AsanaListActivity.this, R.layout.asana_list_content, items);
+            mAsanas = items;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.asana_list_content, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mAsana = mValues.get(position);
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = createView(parent);
+            }
+            final ViewHolder holder = (ViewHolder) convertView.getTag();
+            holder.mAsana = getItem(position);
             holder.mNameView.setText(holder.mAsana.name);
 
             // TODO Rather than text, make this an image, perhaps like a pie chart of 10 minutes
@@ -133,63 +137,114 @@ public class AsanaListActivity extends AppCompatActivity {
             } else {
                 holder.mTimeView.setText("");
             }
+            return convertView;
+        }
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mTwoPane) {
-                        Bundle arguments = new Bundle();
-                        arguments.putString(AsanaDetailFragment.ARG_PRACTICE_ID,
-                                getIntent().getStringExtra(ARG_PRACTICE_ID));
-                        arguments.putString(AsanaDetailFragment.ARG_ASANA_ID, holder.mAsana.id);
-                        AsanaDetailFragment fragment = new AsanaDetailFragment();
-                        fragment.setArguments(arguments);
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.asana_detail_container, fragment)
-                                .commit();
-                    } else {
-                        Context context = v.getContext();
-                        Intent intent = new Intent(context, AsanaDetailActivity.class);
-                        intent.putExtra(AsanaDetailFragment.ARG_PRACTICE_ID,
-                                getIntent().getStringExtra(ARG_PRACTICE_ID));
-                        intent.putExtra(AsanaDetailFragment.ARG_ASANA_ID, holder.mAsana.id);
-
-                        context.startActivity(intent);
-                    }
-                }
-            });
-
-            holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Toast.makeText(AsanaListActivity.this, "clicked", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-            });
+        private View createView(ViewGroup parent) {
+            View view = LayoutInflater.from(getContext())
+                    .inflate(R.layout.asana_list_content, parent, false);
+            view.setTag(new ViewHolder(view));
+            return view;
         }
 
         @Override
-        public int getItemCount() {
-            return mValues.size();
+        public int getCount() {
+            return mAsanas.size();
+        }
+    }
+
+    static class ViewHolder {
+        public final View mView;
+        public final TextView mNameView;
+        public final TextView mTimeView;
+        public Asana mAsana;
+
+        public ViewHolder(View view) {
+            mView = view;
+            mNameView = (TextView) view.findViewById(R.id.name);
+            mTimeView = (TextView) view.findViewById(R.id.time);
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView mNameView;
-            public final TextView mTimeView;
-            public Asana mAsana;
+        @Override
+        public String toString() {
+            return super.toString() + " '" + mNameView.getText() + "'";
+        }
+    }
 
-            public ViewHolder(View view) {
-                super(view);
-                mView = view;
-                mNameView = (TextView) view.findViewById(R.id.name);
-                mTimeView = (TextView) view.findViewById(R.id.time);
+    class OnAsanaClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final ViewHolder holder = (ViewHolder) view.getTag();
+            if (mTwoPane) {
+                Bundle arguments = new Bundle();
+                arguments.putString(AsanaDetailFragment.ARG_PRACTICE_ID,
+                        getIntent().getStringExtra(ARG_PRACTICE_ID));
+                arguments.putString(AsanaDetailFragment.ARG_ASANA_ID, holder.mAsana.id);
+                AsanaDetailFragment fragment = new AsanaDetailFragment();
+                fragment.setArguments(arguments);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.asana_detail_container, fragment)
+                        .commit();
+            } else {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, AsanaDetailActivity.class);
+                intent.putExtra(AsanaDetailFragment.ARG_PRACTICE_ID,
+                        getIntent().getStringExtra(ARG_PRACTICE_ID));
+                intent.putExtra(AsanaDetailFragment.ARG_ASANA_ID, holder.mAsana.id);
+                context.startActivity(intent);
             }
 
-            @Override
-            public String toString() {
-                return super.toString() + " '" + mNameView.getText() + "'";
+        }
+    }
+
+
+    class AsanaMultiChoiceModalListener implements AbsListView.MultiChoiceModeListener {
+
+        private ListView mListView;
+
+        AsanaMultiChoiceModalListener(ListView listView) {
+            this.mListView = listView;
+        }
+
+        @Override
+        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+            mode.setTitle(mListView.getCheckedItemCount() + " selected");
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Inflate the menu for the CAB
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.asana_list_context, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            // Respond to clicks on the actions in the CAB
+            switch (item.getItemId()) {
+                case R.id.action_delete:
+                    deleteSelectedItems();
+                    mode.finish(); // Action picked, so close the CAB
+                    return true;
+                default:
+                    return false;
             }
+        }
+
+        private void deleteSelectedItems() {
+            SparseBooleanArray selected = mListView.getCheckedItemPositions();
+            System.out.println("Should delete " + selected);
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+
         }
     }
 }
