@@ -65,6 +65,7 @@ public class AsanaListActivity extends AppCompatActivity {
                 // TODO Add new asana
             }
         });
+
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -126,14 +127,20 @@ public class AsanaListActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(android.R.layout.simple_list_item_1, parent, false);
+                    .inflate(R.layout.asana_list_content, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mItem = mValues.get(position);
-            holder.mNameView.setText(mValues.get(position).name);
+            holder.mAsana = mValues.get(position);
+            holder.mNameView.setText(holder.mAsana.name);
+
+            if (holder.mAsana.time > 0) {
+                holder.mTimeView.setText(String.format(getString(R.string.asana_time), holder.mAsana.time / 60));
+            } else {
+                holder.mTimeView.setText("");
+            }
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -142,7 +149,7 @@ public class AsanaListActivity extends AppCompatActivity {
                         Bundle arguments = new Bundle();
                         arguments.putString(AsanaDetailFragment.ARG_PRACTICE_ID,
                                 getIntent().getStringExtra(ARG_PRACTICE_ID));
-                        arguments.putString(AsanaDetailFragment.ARG_ASANA_ID, holder.mItem.id);
+                        arguments.putString(AsanaDetailFragment.ARG_ASANA_ID, holder.mAsana.id);
                         AsanaDetailFragment fragment = new AsanaDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -153,10 +160,17 @@ public class AsanaListActivity extends AppCompatActivity {
                         Intent intent = new Intent(context, AsanaDetailActivity.class);
                         intent.putExtra(AsanaDetailFragment.ARG_PRACTICE_ID,
                                 getIntent().getStringExtra(ARG_PRACTICE_ID));
-                        intent.putExtra(AsanaDetailFragment.ARG_ASANA_ID, holder.mItem.id);
+                        intent.putExtra(AsanaDetailFragment.ARG_ASANA_ID, holder.mAsana.id);
 
                         context.startActivity(intent);
                     }
+                }
+            });
+
+            holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return false;
                 }
             });
         }
@@ -169,12 +183,14 @@ public class AsanaListActivity extends AppCompatActivity {
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
             public final TextView mNameView;
-            public Asana mItem;
+            public final TextView mTimeView;
+            public Asana mAsana;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mNameView = (TextView) view.findViewById(android.R.id.text1);
+                mNameView = (TextView) view.findViewById(R.id.name);
+                mTimeView = (TextView) view.findViewById(R.id.time);
             }
 
             @Override

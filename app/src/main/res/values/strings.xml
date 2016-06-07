@@ -10,4 +10,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_asana_list">Asanas</string>
     <string name="title_asana_detail">Asana Detail</string>
+
+    <string name="asana_time">%1$d minutes</string>
 </resources>
