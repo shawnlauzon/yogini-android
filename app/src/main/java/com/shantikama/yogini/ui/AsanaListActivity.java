@@ -152,6 +152,7 @@ public class AsanaListActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         mPerformance.updateName(editText.getText().toString());
                         mPerformance.saveNew(AsanaListActivity.this);
+                        AsanaListActivity.this.setTitle(mPerformance.getName());
                     }
                 })
                 .setNegativeButton(R.string.btn_cancel, null)
