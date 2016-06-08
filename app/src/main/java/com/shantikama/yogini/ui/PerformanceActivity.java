@@ -407,8 +407,8 @@ public class PerformanceActivity extends AppCompatActivity
         }
 
         void initState(Bundle savedInstanceState) {
-            final int savedAsanaId = savedInstanceState.getInt(TAG_CUR_ASANA_ID, -1);
-            if (savedAsanaId >= 0) {
+            final String savedAsanaId = savedInstanceState.getString(TAG_CUR_ASANA_ID);
+            if (savedAsanaId != null) {
                 mAsanaIterator = mPerformance.getAsanas().iterator();
                 while (mAsanaIterator.hasNext()) {
                     // Advance to the asana we saved
