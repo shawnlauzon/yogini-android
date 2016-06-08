@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/practice_list_item_height"
+    android:layout_height="?android:attr/listPreferredItemHeight"
     android:paddingLeft="@dimen/text_margin"
     android:paddingRight="@dimen/text_margin">
 
@@ -13,7 +13,8 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:orientation="vertical"
-        android:paddingRight="8dp">
+        android:paddingRight="8dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/num_minutes"
@@ -37,6 +38,6 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:text="Basic Agama practice"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceListItem" />
 
 </RelativeLayout>

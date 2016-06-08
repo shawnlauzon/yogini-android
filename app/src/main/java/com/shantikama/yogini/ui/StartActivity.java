@@ -22,7 +22,6 @@ import com.shantikama.yogini.PerformanceInfo;
 import com.shantikama.yogini.R;
 
 import java.util.List;
-import java.util.Locale;
 
 public class StartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -63,8 +62,9 @@ public class StartActivity extends AppCompatActivity
 
                     final PerformanceInfo performanceInfo = performances.get(position);
                     ((TextView) convertView.findViewById(R.id.name)).setText(performanceInfo.name);
-                    ((TextView) convertView.findViewById(R.id.num_minutes)).setText(
-                            String.format(Locale.getDefault(), "%d", performanceInfo.timeMinutes));
+                    // TODO When I can auto-calculate, show how long is the practice
+//                    ((TextView) convertView.findViewById(R.id.num_minutes)).setText(
+//                            String.format(Locale.getDefault(), "%d", performanceInfo.timeMinutes));
 
                     return convertView;
                 }
