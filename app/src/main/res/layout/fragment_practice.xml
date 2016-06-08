@@ -18,6 +18,15 @@
         android:layout_centerHorizontal="true"
         tools:ignore="RelativeOverlap" />
 
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/img_margin"
+        android:src="@drawable/agama_yoga_logo" />
+
     <TextView
         android:id="@+id/timer"
         style="@style/TextAppearance.AppCompat.Large"
@@ -25,17 +34,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" />
+        android:layout_below="@id/image"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginStart="@dimen/text_margin" />
 
     <ProgressBar
         android:id="@+id/progress"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_alignBottom="@+id/timer"
+        android:layout_alignTop="@+id/timer"
         android:layout_toLeftOf="@id/timer"
-        android:layout_toStartOf="@id/timer"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp" />
+        android:layout_toStartOf="@id/timer" />
 
 </RelativeLayout>
