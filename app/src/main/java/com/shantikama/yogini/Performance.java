@@ -51,6 +51,10 @@ public class Performance {
         return null;
     }
 
+    public long getItemId() {
+        return UUID.fromString(id).getLeastSignificantBits();
+    }
+
     public void resolveParent(Context context) {
         if (parent != null) {
             mParent = JsonLibrary.getInstance().getPerformance(context, parent);
@@ -69,7 +73,7 @@ public class Performance {
             throw new IllegalStateException("Cannot store published performances");
         }
 
-        JsonLibrary.getInstance().save(context, PerformanceInfo.idToFilename(id), this);
+        JsonLibrary.getInstance().save(context, PerformanceInfo.getFilename(id), this);
     }
 
     public String saveNew(Context context) {
@@ -157,7 +161,7 @@ public class Performance {
         asanas.add(newAsana);
     }
 
-    public void removeAsanaWithId(long l) {
+    public void removeAsanaWithItemId(long l) {
         for (ListIterator<Asana> iterator = asanas.listIterator(); iterator.hasNext();) {
             if (l == iterator.next().getItemId()) {
                 iterator.remove();

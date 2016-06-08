@@ -29,6 +29,10 @@
         <item quantity="other">%d minutes</item>
     </plurals>
 
+    <plurals name="alert_remove_performances">
+        <item quantity="one">Remove %1$d performance?</item>
+        <item quantity="other">Remove %1$d performances?</item>
+    </plurals>
     <plurals name="alert_remove_asanas">
         <item quantity="one">Remove %1$d asana?</item>
         <item quantity="other">Remove %1$d asanas?</item>

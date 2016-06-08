@@ -2,7 +2,7 @@ package com.shantikama.yogini;
 
 import android.content.Context;
 
-import com.shantikama.yogini.utils.GsonUtils;
+import java.util.UUID;
 
 /**
  * Created by Shawn Lauzon
@@ -18,20 +18,24 @@ public class PerformanceInfo {
         this.timeMinutes = timeMinutes;
     }
 
-    public static String idToFilename(String id) {
+    public long getItemId() {
+        return UUID.fromString(id).getLeastSignificantBits();
+    }
+
+    public static String getFilename(String id) {
         return "ap" + id.replaceAll("-", "") + ".json";
     }
 
-    public String idToFilename() {
-        return idToFilename(this.id);
+    public String getFilename() {
+        return getFilename(this.id);
     }
 
-    public static int idToResId(Context context, String id) {
-        return GsonUtils.getRawResId(context, "ap" + id.replaceAll("-", ""));
+    public static int getResId(Context context, String id) {
+        return context.getResources().getIdentifier("ap" + id.replaceAll("-", ""), "raw", context.getPackageName());
     }
 
-    public int idToResId(Context context) {
-        return idToResId(context, this.id);
+    public int getResId(Context context) {
+        return getResId(context, this.id);
     }
 
 }

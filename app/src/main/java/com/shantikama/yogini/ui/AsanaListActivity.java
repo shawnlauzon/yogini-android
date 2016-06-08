@@ -326,7 +326,7 @@ public class AsanaListActivity extends AppCompatActivity {
         private void deleteSelectedItems(ActionMode mode) {
             long[] selected = mListView.getCheckedItemIds();
             for (int i = 0; i < selected.length; i++) {
-                mPerformance.removeAsanaWithId(selected[i]);
+                mPerformance.removeAsanaWithItemId(selected[i]);
             }
             mode.finish(); // Action picked, so close the CAB
             onPerformanceUpdated();

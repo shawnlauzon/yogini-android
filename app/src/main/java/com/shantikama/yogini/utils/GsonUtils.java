@@ -35,10 +35,6 @@ public class GsonUtils {
         return GSON.fromJson(stream, clazz);
     }
 
-    public static int getRawResId(Context context, String name) {
-        return context.getResources().getIdentifier(name, "raw", context.getPackageName());
-    }
-
     static class ImmutableListDeserializer implements JsonDeserializer<ImmutableList<?>> {
         @Override
         public ImmutableList<?> deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {

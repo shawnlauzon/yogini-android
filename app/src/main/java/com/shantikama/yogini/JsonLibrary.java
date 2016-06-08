@@ -4,7 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.shantikama.yogini.utils.GsonUtils;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -34,7 +36,11 @@ public class JsonLibrary {
 
     private Index mIndex;
     private Index mLocalIndex;
-    private final Map<String, Performance> mAllPerformances = new HashMap<>();
+
+    /**
+     * Performances which have currently been loaded, keyed by id.
+     */
+    private final Map<String, Performance> mLoadedPerformances = new HashMap<>();
 
     public static JsonLibrary getInstance() {
         return sInstance;
@@ -59,10 +65,12 @@ public class JsonLibrary {
     }
 
     public List<PerformanceInfo> getPerformances(Context context) {
-        return new ImmutableList.Builder<PerformanceInfo>()
-                .addAll(getLocalIndex(context).getPerformances())
-                .addAll(getIndex(context).getPerformances())
-                .build();
+        return Lists.newArrayList(Iterables.concat(getLocalIndex(context).getPerformances(),
+                getIndex(context).getPerformances()));
+//        return new ImmutableList.Builder<PerformanceInfo>()
+//                .addAll(getLocalIndex(context).getPerformances())
+//                .addAll(getIndex(context).getPerformances())
+//                .build();
     }
 
     private static Index createLocalIndex(Context context) {
@@ -113,32 +121,46 @@ public class JsonLibrary {
     }
 
     public Performance getPerformance(Context context, String performanceId) {
-        if (!mAllPerformances.containsKey(performanceId)) {
+        if (!mLoadedPerformances.containsKey(performanceId)) {
             Performance asanas;
             PerformanceInfo pi = getIndex(context).getById(performanceId);
             if (pi != null) {
-                asanas = GsonUtils.deserialize(context, pi.idToResId(context), Performance.class);
+                asanas = GsonUtils.deserialize(context, pi.getResId(context), Performance.class);
             } else {
                 pi = mLocalIndex.getById(performanceId);
                 if (pi == null) {
                     throw new NoSuchElementException();
                 }
                 try {
-                    asanas = load(context, pi.idToFilename(), Performance.class);
+                    asanas = load(context, pi.getFilename(), Performance.class);
                 } catch (FileNotFoundException e) {
-                    Log.e(TAG, "Could not find file in index " + pi.idToFilename());
+                    Log.e(TAG, "Could not find file in index " + pi.getFilename());
                     throw Throwables.propagate(e);
                 }
             }
             asanas.resolveParent(context);
-            mAllPerformances.put(performanceId, asanas);
+            mLoadedPerformances.put(performanceId, asanas);
         }
-        return mAllPerformances.get(performanceId);
+        return mLoadedPerformances.get(performanceId);
     }
 
     public void addPerformance(Context context, Performance performance) {
         mLocalIndex.addPerformance(performance.newPerformanceInfo());
         save(context, INDEX_FILENAME, mLocalIndex);
-        mAllPerformances.put(performance.getId(), performance);
+        mLoadedPerformances.put(performance.getId(), performance);
+    }
+
+    public PerformanceInfo removePerformanceWithItemId(Context context, long l) {
+        for (ListIterator<PerformanceInfo> iterator = mLocalIndex.getPerformances().listIterator(); iterator.hasNext();) {
+            PerformanceInfo pi = iterator.next();
+            if (l == pi.getItemId()) {
+                iterator.remove();
+                save(context, INDEX_FILENAME, mLocalIndex);
+                new File(context.getFilesDir(), pi.getFilename());
+                mLoadedPerformances.remove(pi.id);
+                return pi;
+            }
+        }
+        return null;
     }
 }
