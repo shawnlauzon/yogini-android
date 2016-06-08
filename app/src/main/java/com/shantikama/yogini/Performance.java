@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableSet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.UUID;
 
 /**
@@ -154,5 +155,14 @@ public class Performance {
         }
         // If all existing asanas are less than newAsana, add to the end
         asanas.add(newAsana);
+    }
+
+    public void removeAsanaWithId(long l) {
+        for (ListIterator<Asana> iterator = asanas.listIterator(); iterator.hasNext();) {
+            if (l == iterator.next().getItemId()) {
+                iterator.remove();
+                return;
+            }
+        }
     }
 }

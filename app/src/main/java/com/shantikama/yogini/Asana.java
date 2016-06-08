@@ -53,6 +53,10 @@ public class Asana implements Comparable<Asana> {
         return id;
     }
 
+    public long getItemId() {
+        return getName().hashCode();
+    }
+
     public void updateId(String id) {
         this.id = id;
     }

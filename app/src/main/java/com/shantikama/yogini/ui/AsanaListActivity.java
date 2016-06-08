@@ -233,6 +233,16 @@ public class AsanaListActivity extends AppCompatActivity {
         public int getCount() {
             return mAsanas.size();
         }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return mAsanas.get(position).getItemId();
+        }
     }
 
     static class ViewHolder {
@@ -337,12 +347,9 @@ public class AsanaListActivity extends AppCompatActivity {
         }
 
         private void deleteSelectedItems(ActionMode mode) {
-            SparseBooleanArray selected = mListView.getCheckedItemPositions();
-            for (int i = 0; i < selected.size(); i++) {
-                if (selected.valueAt(i)) {
-                    final int selectedPos = selected.keyAt(i);
-                    mPerformance.getAsanas().remove(selectedPos);
-                }
+            long[] selected = mListView.getCheckedItemIds();
+            for (int i = 0; i < selected.length; i++) {
+                mPerformance.removeAsanaWithId(selected[i]);
             }
             mode.finish(); // Action picked, so close the CAB
             mAdapter.notifyDataSetChanged();
