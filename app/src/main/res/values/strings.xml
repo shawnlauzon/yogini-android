@@ -37,6 +37,6 @@
         <item quantity="one">Remove %1$d asana?</item>
         <item quantity="other">Remove %1$d asanas?</item>
     </plurals>
-    <string name="title_activity_performance_builder">PerformanceBuilder</string>
+    <string name="title_activity_performance_builder">Performance builder</string>
     <string name="nav_build">Performance builder</string>
 </resources>

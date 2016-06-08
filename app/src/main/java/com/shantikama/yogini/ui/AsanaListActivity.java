@@ -83,7 +83,7 @@ public class AsanaListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        View listView = findViewById(R.id.asana_list);
+        View listView = findViewById(android.R.id.list);
         assert listView != null;
         setupListView((ListView) listView);
 

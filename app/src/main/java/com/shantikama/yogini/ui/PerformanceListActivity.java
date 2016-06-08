@@ -40,7 +40,7 @@ public class PerformanceListActivity extends NavigationDrawerActivity {
     private void setupListView() {
         mPerformances = JsonLibrary.getInstance().getPerformances(this);
 
-        final ListView listView = (ListView) findViewById(R.id.practices);
+        final ListView listView = (ListView) findViewById(android.R.id.list);
         assert listView != null;
         listView.setMultiChoiceModeListener(new PerformanceMultiChoiceModalListener(listView));
         listView.setAdapter(new PerformanceListViewAdapter(mPerformances));
