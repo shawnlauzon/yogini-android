@@ -36,7 +36,7 @@ public class PerformanceActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View root = inflater.inflate(R.layout.fragment_practice, container, false);
+        final View root = inflater.inflate(R.layout.fragment_performance, container, false);
 
         mAsanaName = (TextView) root.findViewById(R.id.name);
         mTimer = (TextView) root.findViewById(R.id.timer);

@@ -8,11 +8,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -31,8 +30,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-public class PerformanceActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class PerformanceActivity extends AppCompatActivity {
     private static final String TAG = "PerformanceActivity";
 
     public static final String ARG_PRACTICE_ID = "practice_id";
@@ -62,7 +60,7 @@ public class PerformanceActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_practice);
+        setContentView(R.layout.activity_performance);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -74,14 +72,11 @@ public class PerformanceActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         setupAudioPlayer();
 
@@ -333,25 +328,6 @@ public class PerformanceActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_begin) {
-            final Intent intent = new Intent(this, PerformanceActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_manage) {
-            final Intent intent = new Intent(this, PerformanceActivity.class);
-            startActivity(intent);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        assert drawer != null;
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     private class AsanaController {

@@ -7,9 +7,9 @@
             android:icon="@drawable/ic_spa_black_24dp"
             android:title="Begin practice" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_build"
             android:icon="@drawable/ic_build_black_24dp"
-            android:title="Modify" />
+            android:title="@string/nav_build" />
     </group>
 
 </menu>
