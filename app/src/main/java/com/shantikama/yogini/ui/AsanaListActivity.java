@@ -49,8 +49,6 @@ public class AsanaListActivity extends AppCompatActivity {
     private Performance mPerformance;
     private ArrayAdapter<Asana> mAsanasAdapter;
 
-    private boolean mIsDirty = false;
-
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -117,22 +115,11 @@ public class AsanaListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mPerformance.addAsana(unusedAsanas.get(which));
-                        mAsanasAdapter.notifyDataSetChanged();
-                        mIsDirty = true;
-                        invalidateOptionsMenu();
+                        onPerformanceUpdated();
                     }
                 })
                 .setNegativeButton(R.string.btn_cancel, null)
                 .create().show();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.asana_list, menu);
-
-        menu.findItem(R.id.action_save).setVisible(mIsDirty);
-        return true;
     }
 
     @Override
@@ -148,21 +135,8 @@ public class AsanaListActivity extends AppCompatActivity {
             //
             NavUtils.navigateUpFromSameTask(this);
             return true;
-        } else if (id == R.id.action_save) {
-            savePerformance();
-            return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void savePerformance() {
-        if (mPerformance.isPublished()) {
-            showSaveNewPerformanceDialog();
-        } else {
-            mPerformance.save(this);
-            mIsDirty = false;
-            invalidateOptionsMenu();
-        }
     }
 
     private void showSaveNewPerformanceDialog() {
@@ -178,8 +152,6 @@ public class AsanaListActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         mPerformance.updateName(editText.getText().toString());
                         mPerformance.saveNew(AsanaListActivity.this);
-                        mIsDirty = false;
-                        invalidateOptionsMenu();
                     }
                 })
                 .setNegativeButton(R.string.btn_cancel, null)
@@ -190,8 +162,12 @@ public class AsanaListActivity extends AppCompatActivity {
      * Called by listener when user updated the list of asanas.
      */
     void onPerformanceUpdated() {
-        mIsDirty = true;
-        invalidateOptionsMenu();
+        mAsanasAdapter.notifyDataSetChanged();
+        if (mPerformance.isPublished()) {
+            showSaveNewPerformanceDialog();
+        } else {
+            mPerformance.save(AsanaListActivity.this);
+        }
     }
 
     class AsanaListViewAdapter extends ArrayAdapter<Asana> {
@@ -352,7 +328,6 @@ public class AsanaListActivity extends AppCompatActivity {
                 mPerformance.removeAsanaWithId(selected[i]);
             }
             mode.finish(); // Action picked, so close the CAB
-            mAdapter.notifyDataSetChanged();
             onPerformanceUpdated();
         }
 
@@ -388,7 +363,6 @@ public class AsanaListActivity extends AppCompatActivity {
                 }
             }
             mode.finish(); // Action picked, so close the CAB
-            mAdapter.notifyDataSetChanged();
             onPerformanceUpdated();
         }
 
