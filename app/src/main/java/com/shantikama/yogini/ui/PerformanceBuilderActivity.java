@@ -73,7 +73,7 @@ public class PerformanceBuilderActivity extends NavigationDrawerActivity {
 
         private View createView(ViewGroup parent) {
             View view = LayoutInflater.from(getContext())
-                    .inflate(R.layout.asana_list_content, parent, false);
+                    .inflate(R.layout.performance_builder_list_content, parent, false);
             view.setTag(new ViewHolder(view));
             return view;
         }
