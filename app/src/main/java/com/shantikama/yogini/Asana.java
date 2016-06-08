@@ -134,10 +134,7 @@ public class Asana {
 
     @Override
     public String toString() {
-        return "Asana {" +
-                "id=" + id +
-                ", name='" + name +
-                '}';
+        return name;
     }
 
     public static class SequenceItem {

@@ -26,6 +26,8 @@ import java.util.NoSuchElementException;
 public class JsonLibrary {
     private static final String TAG = "JsonLibrary";
 
+    public static final String PERFORMANCE_ALL_ASANAS = "ap76738951a9134b3da902dc2e03c0c47c";
+
     private static final JsonLibrary sInstance = new JsonLibrary();
 
     private static final String INDEX_FILENAME = "index.json";

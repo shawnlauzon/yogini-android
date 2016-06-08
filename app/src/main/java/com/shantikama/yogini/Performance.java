@@ -3,7 +3,9 @@ package com.shantikama.yogini;
 import android.content.Context;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -75,6 +77,23 @@ public class Performance {
         save(context);
         JsonLibrary.getInstance().addPerformance(context, this);
         return id;
+    }
+
+    public List<Asana> getUnusedAsanas() {
+        List<Asana> unusedAsanas = new ArrayList<>();
+
+        ImmutableSet.Builder<String> usedAsanasBuilder = new ImmutableSet.Builder<>();
+        for (Asana a : asanas) {
+            usedAsanasBuilder.add(a.getName());
+        }
+        ImmutableSet<String> usedAsanas = usedAsanasBuilder.build();
+
+        for (Asana a : mParent.getAsanas()) {
+            if (!usedAsanas.contains(a.getName())) {
+                unusedAsanas.add(a);
+            }
+        }
+        return unusedAsanas;
     }
 
     public String getId() {

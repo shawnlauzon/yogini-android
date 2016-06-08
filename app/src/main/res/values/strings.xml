@@ -20,6 +20,7 @@
     <string name="btn_cancel">Cancel</string>
     <string name="btn_update">Update</string>
     <string name="dialog_save_performance">Save new performance</string>
+    <string name="dialog_add_asana">Add asana</string>
     <string name="default_modified_performance_name">%s (Custom)</string>
     <string name="btn_save">Save</string>
 

@@ -47,6 +47,7 @@ public class AsanaListActivity extends AppCompatActivity {
     public static final String ARG_PRACTICE_ID = "practice_id";
 
     private Performance mPerformance;
+    private ArrayAdapter<Asana> mAsanasAdapter;
 
     private boolean mIsDirty = false;
 
@@ -74,7 +75,7 @@ public class AsanaListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Add new asana
+                showAddAsanaPicker();
             }
         });
 
@@ -95,6 +96,34 @@ public class AsanaListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+    }
+
+    private void setupListView(@NonNull ListView listView) {
+        mAsanasAdapter = new AsanaListViewAdapter(mPerformance.getAsanas());
+        listView.setAdapter(mAsanasAdapter);
+        listView.setMultiChoiceModeListener(new AsanaMultiChoiceModalListener(listView, mAsanasAdapter));
+        listView.setOnItemClickListener(new OnAsanaClickListener());
+    }
+
+    private void showAddAsanaPicker() {
+        // TODO Display as a full-screen dialog
+        final List<Asana> unusedAsanas = mPerformance.getUnusedAsanas();
+        ArrayAdapter<Asana> adapter = new ArrayAdapter<Asana>(this, android.R.layout.simple_list_item_1,
+                unusedAsanas);
+
+        new AlertDialog.Builder(AsanaListActivity.this)
+                .setTitle(R.string.dialog_add_asana)
+                .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPerformance.getAsanas().add(unusedAsanas.get(which));
+                        mAsanasAdapter.notifyDataSetChanged();
+                        mIsDirty = true;
+                        invalidateOptionsMenu();
+                    }
+                })
+                .setNegativeButton(R.string.btn_cancel, null)
+                .create().show();
     }
 
     @Override
@@ -155,13 +184,6 @@ public class AsanaListActivity extends AppCompatActivity {
                 })
                 .setNegativeButton(R.string.btn_cancel, null)
                 .create().show();
-    }
-
-    private void setupListView(@NonNull ListView listView) {
-        ArrayAdapter adapter = new AsanaListViewAdapter(mPerformance.getAsanas());
-        listView.setAdapter(adapter);
-        listView.setMultiChoiceModeListener(new AsanaMultiChoiceModalListener(listView, adapter));
-        listView.setOnItemClickListener(new OnAsanaClickListener());
     }
 
     /**
