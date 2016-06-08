@@ -137,10 +137,22 @@ public class Performance {
     }
 
     public List<Asana> getAsanas() {
-        return asanas != null ? asanas : mParent.getAsanas();
+        return asanas != null ? asanas : (mParent != null ? mParent.getAsanas() : null);
     }
 
     public void setAsanas(ImmutableList<Asana> asanas) {
         this.asanas = asanas;
+    }
+
+    public void addAsana(Asana newAsana) {
+        final List<Asana> asanas = getAsanas();
+        for (int i = 0; i < asanas.size(); i++) {
+            if (newAsana.getOrder() < asanas.get(i).getOrder()) {
+                asanas.add(i, newAsana);
+                return;
+            }
+        }
+        // If all existing asanas are less than newAsana, add to the end
+        asanas.add(newAsana);
     }
 }

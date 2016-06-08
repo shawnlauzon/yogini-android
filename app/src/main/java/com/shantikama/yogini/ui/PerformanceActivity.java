@@ -379,7 +379,7 @@ public class PerformanceActivity extends AppCompatActivity
         private final ImmutableList<String> STATE_STRS = ImmutableList.of("IDLE", "PLAYING",
                 "WAITING");
 
-        private Performance mAsanas;
+        private Performance mPerformance;
 
         private Iterator<Asana> mAsanaIterator;
         private ListIterator<Asana.SequenceItem> mAsanaSequenceIterator;
@@ -390,8 +390,8 @@ public class PerformanceActivity extends AppCompatActivity
         private int mCurPhase = PHASE_IDLE;
         private int mCurState = STATE_IDLE;
 
-        public AsanaController(Performance asanas) {
-            mAsanas = asanas;
+        public AsanaController(Performance performance) {
+            mPerformance = performance;
         }
 
         void onSaveInstanceState(Bundle outState) {
@@ -409,7 +409,7 @@ public class PerformanceActivity extends AppCompatActivity
         void initState(Bundle savedInstanceState) {
             final int savedAsanaId = savedInstanceState.getInt(TAG_CUR_ASANA_ID, -1);
             if (savedAsanaId >= 0) {
-                mAsanaIterator = mAsanas.getAsanas().iterator();
+                mAsanaIterator = mPerformance.getAsanas().iterator();
                 while (mAsanaIterator.hasNext()) {
                     // Advance to the asana we saved
                     mCurAsana = mAsanaIterator.next();
@@ -439,7 +439,7 @@ public class PerformanceActivity extends AppCompatActivity
         public void startPractice() {
             if (mAsanaIterator == null) {
                 // On rotation, this will be already advanced to the correct location
-                mAsanaIterator = mAsanas.getAsanas().iterator();
+                mAsanaIterator = mPerformance.getAsanas().iterator();
             }
 
             continuePractice();
@@ -534,10 +534,10 @@ public class PerformanceActivity extends AppCompatActivity
                     phaseAudio = mCurAsanaSequenceItem.getConcentrationAudio();
                     break;
                 case PHASE_BEGIN:
-                    phaseAudio = mAsanas.getBeginAudio();
+                    phaseAudio = mPerformance.getBeginAudio();
                     break;
                 case PHASE_END:
-                    phaseAudio = mAsanas.getEndAudio();
+                    phaseAudio = mPerformance.getEndAudio();
                     break;
                 case PHASE_AWARENESS:
                     phaseAudio = mCurAsanaSequenceItem.getAwarenessAudio();

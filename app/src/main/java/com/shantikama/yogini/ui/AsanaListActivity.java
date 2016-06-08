@@ -108,7 +108,7 @@ public class AsanaListActivity extends AppCompatActivity {
     private void showAddAsanaPicker() {
         // TODO Display as a full-screen dialog
         final List<Asana> unusedAsanas = mPerformance.getUnusedAsanas();
-        ArrayAdapter<Asana> adapter = new ArrayAdapter<Asana>(this, android.R.layout.simple_list_item_1,
+        ArrayAdapter<Asana> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                 unusedAsanas);
 
         new AlertDialog.Builder(AsanaListActivity.this)
@@ -116,7 +116,7 @@ public class AsanaListActivity extends AppCompatActivity {
                 .setAdapter(adapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mPerformance.getAsanas().add(unusedAsanas.get(which));
+                        mPerformance.addAsana(unusedAsanas.get(which));
                         mAsanasAdapter.notifyDataSetChanged();
                         mIsDirty = true;
                         invalidateOptionsMenu();

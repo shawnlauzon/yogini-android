@@ -14,6 +14,7 @@
       "announce_audio": "warming_0",
       "announce_pause": 8,
       "time": 0,
+      "order": 100,
       "sequence": [
         {
           "technique_audio": "warming_1_begin",
@@ -74,6 +75,7 @@
       "name": "Pādahastāsana",
       "time": 420,
       "announce_audio": "pad_begin",
+      "order": 200,
       "sequence": [
         {
           "awareness_audio": "pad_end",
@@ -88,6 +90,7 @@
       "time": 150,
       "announce_audio": "trik_announce",
       "announce_pause": 3,
+      "order": 500,
       "sequence": [
         {
           "technique_audio": "trik_technique_left",
@@ -115,6 +118,7 @@
       "time": 120,
       "announce_audio": "garu_begin",
       "announce_pause": 10,
+      "order": 1000,
       "sequence": [
         {
           "technique_audio": "garu_left_begin",
@@ -135,6 +139,7 @@
       "name": "Pavana muktāsana",
       "time": 240,
       "announce_audio": "pm_begin",
+      "order": 1400,
       "sequence": [
         {
           "awareness_audio": "pm_end",
@@ -149,6 +154,7 @@
       "time": 180,
       "announce_audio": "bhujan_announce",
       "announce_pause": 5,
+      "order": 1500,
       "sequence": [
         {
           "technique_audio": "bhujan_technique",
@@ -164,6 +170,7 @@
       "id": "pash",
       "name": "Paścimottānāsana",
       "time": 240,
+      "order": 1600,
       "announce_audio": "paschi_begin",
       "sequence": [
         {
@@ -177,6 +184,7 @@
       "id": "janu",
       "name": "Jānuśirṣāsana",
       "time": 180,
+      "order": 1800,
       "announce_audio": "janu_announce",
       "announce_pause": 3,
       "sequence": [
@@ -202,6 +210,7 @@
       "id": "gomu",
       "name": "Gomukāsana",
       "time": 150,
+      "order": 2000,
       "announce_audio": "gomu_begin",
       "sequence": [
         {
@@ -222,6 +231,7 @@
       "id": "vaj",
       "name": "Vajrāsana",
       "time": 420,
+      "order": 2300,
       "announce_audio": "vaj_begin",
       "sequence": [
         {
@@ -237,6 +247,7 @@
       "id": "hal",
       "name": "Halāsana",
       "time": 180,
+      "order": 2600,
       "announce_audio": "hala_begin",
       "announce_pause": 20,
       "sequence": [
@@ -253,6 +264,7 @@
       "announce_audio": "shavasana_announce",
       "announce_pause": 20,
       "time": 0,
+      "order": 100000,
       "sequence": [
         {
           "technique_audio": "shavasana_technique",

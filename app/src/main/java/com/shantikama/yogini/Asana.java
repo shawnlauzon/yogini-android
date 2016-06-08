@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Created by Shawn Lauzon
  */
-public class Asana {
+public class Asana implements Comparable<Asana> {
     private static final int UNDEFINED = -1;
 
     private String id;
@@ -134,7 +134,7 @@ public class Asana {
 
     @Override
     public String toString() {
-        return name;
+        return getName();
     }
 
     public static class SequenceItem {
@@ -212,7 +212,6 @@ public class Asana {
         public int getBeginPause() {
             return beginPause != UNDEFINED ? beginPause :
                     (mParent != null ? mParent.getBeginPause() : 0);
-
         }
 
         public void updateBeginPause(int beginPause) {
@@ -260,5 +259,25 @@ public class Asana {
         public void updateSkipPhases(Set<String> skipPhases) {
             this.mSkipPhases = skipPhases;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Asana asana = (Asana) o;
+
+        return id.equals(asana.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public int compareTo(Asana another) {
+        return getOrder() - another.getOrder();
     }
 }
