@@ -63,11 +63,11 @@ public class AsanaListActivity extends AppCompatActivity {
 
         mPerformance = JsonLibrary.getInstance().getPerformance(this,
                 getIntent().getStringExtra(ARG_PRACTICE_ID));
+        setTitle(mPerformance.getName());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         assert toolbar != null;
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getIntent().getStringExtra(mPerformance.getName()));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;

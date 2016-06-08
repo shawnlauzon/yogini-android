@@ -82,7 +82,7 @@ public class Performance {
     }
 
     public String getName() {
-        return name != null ? name : mParent.getName();
+        return name != null ? name : (mParent != null ? mParent.getName() : null);
     }
 
     public void updateName(String name) {
