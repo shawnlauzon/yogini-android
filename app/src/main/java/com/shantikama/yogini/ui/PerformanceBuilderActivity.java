@@ -6,7 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 import com.shantikama.yogini.Asana;
 import com.shantikama.yogini.JsonLibrary;
@@ -44,6 +46,10 @@ public class PerformanceBuilderActivity extends NavigationDrawerActivity {
         View recyclerView = findViewById(android.R.id.list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+
+        View spinner = findViewById(R.id.phase_spinner);
+        assert spinner != null;
+        setupSpinner((Spinner) spinner);
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {
@@ -53,11 +59,21 @@ public class PerformanceBuilderActivity extends NavigationDrawerActivity {
         recyclerView.setLayoutManager(mLayoutManager);
     }
 
+    private void setupSpinner(Spinner spinner) {
+        spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                getResources().getStringArray(R.array.phases)));
+    }
+
     private class AsanaAdapter extends RecyclerView.Adapter<AsanaViewHolder> {
         private final List<Asana> mAsanas;
+        private Asana mSelectedAsana;
+        private View mSelectedView;
 
         public AsanaAdapter(List<Asana> items) {
             mAsanas = items;
+            mSelectedAsana = mAsanas.get(0);
+            setTitle(mSelectedAsana.getName());
+            setHasStableIds(true);
         }
 
         @Override
@@ -67,13 +83,50 @@ public class PerformanceBuilderActivity extends NavigationDrawerActivity {
 
         @Override
         public AsanaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new AsanaViewHolder(getLayoutInflater().inflate(
-                    R.layout.performance_builder_list_content, parent, false));
+            View newView = getLayoutInflater().inflate(
+                    R.layout.performance_builder_list_content, parent, false);
+            newView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onViewClicked(v);
+                }
+            });
+            return new AsanaViewHolder(newView);
+        }
+
+        private void onViewClicked(View v) {
+            if (v.getBackground() != null) { // deselect the view
+                v.setBackgroundResource(0);
+                mSelectedAsana = null;
+                mSelectedView = null;
+            } else { // select the view
+                if (mSelectedView != null) {
+                    // deselect the previously selected view
+                    mSelectedView.setBackgroundResource(0);
+                }
+                mSelectedView = v;
+                mSelectedView.setBackgroundResource(R.drawable.selection_background);
+                mSelectedAsana = (Asana) v.getTag();
+                setTitle(mSelectedAsana.getName());
+            }
         }
 
         @Override
         public void onBindViewHolder(AsanaViewHolder holder, int position) {
+            View selectedView = holder.itemView;
+
+            // TODO Display an image from the asana
             holder.mImageView.setImageResource(R.drawable.agama_yoga_logo);
+
+            Asana selectedAsana = mAsanas.get(position);
+            if (mSelectedAsana == selectedAsana) {
+                mSelectedView = selectedView;
+                mSelectedView.setBackgroundResource(R.drawable.selection_background);
+            } else {
+                selectedView.setBackgroundResource(0);
+            }
+
+            selectedView.setTag(selectedAsana);
         }
 
         @Override
@@ -83,12 +136,10 @@ public class PerformanceBuilderActivity extends NavigationDrawerActivity {
     }
 
     static class AsanaViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
         public final ImageView mImageView;
 
         public AsanaViewHolder(View view) {
             super(view);
-            mView = view;
             mImageView = (ImageView) view.findViewById(R.id.image);
         }
     }

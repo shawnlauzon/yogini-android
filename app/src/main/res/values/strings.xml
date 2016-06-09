@@ -39,4 +39,14 @@
     </plurals>
     <string name="title_activity_performance_builder">Performance builder</string>
     <string name="nav_build">Performance builder</string>
+
+    <array name="phases">
+        <item>Announce</item>
+        <item>Technique</item>
+        <item>Concentration</item>
+        <item>Begin</item>
+        <item>End</item>
+        <item>Awareness</item>
+        <item>Stretch</item>
+    </array>
 </resources>

@@ -14,11 +14,16 @@
 
     <LinearLayout
         android:id="@+id/controls"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:orientation="vertical">
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_record"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mic_black_24dp" />
 
         <ImageButton
             android:id="@+id/btn_play"
@@ -26,18 +31,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_play_arrow_black_24dp" />
+
         <ImageButton
             android:id="@+id/btn_pause"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_pause_black_24dp" />
-        <ImageButton
-            android:id="@+id/btn_record"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_mic_black_24dp" />
+
         <ImageButton
             android:id="@+id/btn_replay"
             style="@style/Widget.AppCompat.Button.Borderless"
@@ -46,11 +47,18 @@
             android:src="@drawable/ic_replay_black_24dp" />
     </LinearLayout>
 
+    <Spinner
+        android:id="@+id/phase_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/controls"
+        android:layout_centerHorizontal="true" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_toLeftOf="@+id/controls"
         android:layout_height="match_parent"
+        android:layout_below="@id/phase_spinner"
         tools:context="com.shantikama.yogini.ui.AsanaListActivity"
         tools:listitem="@layout/performance_builder_list_content" />
 </RelativeLayout>
