@@ -19,6 +19,8 @@ import java.util.List;
 
 public class PerformanceBuilderActivity extends NavigationDrawerActivity {
 
+    private static final String TAG_SELECTED_POS = "selected_pos";
+
     private Performance mPerformance;
     private AsanaAdapter mAsanasAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -50,10 +52,14 @@ public class PerformanceBuilderActivity extends NavigationDrawerActivity {
         View spinner = findViewById(R.id.phase_spinner);
         assert spinner != null;
         setupSpinner((Spinner) spinner);
+
+        if (savedInstanceState != null) {
+            mAsanasAdapter.setSelectedPosition(savedInstanceState.getInt(TAG_SELECTED_POS));
+        }
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {
-        mAsanasAdapter = new AsanaAdapter(mPerformance.getAsanas());
+        mAsanasAdapter = new AsanaAdapter(recyclerView, mPerformance.getAsanas());
         recyclerView.setAdapter(mAsanasAdapter);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -64,16 +70,33 @@ public class PerformanceBuilderActivity extends NavigationDrawerActivity {
                 getResources().getStringArray(R.array.phases)));
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(TAG_SELECTED_POS, mAsanasAdapter.getSelectedPosition());
+    }
+
     private class AsanaAdapter extends RecyclerView.Adapter<AsanaViewHolder> {
+        private RecyclerView mRecyclerView;
+
         private final List<Asana> mAsanas;
-        private Asana mSelectedAsana;
+        private int mSelectedPosition;
         private View mSelectedView;
 
-        public AsanaAdapter(List<Asana> items) {
+        public AsanaAdapter(RecyclerView recyclerView, List<Asana> items) {
+            mRecyclerView = recyclerView;
             mAsanas = items;
-            mSelectedAsana = mAsanas.get(0);
-            setTitle(mSelectedAsana.getName());
             setHasStableIds(true);
+            setSelectedPosition(0);
+        }
+
+        int getSelectedPosition() {
+            return mSelectedPosition;
+        }
+
+        void setSelectedPosition(int position) {
+            mSelectedPosition = position;
+            setTitle(mAsanas.get(mSelectedPosition).getName());
         }
 
         @Override
@@ -88,45 +111,42 @@ public class PerformanceBuilderActivity extends NavigationDrawerActivity {
             newView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onViewClicked(v);
+                    if (!v.isSelected()) {
+                        // We are selecting the view clicked
+                        if (mSelectedView != null) {
+                            // deselect the previously selected view
+                            mSelectedView.setSelected(false);
+                        }
+                        mSelectedPosition = mRecyclerView.getChildAdapterPosition(v);
+                        mSelectedView = v;
+                        setTitle(mAsanas.get(mSelectedPosition).getName());
+                    } else {
+                        // We are deselecting the view clicked
+                        setTitle("");
+                        mSelectedPosition = -1;
+                        mSelectedView = null;
+                    }
+
+                    // toggle the item clicked
+                    v.setSelected(!v.isSelected());
                 }
             });
             return new AsanaViewHolder(newView);
         }
 
-        private void onViewClicked(View v) {
-            if (v.getBackground() != null) { // deselect the view
-                v.setBackgroundResource(0);
-                mSelectedAsana = null;
-                mSelectedView = null;
-            } else { // select the view
-                if (mSelectedView != null) {
-                    // deselect the previously selected view
-                    mSelectedView.setBackgroundResource(0);
-                }
-                mSelectedView = v;
-                mSelectedView.setBackgroundResource(R.drawable.selection_background);
-                mSelectedAsana = (Asana) v.getTag();
-                setTitle(mSelectedAsana.getName());
-            }
-        }
-
         @Override
         public void onBindViewHolder(AsanaViewHolder holder, int position) {
-            View selectedView = holder.itemView;
-
             // TODO Display an image from the asana
-            holder.mImageView.setImageResource(R.drawable.agama_yoga_logo);
+            holder.imageView.setImageResource(R.drawable.agama_yoga_logo);
 
-            Asana selectedAsana = mAsanas.get(position);
-            if (mSelectedAsana == selectedAsana) {
-                mSelectedView = selectedView;
-                mSelectedView.setBackgroundResource(R.drawable.selection_background);
+            if (position == mSelectedPosition) {
+                holder.itemView.setSelected(true);
+
+                // keep track of the currently selected view when recycled
+                mSelectedView = holder.itemView;
             } else {
-                selectedView.setBackgroundResource(0);
+                holder.itemView.setSelected(false);
             }
-
-            selectedView.setTag(selectedAsana);
         }
 
         @Override
@@ -136,11 +156,12 @@ public class PerformanceBuilderActivity extends NavigationDrawerActivity {
     }
 
     static class AsanaViewHolder extends RecyclerView.ViewHolder {
-        public final ImageView mImageView;
+        public final ImageView imageView;
 
         public AsanaViewHolder(View view) {
             super(view);
-            mImageView = (ImageView) view.findViewById(R.id.image);
+            itemView.setClickable(true);
+            imageView = (ImageView) view.findViewById(R.id.image);
         }
     }
 }
